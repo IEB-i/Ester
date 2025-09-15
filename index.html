@@ -71,22 +71,30 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 text-align: center;
                 font-weight: bold;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .connection-status {
                 position: fixed;
-                top: 65px;
-                /* Abaixo do header */
+                top: 60px;
+                /* Exatamente abaixo do header */
                 left: 0;
                 right: 0;
                 z-index: 1000;
                 margin: 0;
-                padding: 3px 10px;
-                font-size: 11px;
+                padding: 8px 10px;
+                font-size: 12px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .chat-input {
-                padding: 15px 20px 20px 20px;
+                padding: 15px 20px;
                 position: fixed;
                 bottom: 0;
                 left: 0;
@@ -94,49 +102,62 @@
                 background: white;
                 border-top: 1px solid #e2e8f0;
                 z-index: 1000;
-                padding-bottom: env(safe-area-inset-bottom, 20px);
+                padding-bottom: max(env(safe-area-inset-bottom), 20px);
+                min-height: 80px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
 
             .chat-messages {
                 padding: 15px !important;
-                padding-top: 100px !important;
-                /* Espaço para header e status fixos */
-                padding-bottom: 100px;
-                /* Espaço para o campo de entrada fixo */
+                padding-top: 110px !important;
+                /* Espaço para header (60px) + status (35px) + margem (15px) */
+                padding-bottom: 120px !important;
+                /* Espaço maior para o campo de entrada fixo */
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
                 flex: 1;
-                height: calc(100dvh - 170px);
-                /* Altura total menos header e input */
+                height: calc(100dvh - 95px - 80px);
+                /* Altura total menos header+status e input */
                 position: relative;
                 background: #f8fafc;
+                scroll-behavior: smooth;
             }
 
             .input-field {
                 font-size: 16px;
                 padding: 14px 18px;
+                flex: 1;
+                min-height: 50px;
             }
 
             .send-button {
                 padding: 14px 22px;
                 font-size: 14px;
+                min-height: 50px;
+                white-space: nowrap;
             }
 
             .message-content {
                 max-width: 85% !important;
                 font-size: 16px;
+                line-height: 1.4;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
 
             .option-button {
                 font-size: 15px;
                 padding: 14px 18px;
+                margin-bottom: 8px;
             }
 
             /* Ajustes específicos para quando o teclado virtual aparece */
             @supports (-webkit-touch-callout: none) {
                 .chat-messages {
-                    height: calc(100dvh - 160px) !important;
-                    max-height: calc(100dvh - 160px) !important;
+                    height: calc(100dvh - 95px - 80px) !important;
+                    max-height: calc(100dvh - 95px - 80px) !important;
                 }
             }
 
@@ -149,30 +170,55 @@
 
             /* Garante que o layout se adapte quando o viewport muda */
             @media screen and (max-height: 500px) {
-                .chat-messages {
-                    height: calc(100dvh - 140px) !important;
-                    padding-top: 90px;
-                }
-
                 .chat-header {
                     padding: 10px 20px;
                     font-size: 14px;
-                    display: block !important;
-                    visibility: visible !important;
+                    height: 50px;
                 }
 
                 .connection-status {
-                    top: 55px;
+                    top: 50px;
                     font-size: 11px;
-                    padding: 3px 10px;
+                    padding: 5px 10px;
+                    height: 30px;
+                }
+
+                .chat-messages {
+                    padding-top: 90px !important;
+                    padding-bottom: 100px !important;
+                    height: calc(100dvh - 80px - 70px) !important;
+                }
+
+                .chat-input {
+                    min-height: 70px;
+                    padding: 10px 15px;
+                }
+
+                .input-field {
+                    min-height: 45px;
+                    padding: 12px 16px;
+                }
+
+                .send-button {
+                    min-height: 45px;
+                    padding: 12px 18px;
                 }
             }
 
             /* Força a visibilidade do cabeçalho */
             .chat-header {
-                display: block !important;
+                display: flex !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+            }
+
+            /* Melhora a rolagem e evita cortes */
+            .message {
+                margin-bottom: 20px;
+            }
+
+            .message:last-child {
+                margin-bottom: 30px;
             }
         }
 
