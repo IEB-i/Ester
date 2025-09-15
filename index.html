@@ -214,7 +214,7 @@
 
             /* Melhora a rolagem e evita cortes */
             .message {
-                margin-bottom: 20px;
+                margin-bottom: 25px;
             }
 
             .message:last-child {
@@ -423,7 +423,7 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            🤖 Assistente Virtual
+            🤖 Ester - Assistente Virtual
         </div>
 
         <div class="connection-status" id="connectionStatus">
@@ -444,7 +444,7 @@
     <script>
         class ChatBot {
             constructor() {
-                this.n8nWebhookUrl = 'https://n8n-staging.mociap.com.br/webhook/chat'; // URL do webhook n8n (produção)
+                this.n8nWebhookUrl = 'https://n8n-staging.mociap.com.br/webhook-teste/chat'; // URL do webhook n8n (produção)
                 this.messagesContainer = document.getElementById('chatMessages');
                 this.messageInput = document.getElementById('messageInput');
                 this.sendButton = document.getElementById('sendButton');
