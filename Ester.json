@@ -1,0 +1,404 @@
+{
+  "name": "Ester",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a567eccc-c4fd-452d-85f1-fa30c34d14f8",
+      "name": "Webhook Room Booking",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        -32
+      ],
+      "webhookId": "b676839e-d7f8-4cfe-8154-b20acc03df47"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "user_message",
+              "name": "chatInput",
+              "value": "={{ $json.body.message || $json.message || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "session_id",
+              "name": "sessionId",
+              "value": "={{ $json.body.userId }}",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b18e4842-6a65-41e9-89bd-122392f829eb",
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -624,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, GET, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              }
+            ]
+          }
+        }
+      },
+      "id": "345161c4-1c6f-498a-9649-2d07e0aaf9af",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "calendarioiebi@gmail.com",
+          "mode": "list",
+          "cachedResultName": "PROGRAMAÇÃO IEBI"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', `Start date for availability check`, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', `End date for availability check`, 'string') }}",
+        "options": {}
+      },
+      "id": "29be2161-b652-4af3-a0d5-cc8d113e0bb8",
+      "name": "Get availability",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        368
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "EmrrTUtRYxJ2Bm95",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        272
+      ],
+      "id": "377b49f3-1be6-479a-9949-0384aa961725",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        272
+      ],
+      "id": "597b0c9c-e962-4c20-8e59-0b06949ab23f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4WvHsuJ9CDhkpMSA",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Seu nome é Ester e Você é uma assistente especializada em agendamento de salas da igreja IEBI. Sua função é:\n\n1. ANALISAR a mensagem do usuário para identificar:\n    - Nome do usuário (não precisa pedir nome completo. Peça só o nome)\n    - Data e horário desejados\n    - Motivo da agenda\n    - Duração da reunião\n    - Preferências de localização (Sala)\n2. VERIFICAR disponibilidade das salas com base no google Calendar.\n3. Faça uma pergunta por vez para identificar os pontos da resposta. Lembre-se que o usuário é iniciante. Comece, por exemplo, por nome, depois pea data e horário e etc...\n4. você não tem permissão para excluir, mas pode editar todas as informações necessárias no evento, desde de que o nome do usuário do chat esteja relacionado no evento, seja no título ou descrição. Ao editar não precisa informar ao usuário o id do evento.\n5. vc tem permissão para incluir um novo evento e consultar agendas. Faça somente consultas e as informe\n6. Importante: Ao perguntar sobre as salas, liste todas as opções relacionadas pelo firebase.\n7. Antes de agendar sempre confirme com o usuário se os dados estão corretos\n8. após o usuário confirmar, verifique novamente se a agenda está disponível e faça o agendamento\n8. Para alteração no evento em questão, só pode ser realizado se o nome da pessoa descrita no título do evento for igual ao usuário do chat.\n9. Salas Existentes:\nAuditório\nJardim do Édem\nSala 01\nSala 02\nSala 03\nSala 04\nSala 05\nSala 06;\n10. Observações Finais\n    - Você deve garantir que os dados informados pelo usuário sejam validados antes de realizar qualquer ação (verificação de disponibilidade de sala)..\n    - Caso a sala esteja ocupada durante o processo de agendamento, o bot deve sugerir uma nova tentativa, e o fluxo deve ser claro sobre as opções disponíveis para o usuário.\n\n=== INSTRUÇÕES DE FORMATAÇÃO ===\nIMPORTANTE: Sempre formate suas respostas de forma clara e organizada, evitando emojis na conversa, msa usando nos informativos:\n\n- Para listas de eventos/agenda, use este formato:\n📅 [DIA DA SEMANA, DATA]\n⏰ [HORÁRIO] - [EVENTO] ([LOCAL])\n⏰ [HORÁRIO] - [EVENTO] ([LOCAL])\n- Para confirmações, use:\n✅ Para confirmações positivas\n❌ Para negativas\n⚠️ Para avisos\n- Sempre separe seções com linhas em branco\n• Mantenha parágrafos curtos e organizados\n• Para listas longas, agrupe por dia da semana\n\nExemplo de formatação ideal:\n📅 AGENDA DA SEMANA\n\n📅 Segunda-feira, 15 de setembro\n⏰ 15:30-19:30 - JIU-JITSU INFANTIL (Jardim do Éden)\n⏰ 19:30-21:30 - FILHAS DO REI (Templo Principal)\n\n📅 Terça-feira, 16 de setembro\n⏰ 18:30-20:30 - JIU-JITSU ADULTO (Jardim do Éden)\n\n❓ Agora me informe: qual data e horário você gostaria de agendar?\n\nConsidere horário atual: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        -32
+      ],
+      "id": "d71178f1-beb3-4289-9e22-f8f9efb1446b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "calendarioiebi@gmail.com",
+          "mode": "list",
+          "cachedResultName": "PROGRAMAÇÃO IEBI"
+        },
+        "returnAll": true,
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', `Start date for events search`, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', `End date for events search`, 'string') }}",
+        "options": {}
+      },
+      "id": "6aec3413-3d14-4afd-b96c-343e6289f8a9",
+      "name": "Get events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        192
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "EmrrTUtRYxJ2Bm95",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "calendarioiebi@gmail.com",
+          "mode": "list",
+          "cachedResultName": "PROGRAMAÇÃO IEBI"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `No título identifique o motivo do agendamento de forma resumida e o nome de quem solicitou. Exemplo esperado: GD Rede Teen - Mozer`, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        32,
+        208
+      ],
+      "id": "e36a1e9f-e71f-4191-8642-10f2f8d7cf1c",
+      "name": "Crear Evento",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "EmrrTUtRYxJ2Bm95",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "calendarioiebi@gmail.com",
+          "mode": "list",
+          "cachedResultName": "PROGRAMAÇÃO IEBI"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `somente prosseguir com a alterarção se o nome do usuário estiver no título`, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        352
+      ],
+      "id": "5f3ad932-fbef-4b1c-87a9-c776a52cd142",
+      "name": "Alterar Evento",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "EmrrTUtRYxJ2Bm95",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "deepseek-chat",
+          "mode": "list",
+          "cachedResultName": "deepseek-chat"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -352,
+        176
+      ],
+      "id": "e3b70457-45a2-4256-bf35-4e6532a0cd42",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ee0Yhyx8PeLMm7wm",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Room Booking": {
+      "main": [
+        [
+          {
+            "node": "Extract Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Data": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Get events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alterar Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cf2b5756-fc79-4f87-aa5d-74efa0fcd640",
+  "meta": {
+    "templateId": "calendar_agent_with_gcal",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f3cbc0442aed548d8914347e5e86874c8c3119129f0096610bb67c5b6d226865"
+  },
+  "id": "MuCUReSnZXcwjS6L",
+  "tags": []
+}
