@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procurar Cadastro - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <meta name="description" content="Página de pesquisa e listagem de pessoas do Sistema de Gestão IEBI.">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F4C3A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+
+  <!-- Topbar Header -->
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <!-- Sidebar Menu -->
+    <iebi-sidebar active-menu="procurar-cadastro"></iebi-sidebar>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">
+          Pessoas - Procurar Cadastro
+        </div>
+      </div>
+
+      <div class="page-title-container">
+        <h2 class="page-title">Procurar Cadastro</h2>
+      </div>
+
+      <div class="card form-card">
+        <div class="table-toolbar">
+          <div class="table-search">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Pesquisar por nome ou celular...">
+          </div>
+          <div class="table-actions">
+            <button class="btn btn-secondary">
+              <i class="ph ph-funnel"></i> Filtros
+            </button>
+            <a href="pessoa-nova.html" class="btn btn-primary" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+              <i class="ph ph-plus"></i> Nova Pessoa
+            </a>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nome Completo</th>
+                <th>Celular</th>
+                <th>E-mail</th>
+                <th>Arrolamento</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- As linhas serão inseridas via JavaScript -->
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 32px; color: var(--text-muted);">
+                  <i class="ph ph-spinner ph-spin" style="font-size: 24px;"></i><br>Carregando cadastros...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module" src="../JS/firebase.js"></script>
+  <script type="module" src="../JS/procurar-cadastro.js"></script>
+</body>
+
+</html>

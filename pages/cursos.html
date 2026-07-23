@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursos - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <meta name="description" content="Gerenciamento de Cursos de Ensino.">
+  <style>
+    /* Premium Course Cards */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .course-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      border-color: rgba(39, 174, 96, 0.3);
+    }
+    .course-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, #2ECC71 100%);
+    }
+    .course-status {
+      position: absolute;
+      top: 16px; right: 16px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .course-status.ativo {
+      background: rgba(39, 174, 96, 0.1);
+      color: var(--primary);
+    }
+    .course-status.inativo {
+      background: rgba(231, 76, 60, 0.1);
+      color: #E74C3C;
+    }
+    .course-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      margin-top: 12px;
+    }
+    .course-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .course-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .course-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .course-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .course-actions button {
+      flex: 1;
+    }
+  </style>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F4C3A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <iebi-sidebar active-menu="cursos"></iebi-sidebar>
+
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">Ensino - Cursos</div>
+      </div>
+      
+      <div class="page-title-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 class="page-title">Catálogo de Cursos</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; margin-bottom: 0;">Gerencie a grade curricular e catálogo de cursos disponíveis.</p>
+        </div>
+        <button id="btnNovoCurso" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+          <i class="ph ph-plus-circle" style="font-size: 1.2rem;"></i>
+          Novo Curso
+        </button>
+      </div>
+
+      <div class="courses-grid" id="coursesGrid">
+        <!-- Loader ou Lista vazia -->
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+          <i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i>
+          <p style="margin-top: 12px;">Carregando cursos...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Novo/Editar Curso -->
+  <div id="cursoModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header" style="align-items: flex-start; padding-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;">
+            <i class="ph-fill ph-books" style="font-size: 1.6rem;"></i>
+          </div>
+          <div>
+            <h3 id="modalTitleText" style="margin: 0; color: #fff; font-size: 1.15rem; font-weight: 700;">Cadastrar Novo Curso</h3>
+            <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.8);">Preencha os detalhes do curso abaixo.</p>
+          </div>
+        </div>
+        <button id="closeModalBtn" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px; display: flex; font-size: 1.25rem;">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      
+      <form id="cursoForm">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-group">
+            <label class="form-label">Nome do Curso</label>
+            <input type="text" id="cursoNome" class="form-control" required placeholder="Ex: Maturidade Cristã">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Descrição</label>
+            <textarea id="cursoDescricao" class="form-control" required rows="3" placeholder="Resumo dos objetivos do curso"></textarea>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="form-group">
+              <label class="form-label">Carga Horária (h)</label>
+              <input type="number" id="cursoCargaHoraria" class="form-control" required min="1" placeholder="Ex: 40">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="cursoStatus" class="form-control" required>
+                <option value="Ativo">Ativo</option>
+                <option value="Inativo">Inativo</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="form-group">
+              <label class="form-label">Público-Alvo</label>
+              <select id="cursoPublico" class="form-control" required>
+                <option value="Aberto a Todos">Aberto a Todos</option>
+                <option value="Membros">Membros</option>
+                <option value="Líderes">Líderes</option>
+                <option value="Supervisores">Supervisores</option>
+                <option value="Coordenadores">Coordenadores</option>
+                <option value="Pastores">Pastores</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Curso Pré-requisito (Opcional)</label>
+              <select id="cursoPreRequisito" class="form-control">
+                <option value="">Nenhum</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" id="saveCursoBtn" class="btn btn-primary">Salvar Curso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module" src="../JS/firebase.js"></script>
+  <script type="module" src="../JS/cursos.js"></script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Tarefas - Ensino - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+
+  <!-- Topbar Header -->
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <!-- Sidebar Menu -->
+    <iebi-sidebar active-menu="ensino"></iebi-sidebar>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">
+          Ensino - Gestão de Tarefas
+        </div>
+      </div>
+
+      <div class="page-title-container" style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 class="page-title">Gestão de Tarefas - Ensino</h2>
+        <button class="btn btn-primary" onclick="openTaskModal()">
+          <i class="ph ph-plus" style="margin-right: 8px;"></i>Nova Tarefa
+        </button>
+      </div>
+
+      <!-- Kanban Board -->
+      <div class="kanban-board">
+        <!-- A Fazer -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <h3>A Fazer</h3>
+            <span class="task-count">2</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="task-card">
+              <span class="task-badge">EBD</span>
+              <h4>Preparar aula sobre Salmos</h4>
+              <div class="task-meta">
+                <span><i class="ph ph-user"></i> Pr. João</span>
+                <span><i class="ph ph-calendar"></i> 15/10</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <span class="task-badge">Discipulado</span>
+              <h4>Atualizar material de consolidação</h4>
+              <div class="task-meta">
+                <span><i class="ph ph-user"></i> Maria</span>
+                <span><i class="ph ph-calendar"></i> 20/10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Em Andamento -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <h3>Em Andamento</h3>
+            <span class="task-count">1</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="task-card">
+              <span class="task-badge">Curso de Noivos</span>
+              <h4>Revisar módulo 2</h4>
+              <div class="task-meta">
+                <span><i class="ph ph-user"></i> Carlos</span>
+                <span><i class="ph ph-calendar"></i> 12/10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revisão -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <h3>Revisão</h3>
+            <span class="task-count">0</span>
+          </div>
+          <div class="kanban-cards">
+          </div>
+        </div>
+
+        <!-- Concluído -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <h3>Concluído</h3>
+            <span class="task-count">1</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="task-card done">
+              <span class="task-badge" style="background: #EAECEE; color: #7F8C8D;">EBD</span>
+              <h4>Escala de professores de Outubro</h4>
+              <div class="task-meta">
+                <span><i class="ph ph-user"></i> Pr. João</span>
+                <span><i class="ph ph-calendar"></i> 01/10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Task Modal (Formulário Flutuante) -->
+  <div id="taskModal" class="modal-overlay">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h3 class="section-title" style="margin-bottom: 0;">Nova Tarefa</h3>
+        <button class="icon-btn close-modal" style="color: var(--text-main);" onclick="closeTaskModal()">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      <form id="formNovaTarefa">
+        <div class="form-grid" style="margin-top: 16px;">
+          <div class="form-group full-width">
+            <label for="titulo" class="form-label">Título da Tarefa</label>
+            <input type="text" id="titulo" class="form-control" required placeholder="Ex: Preparar aula de história da igreja...">
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="descricao" class="form-label">Descrição (Opcional)</label>
+            <textarea id="descricao" class="form-control" rows="3" placeholder="Detalhes e observações sobre a tarefa..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="categoria" class="form-label">Categoria</label>
+            <select id="categoria" class="form-control" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="EBD">EBD</option>
+              <option value="Discipulado">Discipulado</option>
+              <option value="Curso de Noivos">Curso de Noivos</option>
+              <option value="Kids">Kids</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="responsavel" class="form-label">Responsável</label>
+            <input type="text" id="responsavel" class="form-control" required placeholder="Nome do Professor/Responsável">
+          </div>
+          
+          <div class="form-group">
+            <label for="data" class="form-label">Data de Entrega</label>
+            <input type="date" id="data" class="form-control" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="status" class="form-label">Status Inicial</label>
+            <select id="status" class="form-control" required>
+              <option value="A Fazer" selected>A Fazer</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Revisão">Revisão</option>
+              <option value="Concluído">Concluído</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeTaskModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Tarefa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script>
+    function openTaskModal() {
+      document.getElementById('taskModal').classList.add('active');
+    }
+    
+    function closeTaskModal() {
+      document.getElementById('taskModal').classList.remove('active');
+    }
+    
+    // Fechar ao clicar fora
+    document.getElementById('taskModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeTaskModal();
+      }
+    });
+
+    // Submissão do form
+    document.getElementById('formNovaTarefa').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Tarefa adicionada com sucesso! (Apenas front-end por enquanto)');
+      closeTaskModal();
+      this.reset();
+    });
+  </script>
+</body>
+
+</html>

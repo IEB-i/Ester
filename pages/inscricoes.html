@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscrições - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    .turma-header-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-top: 4px solid var(--primary);
+    }
+    .add-student-container {
+        display: flex;
+        gap: 16px;
+        align-items: flex-end;
+    }
+    .student-search-box {
+        flex: 1;
+        position: relative;
+    }
+    .students-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+    }
+    .students-table th, .students-table td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .students-table th {
+        background: #f8f9fa;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+    .students-table tr:hover td {
+        background: rgba(39, 174, 96, 0.05);
+    }
+    .btn-remover {
+        color: #E74C3C;
+        background: rgba(231, 76, 60, 0.1);
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 0.85rem;
+    }
+    .btn-remover:hover {
+        background: #E74C3C;
+        color: #FFF;
+    }
+  </style>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F4C3A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <iebi-topbar></iebi-topbar>
+  <div class="app-container">
+    <iebi-sidebar active-menu="turmas"></iebi-sidebar>
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb" style="display:flex; align-items:center; gap:8px;">
+          <a href="turmas.html" style="color: var(--text-muted); text-decoration: none;"><i class="ph ph-arrow-left"></i> Voltar para Turmas</a>
+          <span>/ Inscrições</span>
+        </div>
+      </div>
+      
+      <!-- Cabeçalho da Turma -->
+      <div class="turma-header-card" id="turmaHeader">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+              <div>
+                  <div id="badgeStatus" class="turma-badge" style="position: relative; display: inline-block; margin-bottom: 12px; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight:bold; text-transform:uppercase;">Carregando...</div>
+                  <h2 id="turmaNomeTitle" class="page-title" style="margin-bottom: 8px;">Carregando detalhes...</h2>
+                  <p id="cursoNomeTitle" style="color: var(--primary); font-weight: bold; font-size: 1.1rem; margin: 0;">--</p>
+              </div>
+              <div style="text-align: right; color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;">
+                  <div><i class="ph ph-chalkboard-teacher" style="vertical-align: middle;"></i> <span id="lblProfessor">--</span></div>
+                  <div><i class="ph ph-calendar" style="vertical-align: middle;"></i> <span id="lblDatas">--</span></div>
+                  <div><i class="ph ph-clock" style="vertical-align: middle;"></i> <span id="lblHorario">--</span></div>
+              </div>
+          </div>
+          
+          <div class="turma-vagas" style="background: rgba(0,0,0,0.02); border-radius: 8px; padding: 16px; margin-bottom: 0;">
+            <div class="vagas-header" style="display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">
+                <span>Ocupação das Vagas</span>
+                <span id="lblVagas">0/0</span>
+            </div>
+            <div class="vagas-bar" style="height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
+                <div id="vagasFill" class="vagas-fill" style="height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.3s; width: 0%;"></div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Área de Inscrição e Lista -->
+      <div class="card form-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <h3 class="section-title" style="margin-bottom: 0;">Matrícula e Inscritos</h3>
+          </div>
+          
+          <!-- Formulário Adicionar -->
+          <div class="add-student-container" style="background: #f8f9fa; padding: 24px; border-radius: 8px; margin-bottom: 24px; border: 1px solid var(--border-color);">
+              <div class="student-search-box">
+                  <label class="form-label" style="margin-bottom: 8px;">Matricular Aluno (Pesquisar no sistema)</label>
+                  <input type="text" id="buscaAluno" class="form-control" style="width: 100%;" placeholder="Digite o nome do aluno..." autocomplete="off">
+                  <div id="alunoAutocomplete" class="autocomplete-dropdown"></div>
+                  <input type="hidden" id="selectedAlunoId">
+                  <input type="hidden" id="selectedAlunoNome">
+                  <input type="hidden" id="selectedAlunoContato">
+              </div>
+              <button id="btnMatricular" class="btn btn-primary" style="height: 44px; padding: 0 32px;" disabled>
+                  <i class="ph ph-user-plus"></i> Matricular
+              </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th>Nome do Aluno</th>
+                        <th>Data Inscrição</th>
+                        <th>Contato</th>
+                        <th style="text-align: right;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaInscritos">
+                    <tr><td colspan="4" style="text-align:center; color: var(--text-muted); padding: 40px;"><i class="ph ph-spinner ph-spin" style="font-size: 1.5rem;"></i> Carregando...</td></tr>
+                </tbody>
+            </table>
+          </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module" src="../JS/firebase.js"></script>
+  <script type="module" src="../JS/inscricoes.js"></script>
+</body>
+</html>
