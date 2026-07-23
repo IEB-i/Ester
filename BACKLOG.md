@@ -25,7 +25,7 @@ O objetivo desta fase é permitir o acompanhamento da rotina semanal das turmas 
 Melhorar a interação e gestão de conteúdo da turma para evitar a evasão.
 - [ ] **Mural de Recados:** Espaço de avisos da turma visível para professores e alunos.
 - [ ] **Arquivos e Apostilas:** Anexo de links de arquivos (Google Drive/PDFs) e controle simples de entrega de material físico (Ex: "Recebeu Apostila? [✓]").
-- [ ] **Lembretes Automáticos:** Disparo de notificações (WhatsApp/Email/Push) pré-aula (lembrete do horário e sala) e pós-aula (aviso de falta/material liberado).
+- [ ] **Lembretes 1-Click (WhatsApp):** Botões inteligentes no sistema que geram a mensagem de lembrete pré/pós-aula (com nome do aluno e sala) e abrem o WhatsApp Web do professor/secretário para envio imediato (Zero custo de API).
 
 ## Fase 7: Avaliação, Formatura e Auto-Matrícula Inteligente
 Gerenciamento da Trilha de Crescimento, avaliação final e validação de elegibilidade do aluno.
@@ -39,14 +39,16 @@ Gerenciamento da Trilha de Crescimento, avaliação final e validação de elegi
 - [ ] **Geração de Certificados:** Emissão automática do PDF do certificado assinado para alunos aprovados.
 
 ## Fase 8: Painéis por Perfil (Professores e Alunos)
-Adesão de múltiplos perfis de acesso ao sistema com níveis de segurança adequados.
+Adesão de múltiplos perfis de acesso ao sistema com níveis de segurança adequados (Custom Claims do Firebase).
+- [ ] **Segurança Blindada (Role-Based Access):** Regras de banco de dados que bloqueiam sumariamente alunos de verem finanças/cadastros e professores de verem turmas de outros.
 - [ ] **Perfil do Professor (PWA / Mobile):**
   - Login restrito (sem acesso a menus administrativos/financeiros).
   - Visão "Minhas Turmas" limpa e focada em ações rápidas.
   - Chamada mobile rápida em sala de aula.
   - Suporte a Co-professores e Auxiliares vinculados à mesma turma.
   - Opção de Substituição de Professor pontual em uma aula específica.
-- [ ] **Portal do Aluno (PWA / Mobile):**
+- [ ] **Portal do Aluno Gamificado (PWA / Mobile):**
   - Área "Meus Cursos" (aulas, presença e materiais).
+  - **Trilha de Crescimento Visual:** Mapa interativo (estilo videogame) mostrando os cursos concluídos desbloqueados e os próximos passos bloqueados com cadeado.
   - Catálogo de Cursos Disponíveis para Auto-Matrícula (com checagem dos pré-requisitos em tempo real).
   - Download de Certificados obtidos.
