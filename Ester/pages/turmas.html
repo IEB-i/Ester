@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Turmas - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    /* Cards de Turmas */
+    .turmas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .turma-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .turma-card:hover {
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      border-color: rgba(39, 174, 96, 0.3);
+    }
+    .turma-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-abertas { background: rgba(39, 174, 96, 0.1); color: var(--primary); }
+    .badge-andamento { background: rgba(243, 156, 18, 0.1); color: #F39C12; }
+    .badge-concluida { background: rgba(41, 128, 185, 0.1); color: #2980B9; }
+    .badge-cancelada { background: rgba(231, 76, 60, 0.1); color: #E74C3C; }
+    
+    .turma-curso {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+    .turma-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .turma-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+    .turma-meta div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .turma-vagas {
+      background: rgba(0,0,0,0.02);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+    .vagas-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .vagas-bar {
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .vagas-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .turma-actions {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+    }
+    .turma-actions button {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.85rem;
+    }
+  </style>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F4C3A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <iebi-topbar></iebi-topbar>
+  <div class="app-container">
+    <iebi-sidebar active-menu="turmas"></iebi-sidebar>
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">Ensino - Turmas</div>
+      </div>
+      
+      <div class="page-title-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 class="page-title">Gestão de Turmas</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; margin-bottom: 0;">Abra novas turmas vinculadas aos cursos ativos da IEBI.</p>
+        </div>
+        <button id="btnNovaTurma" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+          <i class="ph ph-plus-circle" style="font-size: 1.2rem;"></i>
+          Nova Turma
+        </button>
+      </div>
+
+      <div class="turmas-grid" id="turmasGrid">
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+          <i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i>
+          <p style="margin-top: 12px;">Carregando turmas...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Nova Turma -->
+  <div id="turmaModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header" style="align-items: flex-start; padding-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;">
+            <i class="ph-fill ph-users-three" style="font-size: 1.6rem;"></i>
+          </div>
+          <div>
+            <h3 id="modalTitleText" style="margin: 0; color: #fff; font-size: 1.15rem; font-weight: 700;">Abrir Nova Turma</h3>
+            <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.8);">Configure os detalhes da execução do curso.</p>
+          </div>
+        </div>
+        <button id="closeModalBtn" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px; display: flex; font-size: 1.25rem;">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      
+      <form id="turmaForm">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="form-group">
+            <label class="form-label">Curso Base</label>
+            <select id="turmaCurso" class="form-control" required>
+              <option value="">Carregando cursos...</option>
+            </select>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 2fr 1fr;">
+            <div class="form-group">
+              <label class="form-label">Nome da Turma / Identificação</label>
+              <input type="text" id="turmaNome" class="form-control" required placeholder="Ex: Turma Sábado 2026.2">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="turmaStatus" class="form-control" required>
+                <option value="Inscrições Abertas">Inscrições Abertas</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Encerrada">Encerrada</option>
+                <option value="Cancelada">Cancelada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="position: relative;">
+            <label class="form-label">Professor / Instrutor</label>
+            <input type="text" id="turmaProfessor" class="form-control" required placeholder="Nome do responsável por ministrar" autocomplete="off">
+            <div id="professorAutocomplete" class="autocomplete-dropdown"></div>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="form-group">
+              <label class="form-label">Data de Início</label>
+              <input type="date" id="turmaDataInicio" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Data de Término</label>
+              <input type="date" id="turmaDataFim" class="form-control" required>
+            </div>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 2fr 1fr;">
+            <div class="form-group">
+              <label class="form-label">Dias da Semana (Aulas)</label>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;">
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="1"> Seg</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="2"> Ter</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="3"> Qua</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="4"> Qui</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="5"> Sex</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="6"> Sáb</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="0"> Dom</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Horário (Início)</label>
+              <input type="time" id="turmaHorario" class="form-control" required>
+            </div>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 1fr; margin-top: 16px;">
+            <div class="form-group" style="max-width: 200px;">
+              <label class="form-label">Total de Vagas</label>
+              <input type="number" id="turmaVagas" class="form-control" required min="1" placeholder="Ex: 50">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-actions" style="margin-top: 24px;">
+          <button type="submit" id="saveTurmaBtn" class="btn btn-primary">Salvar Turma</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module" src="../JS/firebase.js"></script>
+  <script type="module" src="../JS/turmas.js"></script>
+</body>
+</html>

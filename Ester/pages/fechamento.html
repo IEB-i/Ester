@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fechamento de Turma - Sistema IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    .fechamento-header {
+        background: #F39C12;
+        color: white;
+        padding: 32px 24px;
+        border-radius: var(--radius-lg);
+        margin-bottom: 24px;
+    }
+    .fechamento-header h2 { margin: 0 0 8px 0; font-size: 1.5rem; }
+    .fechamento-header p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+
+    .students-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+    }
+    .students-table th, .students-table td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+    .students-table th {
+        background: #f8f9fa;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+    .select-status {
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+    }
+    .select-status.aprovado { color: #27AE60; border-color: #27AE60; background: rgba(39, 174, 96, 0.05); }
+    .select-status.reprovado { color: #E74C3C; border-color: #E74C3C; background: rgba(231, 76, 60, 0.05); }
+    .select-status.desistente { color: #7F8C8D; border-color: #7F8C8D; background: rgba(127, 140, 141, 0.05); }
+
+    .main-content { padding-bottom: 40px; }
+  </style>
+</head>
+<body>
+  <iebi-topbar></iebi-topbar>
+  <div class="app-container">
+    <iebi-sidebar active-menu="turmas"></iebi-sidebar>
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb" style="display:flex; align-items:center; gap:8px;">
+          <a href="#" id="linkVoltar" style="color: var(--text-muted); text-decoration: none;"><i class="ph ph-arrow-left"></i> Voltar</a>
+          <span>/ Assistente de Fechamento</span>
+        </div>
+      </div>
+      
+      <div class="fechamento-header">
+          <h2 id="lblTurma">Carregando...</h2>
+          <p>Revise a situação final dos alunos. Após confirmar, a turma será bloqueada e o histórico escolar dos aprovados será atualizado.</p>
+      </div>
+
+      <div class="card form-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 class="section-title" style="margin: 0;">Avaliação Final</h3>
+          </div>
+
+          <div class="table-responsive">
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Frequência</th>
+                        <th>Situação Calculada</th>
+                        <th style="width: 250px;">Ajuste Manual</th>
+                    </tr>
+                </thead>
+                <tbody id="listaAlunos">
+                    <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-muted);"><i class="ph ph-spinner ph-spin"></i> Carregando...</td></tr>
+                </tbody>
+            </table>
+          </div>
+          
+          <div style="margin-top: 24px; text-align: right; border-top: 1px solid var(--border-color); padding-top: 24px;">
+              <button class="btn btn-primary" id="btnSalvarFechamento" style="background: #E74C3C; padding: 12px 32px; font-size: 1.05rem;">
+                  <i class="ph ph-lock-key"></i> Confirmar Fechamento de Turma
+              </button>
+          </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="alertModal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <div id="alertModalIcon" style="font-size: 4rem; color: var(--primary); margin-bottom: 16px;">
+        <i class="ph ph-info"></i>
+      </div>
+      <h3 id="alertModalTitle" style="margin-bottom: 8px; color: var(--text-main); font-size: 1.5rem;">Atenção</h3>
+      <p id="alertModalMessage" style="color: var(--text-muted); margin-bottom: 24px;">Mensagem.</p>
+      <button type="button" class="btn btn-primary" id="btnOkAlert" style="width: 100%;">OK</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-content" style="max-width: 450px; text-align: center;">
+      <div style="font-size: 4rem; color: #E74C3C; margin-bottom: 16px;">
+        <i class="ph ph-warning-octagon"></i>
+      </div>
+      <h3 style="margin-bottom: 8px; color: var(--text-main); font-size: 1.5rem;">Atenção</h3>
+      <p style="color: var(--text-muted); margin-bottom: 24px;">Ao fechar a turma, você não poderá mais matricular alunos, editar presenças ou excluir a turma. Deseja prosseguir?</p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+          <button type="button" class="btn btn-secondary" id="btnCancelConfirm" style="flex: 1;">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btnConfirmAction" style="flex: 1; background: #E74C3C; border: none;">Sim, Encerrar Turma</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="transferModal">
+    <div class="modal-content" style="max-width: 500px; text-align: center;">
+      <div style="font-size: 4rem; color: var(--primary); margin-bottom: 16px;">
+        <i class="ph ph-arrow-circle-up-right"></i>
+      </div>
+      <h3 style="margin-bottom: 8px; color: var(--text-main); font-size: 1.5rem;">Trilha de Crescimento</h3>
+      <p style="color: var(--text-muted); margin-bottom: 24px;">Este curso possui uma sequência direta. Deseja matricular os aprovados na próxima turma?</p>
+      
+      <div style="text-align: left; margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 8px; border: 1px solid var(--border-color);">
+          <label class="form-label" style="margin-bottom: 8px;">Turma de Destino (Inscrições Abertas)</label>
+          <select id="transferTurmaSelect" class="form-control">
+              <option value="">Não transferir agora / Nenhuma turma aberta</option>
+          </select>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; margin-bottom: 0;">Você pode pular esta etapa escolhendo "Não transferir" e matricular manualmente depois.</p>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: center;">
+          <button type="button" class="btn btn-primary" id="btnConfirmTransfer" style="flex: 1; padding: 12px;">Confirmar Fechamento</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script type="module" src="../JS/fechamento.js"></script>
+</body>
+</html>

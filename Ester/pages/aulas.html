@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronograma de Aulas - Sistema IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    .turma-header-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-top: 4px solid var(--primary);
+    }
+    .aulas-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+    }
+    .aulas-table th, .aulas-table td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .aulas-table th {
+        background: #f8f9fa;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+    .aulas-table tr:hover td {
+        background: rgba(39, 174, 96, 0.05);
+    }
+    .status-agendada {
+        background: #F39C12;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .status-realizada {
+        background: #27AE60;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .btn-chamada {
+        color: #FFF;
+        background: var(--primary);
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-chamada:hover {
+        background: #0F4C3A;
+    }
+  </style>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F4C3A">
+</head>
+<body>
+  <iebi-topbar></iebi-topbar>
+  <div class="app-container">
+    <iebi-sidebar active-menu="turmas"></iebi-sidebar>
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb" style="display:flex; align-items:center; gap:8px;">
+          <a href="turmas.html" style="color: var(--text-muted); text-decoration: none;"><i class="ph ph-arrow-left"></i> Voltar para Turmas</a>
+          <span>/ Cronograma de Aulas</span>
+        </div>
+      </div>
+      
+      <!-- Cabeçalho da Turma -->
+      <div class="turma-header-card" id="turmaHeader">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                  <div id="badgeStatus" class="turma-badge" style="position: relative; display: inline-block; margin-bottom: 12px; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight:bold; text-transform:uppercase;">Carregando...</div>
+                  <h2 id="turmaNomeTitle" class="page-title" style="margin-bottom: 8px;">Carregando detalhes...</h2>
+                  <p id="cursoNomeTitle" style="color: var(--primary); font-weight: bold; font-size: 1.1rem; margin: 0;">--</p>
+              </div>
+              <div style="text-align: right; color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;">
+                  <div><i class="ph ph-chalkboard-teacher" style="vertical-align: middle;"></i> <span id="lblProfessor">--</span></div>
+                  <div><i class="ph ph-calendar" style="vertical-align: middle;"></i> <span id="lblDatas">--</span></div>
+                  <div><i class="ph ph-clock" style="vertical-align: middle;"></i> <span id="lblHorario">--</span></div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Tabela de Aulas -->
+      <div class="card form-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <h3 class="section-title" style="margin-bottom: 0;">Cronograma de Aulas Geradas</h3>
+              <!-- Botão Imprimir Diário em Branco -->
+              <button class="btn btn-secondary" onclick="window.print()">
+                  <i class="ph ph-printer"></i> Imprimir Diário de Classe
+              </button>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="aulas-table">
+                <thead>
+                    <tr>
+                        <th>Data da Aula</th>
+                        <th>Dia da Semana</th>
+                        <th>Horário</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="listaAulas">
+                    <tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 40px;"><i class="ph ph-spinner ph-spin" style="font-size: 1.5rem;"></i> Carregando aulas...</td></tr>
+                </tbody>
+            </table>
+          </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Genérico de Alerta -->
+  <div class="modal-overlay" id="alertModal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <div id="alertModalIcon" style="font-size: 4rem; color: var(--primary); margin-bottom: 16px;">
+        <i class="ph ph-info"></i>
+      </div>
+      <h3 id="alertModalTitle" style="margin-bottom: 8px; color: var(--text-main); font-size: 1.5rem;">Atenção</h3>
+      <p id="alertModalMessage" style="color: var(--text-muted); margin-bottom: 24px;">Mensagem.</p>
+      <button type="button" class="btn btn-primary" id="btnOkAlert" style="width: 100%;">OK, Entendi</button>
+    </div>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script type="module" src="../JS/aulas.js"></script>
+</body>
+</html>

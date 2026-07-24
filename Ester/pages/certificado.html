@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificado - IEBI</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;600&display=swap');
+
+    @page {
+        size: A4 landscape;
+        margin: 0;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        background: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .cert-container {
+        width: 297mm;
+        height: 210mm;
+        background: white;
+        position: relative;
+        box-sizing: border-box;
+        padding: 20mm;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    /* Print resets */
+    @media print {
+        body { background: white; margin: 0; padding: 0; display: block; }
+        .cert-container { box-shadow: none; width: 100%; height: 100vh; page-break-after: always; padding: 20mm; }
+        #btnPrint { display: none !important; }
+    }
+
+    /* Borda elegante */
+    .cert-border {
+        position: absolute;
+        top: 10mm; left: 10mm; right: 10mm; bottom: 10mm;
+        border: 3px solid #0F4C3A;
+        padding: 4mm;
+    }
+    .cert-inner-border {
+        width: 100%; height: 100%;
+        border: 1px solid rgba(15, 76, 58, 0.4);
+        box-sizing: border-box;
+    }
+
+    /* Conteúdo */
+    .cert-content {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        width: 80%;
+    }
+
+    .logo-text {
+        font-family: 'Cinzel', serif;
+        font-size: 24pt;
+        color: #0F4C3A;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+    }
+
+    h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 42pt;
+        color: #F39C12; /* Dourado */
+        margin: 0 0 40px 0;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+    }
+
+    .cert-body {
+        font-size: 16pt;
+        color: #333;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .student-name {
+        display: block;
+        font-family: 'Cinzel', serif;
+        font-size: 36pt;
+        color: #0F4C3A;
+        font-weight: 700;
+        margin: 20px 0;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+    }
+
+    .course-name {
+        font-weight: 600;
+        color: #0F4C3A;
+    }
+
+    /* Assinaturas */
+    .signatures {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 60px;
+    }
+
+    .sig-line {
+        width: 250px;
+        border-top: 1px solid #0F4C3A;
+        padding-top: 10px;
+        font-size: 12pt;
+        color: #666;
+    }
+
+    .btn-print {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #0F4C3A;
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(15, 76, 58, 0.3);
+        z-index: 1000;
+        transition: 0.2s;
+    }
+    .btn-print:hover { background: #0b3628; }
+  </style>
+</head>
+<body>
+
+  <button class="btn-print" id="btnPrint" onclick="window.print()">Imprimir / Salvar PDF</button>
+
+  <div class="cert-container">
+      <div class="cert-border">
+          <div class="cert-inner-border"></div>
+      </div>
+
+      <div class="cert-content">
+          <div class="logo-text">IGREJA EVANGÉLICA BATISTA EM INTERMARES</div>
+          <h1>Certificado de Conclusão</h1>
+          
+          <div class="cert-body">
+              Certificamos que
+              <span class="student-name" id="lblNome">Carregando...</span>
+              concluiu com aproveitamento satisfatório o curso<br>
+              <strong class="course-name" id="lblCurso">...</strong>,
+              realizado no período letivo.<br>
+              <span style="font-size: 14pt; color: #777; margin-top: 15px; display: block;" id="lblData">Emitido em --/--/----</span>
+          </div>
+
+          <div class="signatures">
+              <div class="sig-line">
+                  <strong>Pr. Titular</strong><br>
+                  IEB Intermares
+              </div>
+              <div class="sig-line">
+                  <strong><span id="lblProfessor">Professor</span></strong><br>
+                  Líder de Ensino / Professor
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script type="module" src="../JS/certificado.js"></script>
+</body>
+</html>

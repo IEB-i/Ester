@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tarefas Mobile - Ensino IEBI</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #27AE60;
+      --primary-dark: #0F4C3A;
+      --bg-color: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --text-main: #1A1A1A;
+      --text-muted: #666666;
+      --border-color: #E0E0E0;
+      --safe-area-pb: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      overflow-x: hidden;
+      padding-bottom: calc(70px + var(--safe-area-pb));
+    }
+
+    /* Header Mobile */
+    .mobile-header {
+      background-color: var(--primary-dark);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+
+    .header-icon {
+      color: white;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Tabs Horizontais (Filtro de Status) */
+    .tabs-container {
+      background: var(--primary-dark);
+      padding: 0 16px;
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      scrollbar-width: none;
+    }
+
+    .tabs-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      color: rgba(255, 255, 255, 0.6);
+      padding: 12px 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .tab.active {
+      color: white;
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--primary);
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 16px;
+    }
+
+    /* Task Cards Mobile */
+    .task-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-left: 4px solid var(--primary);
+      position: relative;
+    }
+
+    .task-card.done {
+      border-left-color: #BDBDBD;
+      opacity: 0.7;
+    }
+
+    .task-card.done .task-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .task-badge {
+      display: inline-block;
+      background: rgba(39, 174, 96, 0.15);
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .task-title {
+      font-size: 1rem;
+      color: var(--text-main);
+      font-weight: 600;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .task-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-icon {
+      font-size: 1rem;
+    }
+
+    /* Botões de Ação Rápida (Kanban) */
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .action-btn:active {
+      transform: scale(0.95);
+    }
+
+    .action-btn.start {
+      background: rgba(39, 174, 96, 0.1);
+      color: var(--primary);
+    }
+
+    .action-btn.review {
+      background: rgba(243, 156, 18, 0.1);
+      color: #f39c12;
+    }
+
+    .action-btn.finish {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0 calc(12px + var(--safe-area-pb));
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      gap: 4px;
+    }
+
+    .nav-item.active {
+      color: var(--primary-dark);
+    }
+
+    .nav-item i {
+      font-size: 1.5rem;
+    }
+
+    .nav-item span {
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    /* Floating Action Button (FAB) */
+    .fab {
+      position: fixed;
+      bottom: calc(90px + var(--safe-area-pb));
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+      cursor: pointer;
+      z-index: 90;
+      transition: transform 0.2s;
+    }
+
+    .fab:active {
+      transform: scale(0.95);
+    }
+
+    /* Bottom Sheet Modal */
+    .bottom-sheet-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .bottom-sheet-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .bottom-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px calc(24px + var(--safe-area-pb));
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 201;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .bottom-sheet-overlay.active .bottom-sheet {
+      transform: translateY(0);
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .sheet-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* Formulário Mobile */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--bg-color);
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="mobile-header">
+    <button class="header-icon">
+      <i class="ph ph-arrow-left"></i>
+    </button>
+    <div class="header-title">Ensino</div>
+    <button class="header-icon">
+      <i class="ph ph-magnifying-glass"></i>
+    </button>
+  </header>
+
+  <!-- Tabs (Filtros Kanban adaptados para mobile) -->
+  <div class="tabs-container" id="tabsContainer">
+    <div class="tab active" data-status="A Fazer">A Fazer (0)</div>
+    <div class="tab" data-status="Em Andamento">Em Andamento (0)</div>
+    <div class="tab" data-status="Revisão">Revisão (0)</div>
+    <div class="tab" data-status="Concluído">Concluído (0)</div>
+  </div>
+
+  <!-- Content -->
+  <main class="content-area" id="tasksList">
+    <div style="text-align: center; margin-top: 40px; color: var(--text-muted);">
+      Carregando tarefas...
+    </div>
+  </main>
+
+  <!-- Botão Flutuante -->
+  <div class="fab" onclick="openBottomSheet()">
+    <i class="ph ph-plus"></i>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <iebi-bottom-nav active-item="ensino"></iebi-bottom-nav>
+
+  <!-- Bottom Sheet (Modal de Nova Tarefa) -->
+  <div class="bottom-sheet-overlay" id="taskSheetOverlay">
+    <div class="bottom-sheet">
+      <div class="sheet-header">
+        <div class="sheet-title">Nova Tarefa</div>
+        <button class="header-icon" style="color: var(--text-muted);" onclick="closeBottomSheet()">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+
+      <form id="mobileFormTarefa">
+        <div class="form-group">
+          <label class="form-label">Título</label>
+          <input type="text" id="taskTitulo" class="form-control" placeholder="Ex: Preparar aula..." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Categoria</label>
+          <select id="taskCategoria" class="form-control" required>
+            <option value="" disabled selected>Selecione...</option>
+            <option value="EB">Escola Bíblica</option>
+            <option value="EM">Escola Ministerial</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Responsável</label>
+          <input type="text" id="taskResponsavel" class="form-control" placeholder="Nome" required>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Data</label>
+            <input type="date" id="taskData" class="form-control" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Status</label>
+            <select id="taskStatus" class="form-control" required>
+              <option value="A Fazer">A Fazer</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Revisão">Revisão</option>
+              <option value="Concluído">Concluído</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="btnSubmitTask" class="btn-submit">Criar Tarefa</button>
+      </form>
+    </div>
+    <script src="./JS/components.js"></script>
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC31C1X13eqVAOq_o5K2evI8q3GOfnpOpo",
+        authDomain: "iebi-2e84e.firebaseapp.com",
+        projectId: "iebi-2e84e",
+        storageBucket: "iebi-2e84e.firebasestorage.app",
+        messagingSenderId: "634456198202",
+        appId: "1:634456198202:web:8b4de1b4def23a49303903"
+      };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Estado local
+    let currentTab = "A Fazer";
+    let allTasks = [];
+    let editingTaskId = null; // Controla se estamos criando ou editando
+
+    // Elementos DOM
+    const tabs = document.querySelectorAll('.tab');
+    const tasksList = document.getElementById('tasksList');
+    const form = document.getElementById('mobileFormTarefa');
+    const sheetOverlay = document.getElementById('taskSheetOverlay');
+    const btnSubmit = document.getElementById('btnSubmitTask');
+    const sheetTitle = document.querySelector('.sheet-title'); // Título do modal
+
+    // Funções de Modal (globais para HTML onClick)
+    window.openBottomSheet = () => {
+      editingTaskId = null;
+      form.reset();
+      sheetTitle.textContent = "Nova Tarefa";
+      btnSubmit.textContent = "Criar Tarefa";
+      sheetOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.editTask = (id) => {
+      editingTaskId = id;
+      const task = allTasks.find(t => t.id === id);
+      if(!task) return;
+      
+      document.getElementById('taskTitulo').value = task.titulo || "";
+      document.getElementById('taskCategoria').value = task.categoria || "";
+      document.getElementById('taskResponsavel').value = task.responsavel || "";
+      document.getElementById('taskData').value = task.data_entrega || "";
+      document.getElementById('taskStatus').value = task.status || "A Fazer";
+      
+      sheetTitle.textContent = "Editar Tarefa";
+      btnSubmit.textContent = "Atualizar Tarefa";
+      sheetOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeBottomSheet = () => {
+        sheetOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      };
+
+      sheetOverlay.addEventListener('click', (e) => {
+        if (e.target === sheetOverlay) window.closeBottomSheet();
+      });
+
+    // Controle de Abas
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentTab = tab.getAttribute('data-status');
+        renderTasks();
+      });
+    });
+
+    // Função para avançar rapidamente o status no card
+    window.advanceStatus = async (event, id, nextStatus) => {
+      event.stopPropagation(); // Evita que o clique abra o modal inteiro
+      try {
+        const docRef = doc(db, "tarefas_ensino", id);
+        await updateDoc(docRef, {
+          status: nextStatus,
+          atualizado_em: serverTimestamp()
+        });
+      } catch (error) {
+        console.error("Erro ao mudar status", error);
+        alert("Falha ao mover a tarefa.");
+      }
+    };
+
+    // Formatar data para DD/MM
+    function formatData(dataStr) {
+      if (!dataStr) return '--/--';
+      const [ano, mes, dia] = dataStr.split('-');
+      return `${dia}/${mes}`;
+    }
+
+    // Renderizar Tarefas
+    function renderTasks() {
+      // Atualizar contadores nas abas
+      const counts = { "A Fazer": 0, "Em Andamento": 0, "Revisão": 0, "Concluído": 0 };
+      allTasks.forEach(t => {
+        if (counts[t.status] !== undefined) counts[t.status]++;
+      });
+
+      tabs.forEach(tab => {
+        const status = tab.getAttribute('data-status');
+        const textNode = tab.childNodes[0];
+        if (textNode) {
+          textNode.textContent = `${status} (${counts[status] || 0})`;
+        }
+      });
+
+      // Filtrar tarefas da aba atual
+      const filteredTasks = allTasks.filter(t => t.status === currentTab);
+
+      // Ordenar por data da mais antiga para a mais nova (tarefas sem data vão para o final)
+      filteredTasks.sort((a, b) => {
+        const dateA = a.data_entrega || "9999-12-31";
+        const dateB = b.data_entrega || "9999-12-31";
+        return dateA.localeCompare(dateB);
+      });
+
+      if (filteredTasks.length === 0) {
+        tasksList.innerHTML = `<div style="text-align: center; margin-top: 40px; color: var(--text-muted);">Nenhuma tarefa em "${currentTab}".</div>`;
+        return;
+      }
+
+      tasksList.innerHTML = filteredTasks.map(task => {
+        const isDone = task.status === "Concluído";
+        const badgeStyle = isDone ? `style="background: #E0E0E0; color: #666;"` : '';
+        
+        // Gerar botão de ação inteligente
+        let actionBtnHtml = '';
+        if (task.status === "A Fazer") {
+          actionBtnHtml = `<button class="action-btn start" onclick="advanceStatus(event, '${task.id}', 'Em Andamento')">Iniciar <i class="ph ph-play-circle"></i></button>`;
+        } else if (task.status === "Em Andamento") {
+          actionBtnHtml = `<button class="action-btn review" onclick="advanceStatus(event, '${task.id}', 'Revisão')">Revisar <i class="ph ph-magnifying-glass"></i></button>`;
+        } else if (task.status === "Revisão") {
+          actionBtnHtml = `<button class="action-btn finish" onclick="advanceStatus(event, '${task.id}', 'Concluído')">Concluir <i class="ph ph-check-circle"></i></button>`;
+        }
+
+        return `
+          <div class="task-card ${isDone ? 'done' : ''}" onclick="editTask('${task.id}')" style="cursor:pointer;">
+            <span class="task-badge" ${badgeStyle}>${task.categoria}</span>
+            <h3 class="task-title">${task.titulo}</h3>
+            <div class="task-meta">
+              <div style="display: flex; gap: 16px;">
+                <div class="meta-item">
+                  <i class="ph ph-user meta-icon"></i> ${task.responsavel}
+                </div>
+                <div class="meta-item">
+                  <i class="ph ph-calendar meta-icon"></i> ${formatData(task.data_entrega)}
+                </div>
+              </div>
+              ${actionBtnHtml}
+            </div>
+          </div>
+        `;
+        }).join('');
+      }
+
+    // Conectar à coleção de tarefas
+    try {
+      const tarefasRef = collection(db, "tarefas_ensino");
+
+      const q = query(tarefasRef, orderBy("criado_em", "desc"));
+      onSnapshot(q, (snapshot) => {
+        allTasks = [];
+        snapshot.forEach((doc) => {
+          allTasks.push({ id: doc.id, ...doc.data() });
+        });
+        renderTasks();
+      }, (error) => {
+        console.error("Erro no onSnapshot do Firebase:", error);
+        tasksList.innerHTML = `<div style="text-align: center; margin-top: 40px; color: #E74C3C;">Erro ao ler os dados do banco. Verifique as regras de segurança ou conexão.</div>`;
+      });
+
+      // Envio do formulário (Criar ou Editar Tarefa)
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const titulo = document.getElementById('taskTitulo').value;
+        const categoria = document.getElementById('taskCategoria').value;
+        const responsavel = document.getElementById('taskResponsavel').value;
+        const data_entrega = document.getElementById('taskData').value;
+        const status = document.getElementById('taskStatus').value;
+
+        btnSubmit.disabled = true;
+
+        try {
+          if (editingTaskId) {
+            btnSubmit.textContent = 'Atualizando...';
+            const docRef = doc(db, "tarefas_ensino", editingTaskId);
+            await updateDoc(docRef, {
+              titulo,
+              categoria,
+              responsavel,
+              data_entrega,
+              status,
+              atualizado_em: serverTimestamp()
+            });
+          } else {
+            btnSubmit.textContent = 'Salvando...';
+            await addDoc(tarefasRef, {
+              titulo,
+              categoria,
+              responsavel,
+              data_entrega,
+              status,
+              criado_em: serverTimestamp()
+            });
+          }
+          window.closeBottomSheet();
+          form.reset();
+          editingTaskId = null;
+        } catch (error) {
+          console.error("Erro ao salvar documento: ", error);
+          alert("Erro ao salvar a tarefa. Verifique as regras de permissão (Security Rules) do Firestore.");
+        } finally {
+          btnSubmit.disabled = false;
+          btnSubmit.textContent = editingTaskId ? 'Atualizar Tarefa' : 'Criar Tarefa';
+        }
+      });
+
+    } catch (error) {
+      console.warn("Erro ao configurar Firebase:", error);
+      tasksList.innerHTML = `<div style="text-align: center; margin-top: 40px; color: #E74C3C;">Não foi possível conectar ao banco de dados.</div>`;
+    }
+
+    </script>
+</body>
+
+</html>

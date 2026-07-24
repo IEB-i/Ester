@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diário de Classe - Sistema IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    .diario-header {
+        background: var(--primary);
+        color: white;
+        padding: 32px 24px;
+        border-radius: var(--radius-lg);
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(15, 76, 58, 0.2);
+    }
+    .diario-header h2 { margin: 0 0 8px 0; font-size: 1.5rem; }
+    .diario-header p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+    
+    .student-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.2s;
+    }
+    .student-card:hover { border-color: var(--primary); }
+    .student-info { flex: 1; }
+    .student-name { font-weight: 600; color: var(--text-main); font-size: 1.05rem; margin-bottom: 4px; }
+    .student-meta { font-size: 0.85rem; color: var(--text-muted); }
+    
+    /* Toggle Switch */
+    .toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .toggle-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        min-width: 65px;
+        text-align: right;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #E74C3C; transition: .3s; border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px;
+      background-color: white; transition: .3s; border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #27AE60; }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    .bottom-bar {
+        position: fixed;
+        bottom: 0; left: 0; width: 100%;
+        background: #fff;
+        padding: 16px 24px;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+    }
+    .bottom-bar .status-count { font-weight: bold; color: var(--text-main); }
+    .main-content { padding-bottom: 100px; }
+
+    /* Print Styles para o Diário Físico */
+    @media print {
+        body { background: #fff !important; }
+        iebi-topbar, iebi-sidebar, .bottom-bar, .breadcrumb, .toggle-container { display: none !important; }
+        .app-container { padding: 0 !important; margin: 0 !important; }
+        .main-content { margin-left: 0 !important; padding: 20px !important; }
+        .diario-header { background: transparent !important; color: #000 !important; box-shadow: none !important; border: 2px solid #000; padding: 16px !important; }
+        .student-card { border: none !important; border-bottom: 1px solid #ccc !important; border-radius: 0 !important; padding: 12px 0 !important; }
+        .student-card::after {
+            content: "Assinatura: _________________________________________";
+            display: block; font-size: 0.9rem; color: #666; margin-top: 8px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <iebi-topbar></iebi-topbar>
+  <div class="app-container">
+    <iebi-sidebar active-menu="turmas"></iebi-sidebar>
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb" style="display:flex; align-items:center; gap:8px;">
+          <a href="#" id="linkVoltar" style="color: var(--text-muted); text-decoration: none;"><i class="ph ph-arrow-left"></i> Voltar para Cronograma</a>
+          <span>/ Lista de Chamada</span>
+        </div>
+      </div>
+      
+      <div class="diario-header">
+          <h2 id="lblTurma">Carregando turma...</h2>
+          <p><i class="ph ph-calendar"></i> <span id="lblData">--/--/----</span> &nbsp;&bull;&nbsp; <i class="ph ph-clock"></i> <span id="lblHorario">--:--</span></p>
+          <p style="margin-top: 8px;"><i class="ph ph-chalkboard-teacher"></i> <span id="lblProfessor">--</span></p>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 class="section-title" style="margin: 0;">Alunos Matriculados</h3>
+          <button class="btn btn-secondary" onclick="marcarTodos()" id="btnMarcarTodos" style="padding: 6px 12px; font-size: 0.85rem;">
+              <i class="ph ph-check-square-offset"></i> Marcar Todos Presentes
+          </button>
+      </div>
+
+      <div id="listaAlunos">
+          <div style="text-align:center; padding: 40px; color: var(--text-muted);"><i class="ph ph-spinner ph-spin" style="font-size: 1.5rem;"></i> Carregando alunos...</div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="bottom-bar">
+      <div class="status-count">
+          Presentes: <span id="countPresentes" style="color: #27AE60;">0</span> / <span id="countTotal">0</span>
+      </div>
+      <button class="btn btn-primary" id="btnSalvarDiario" style="padding: 12px 32px; font-size: 1.05rem;">
+          <i class="ph ph-floppy-disk"></i> Salvar Chamada
+      </button>
+  </div>
+
+  <!-- Modal Genérico de Alerta -->
+  <div class="modal-overlay" id="alertModal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <div id="alertModalIcon" style="font-size: 4rem; color: var(--primary); margin-bottom: 16px;">
+        <i class="ph ph-info"></i>
+      </div>
+      <h3 id="alertModalTitle" style="margin-bottom: 8px; color: var(--text-main); font-size: 1.5rem;">Atenção</h3>
+      <p id="alertModalMessage" style="color: var(--text-muted); margin-bottom: 24px;">Mensagem.</p>
+      <button type="button" class="btn btn-primary" id="btnOkAlert" style="width: 100%;">OK</button>
+    </div>
+  </div>
+
+  <script src="../JS/components.js"></script>
+  <script type="module" src="../JS/chamada.js"></script>
+</body>
+</html>

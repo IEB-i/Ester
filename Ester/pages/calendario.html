@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendário - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Importando biblioteca FullCalendar -->
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales/pt-br.global.min.js'></script>
+  
+  <meta name="description" content="Calendário Dinâmico de Ensino e Eventos.">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F4C3A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <iebi-sidebar active-menu="calendario"></iebi-sidebar>
+
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">Ensino - Calendário</div>
+      </div>
+      <div class="page-title-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 class="page-title">Calendário de Ensino</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; margin-bottom: 0;">Gerencie eventos, aulas e reuniões da IEBI.</p>
+        </div>
+        <button id="openModalBtn" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+          <i class="ph ph-plus-circle" style="font-size: 1.2rem;"></i>
+          Novo Evento
+        </button>
+      </div>
+
+      <div class="calendar-layout">
+        <!-- Coluna Esquerda: Controles -->
+        <aside class="calendar-sidebar">
+          <div class="calendar-filters">
+            <h4 class="filter-title">Minhas Agendas</h4>
+            
+            <label class="filter-item">
+              <input type="checkbox" class="filter-checkbox" value="#27AE60" checked>
+              <span class="filter-color" style="background-color: #27AE60; border-color: #27AE60;"></span>
+              <span class="filter-label">Aula</span>
+            </label>
+            <label class="filter-item">
+              <input type="checkbox" class="filter-checkbox" value="#3498DB" checked>
+              <span class="filter-color" style="background-color: #3498DB; border-color: #3498DB;"></span>
+              <span class="filter-label">Reuniões ADM</span>
+            </label>
+            <label class="filter-item">
+              <input type="checkbox" class="filter-checkbox" value="#E74C3C" checked>
+              <span class="filter-color" style="background-color: #E74C3C; border-color: #E74C3C;"></span>
+              <span class="filter-label">Férias</span>
+            </label>
+            <label class="filter-item">
+              <input type="checkbox" class="filter-checkbox" value="#F39C12" checked>
+              <span class="filter-color" style="background-color: #F39C12; border-color: #F39C12;"></span>
+              <span class="filter-label">Tarefa Externa</span>
+            </label>
+            <label class="filter-item">
+              <input type="checkbox" class="filter-checkbox" value="#8E44AD" checked>
+              <span class="filter-color" style="background-color: #8E44AD; border-color: #8E44AD;"></span>
+              <span class="filter-label">Outros</span>
+            </label>
+          </div>
+        </aside>
+
+        <!-- Coluna Direita: Grade Principal -->
+        <div class="calendar-main card form-card">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal para adicionar Evento -->
+  <div id="eventModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header" style="align-items: flex-start; padding-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;">
+            <i class="ph-fill ph-calendar" style="font-size: 1.6rem;"></i>
+          </div>
+          <div>
+            <h3 style="margin: 0; color: #fff; font-size: 1.15rem; font-weight: 700;">Adicionar Evento</h3>
+            <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.8);">Agende um novo compromisso no calendário.</p>
+          </div>
+        </div>
+        <button id="closeModalBtn" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px; display: flex; font-size: 1.25rem;">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      <form id="eventForm" style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="form-group">
+          <label class="form-label">Título do Evento</label>
+          <input type="text" id="eventTitle" class="form-control" required placeholder="Ex: Aula de Teologia">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data</label>
+          <input type="date" id="eventDate" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de Evento</label>
+          <div class="color-picker-grid">
+            <div class="color-option">
+              <input type="radio" name="eventColor" id="color1" value="#27AE60" checked>
+              <label for="color1" class="color-swatch" style="background-color: #27AE60;"></label>
+              <label for="color1" class="color-label">Aula</label>
+            </div>
+            <div class="color-option">
+              <input type="radio" name="eventColor" id="color2" value="#3498DB">
+              <label for="color2" class="color-swatch" style="background-color: #3498DB;"></label>
+              <label for="color2" class="color-label">Reuniões ADM</label>
+            </div>
+            <div class="color-option">
+              <input type="radio" name="eventColor" id="color3" value="#E74C3C">
+              <label for="color3" class="color-swatch" style="background-color: #E74C3C;"></label>
+              <label for="color3" class="color-label">Férias</label>
+            </div>
+            <div class="color-option">
+              <input type="radio" name="eventColor" id="color4" value="#F39C12">
+              <label for="color4" class="color-swatch" style="background-color: #F39C12;"></label>
+              <label for="color4" class="color-label">Tarefa Externa</label>
+            </div>
+            <div class="color-option">
+              <input type="radio" name="eventColor" id="color5" value="#8E44AD">
+              <label for="color5" class="color-swatch" style="background-color: #8E44AD;"></label>
+              <label for="color5" class="color-label">Outros</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions" style="margin-top: 24px;">
+          <button type="button" id="cancelModalBtn" class="btn btn-secondary">Cancelar</button>
+          <button type="submit" id="saveEventBtn" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Estilos base do Modal (SaaS Moderno) -->
+  <style>
+    .modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 9999;
+      backdrop-filter: blur(3px);
+    }
+    .modal-content {
+      background: #fff; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    /* Color Picker Google Style with Labels */
+    .color-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+    .color-option { display: flex; align-items: center; gap: 8px; }
+    .color-label { font-size: 0.85rem; color: var(--text-main); cursor: pointer; font-weight: 500; }
+    .color-option input[type="radio"] { display: none; }
+    .color-swatch {
+      width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: inline-block;
+      position: relative; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .color-swatch:hover { transform: scale(1.1); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    .color-option input[type="radio"]:checked + .color-swatch::after {
+      content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      color: white; font-size: 12px; font-weight: bold;
+    }
+    
+    /* Eventos do Calendário com Barra Lateral */
+    .fc-daygrid-event {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 2px 4px !important;
+    }
+    .fc-daygrid-event:hover {
+        background: rgba(0,0,0,0.03) !important;
+    }
+    
+    /* FullCalendar Mobile adjustments */
+    @media (max-width: 768px) {
+      .fc .fc-toolbar { flex-direction: column; gap: 8px; }
+      .fc .fc-toolbar-title { font-size: 1.25rem !important; }
+      .fc .fc-button { padding: 0.4em 0.6em !important; font-size: 0.85em !important; }
+    }
+  </style>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module" src="../JS/firebase.js"></script>
+  <script type="module" src="../JS/calendario.js"></script>
+</body>
+</html>
