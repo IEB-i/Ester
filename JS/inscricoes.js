@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const pct = Math.round((presencas / totalAulas) * 100);
                         frequenciaStr = `${pct}% <span class="hide-on-mobile">(${presencas}/${totalAulas})</span>`;
                         if (pct < 75) frequenciaColor = '#E74C3C'; // Alerta de Falta
-                        else frequenciaColor = '#27AE60';
+                        else frequenciaColor = '#2760AE';
                     }
 
                     let whatsappBtn = '';
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     let acoesHtml = '';
                     if (turmaData.status === 'Encerrada') {
-                        let colorBadge = i.status_final === 'Aprovado' ? '#27AE60' : (i.status_final === 'Desistente' ? '#7F8C8D' : '#E74C3C');
+                        let colorBadge = i.status_final === 'Aprovado' ? '#2760AE' : (i.status_final === 'Desistente' ? '#7F8C8D' : '#E74C3C');
                         
                         let iconClass = 'ph-info';
                         if (i.status_final === 'Aprovado') iconClass = 'ph-check-circle';
@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         let badgeHtml = '';
                         if (aluno.status_final) {
                             if (aluno.status_final === 'Aprovado') {
-                                badgeHtml = '<span style="color:#27AE60; font-size:0.75rem; font-weight:bold;">[Aprovado]</span>';
+                                badgeHtml = '<span style="color:#2760AE; font-size:0.75rem; font-weight:bold;">[Aprovado]</span>';
                             } else if (aluno.status_final === 'Desistente') {
                                 badgeHtml = '<span style="color:#7F8C8D; font-size:0.75rem; font-weight:bold;">[Desistente]</span>';
                             } else {

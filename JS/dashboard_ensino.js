@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (alertas.length === 0) {
                 alertsList.innerHTML = `
                     <div style="padding: 24px; text-align: center; color: var(--text-muted);">
-                        <i class="ph ph-check-circle" style="font-size: 2rem; color: #27AE60;"></i>
+                        <i class="ph ph-check-circle" style="font-size: 2rem; color: #2760AE;"></i>
                         <p style="margin-top: 8px;">Tudo operando perfeitamente. Nenhum alerta.</p>
                     </div>`;
             } else {
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     datasets: [{
                         label: 'Total de Matrículas Ativas',
                         data: dataDemanda,
-                        backgroundColor: '#0F4C3A',
+                        backgroundColor: '#0F3A4C',
                         borderRadius: 4
                     }]
                 },
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            color: '#0F4C3A',
+                            color: '#0F3A4C',
                             font: {
                                 weight: 'bold',
                                 size: 14
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     labels: ['Vagas Ocupadas', 'Vagas Livres'],
                     datasets: [{
                         data: [vagasOcupadasAtivas, vagasLivres],
-                        backgroundColor: ['#27AE60', '#EAECEF'],
+                        backgroundColor: ['#2760AE', '#EAECEF'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]

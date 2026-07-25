@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     presentes: [],
                     title: 'Aula: ' + turma.nome_turma,
                     date: dataStr,
-                    color: '#27AE60',
+                    color: '#2760AE',
                     tipo: 'Aula'
                 }));
             }

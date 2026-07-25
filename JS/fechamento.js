@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if(totalAulas > 0) pct = Math.round((presencas / totalAulas) * 100);
             
             let freqStr = `${pct}% <span class="hide-on-mobile">(${presencas}/${totalAulas})</span>`;
-            let freqColor = pct >= 75 ? '#27AE60' : '#E74C3C';
+            let freqColor = pct >= 75 ? '#2760AE' : '#E74C3C';
             
             let sugStatus = pct >= 75 ? 'Aprovado' : 'Reprovado por Falta';
 

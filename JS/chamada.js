@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Altera visual do texto
         document.querySelectorAll('.toggle-label').forEach(lbl => {
             lbl.textContent = 'Presente';
-            lbl.style.color = '#27AE60';
+            lbl.style.color = '#2760AE';
         });
     };
 
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Se for uma aula nova, marca todos como presente. Se for uma aula já realizada, respeita o banco de dados.
             const isPresente = isNovaChamada ? true : presentesSet.has(aluno.id);
             const labelStr = isPresente ? 'Presente' : 'Falta';
-            const labelColor = isPresente ? '#27AE60' : '#E74C3C';
+            const labelColor = isPresente ? '#2760AE' : '#E74C3C';
 
             const card = document.createElement('div');
             card.className = 'student-card';
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             cb.addEventListener('change', (e) => {
                 if(e.target.checked) {
                     lbl.textContent = 'Presente';
-                    lbl.style.color = '#27AE60';
+                    lbl.style.color = '#2760AE';
                 } else {
                     lbl.textContent = 'Falta';
                     lbl.style.color = '#E74C3C';

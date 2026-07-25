@@ -4,7 +4,7 @@
   "start_url": "pages/dashboard.html",
   "display": "standalone",
   "background_color": "#F8F9FA",
-  "theme_color": "#0F4C3A",
+  "theme_color": "#0F3A4C",
   "icons": [
     {
       "src": "assets/favico.png",

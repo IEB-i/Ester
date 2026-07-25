@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     id: doc.id,
                     title: data.title,
                     start: data.date,
-                    color: data.color || '#27AE60',
+                    color: data.color || '#2760AE',
                     tipo: data.tipo || 'Evento'
                 });
             });
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     id: doc.id,
                     title: data.title || 'Aula',
                     start: data.date || data.data_aula,
-                    color: data.color || '#27AE60',
+                    color: data.color || '#2760AE',
                     tipo: data.tipo || 'Aula',
                     turmaId: data.turmaId
                 });
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Renderiza o texto com a barra colorida na lateral esquerda
             eventContent: function(arg) {
-                const cor = arg.event.backgroundColor || arg.event.extendedProps.color || '#27AE60';
+                const cor = arg.event.backgroundColor || arg.event.extendedProps.color || '#2760AE';
                 return {
                     html: `<div style="border-left: 4px solid ${cor}; padding-left: 6px; padding-top: 2px; padding-bottom: 2px; color: var(--text-main); font-weight: 600; font-size: 0.85em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                         ${arg.event.title}
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveBtn.disabled = true;
 
         const colorInput = document.querySelector('input[name="eventColor"]:checked');
-        const colorValue = colorInput ? colorInput.value : '#27AE60';
+        const colorValue = colorInput ? colorInput.value : '#2760AE';
 
         const novoEvento = {
             title: document.getElementById('eventTitle').value,

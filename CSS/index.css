@@ -3,13 +3,14 @@
 :root {
   --bg-color: #F8F9FA;
   --card-bg: #FFFFFF;
-  --header-bg: #0F4C3A;
+  --header-bg: #0F3A4C;
   /* Verde Escuro */
-  --sidebar-bg: #0F4C3A;
+  --sidebar-bg: #0F3A4C;
   /* Verde Escuro */
   --sidebar-hover: rgba(255, 255, 255, 0.1);
   --sidebar-text: rgba(255, 255, 255, 0.7);
-  --primary: #27AE60;
+  --primary: #2760AE;
+  --primary-light: #5DADE2;
   /* Verde Claro */
   --primary-hover: #219653;
   --text-main: #2C3E50;
@@ -203,11 +204,11 @@ body {
 }
 
 .nav-link.active {
-  color: var(--primary);
+  color: var(--primary-light);
 }
 
 .has-submenu.active>.nav-link {
-  color: var(--primary);
+  color: var(--primary-light);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -218,7 +219,7 @@ body {
 
 .sidebar-nav>.nav-menu>.nav-item:has(> .nav-link.active),
 .sidebar-nav>.nav-menu>.has-submenu.active {
-  border-left-color: var(--primary);
+  border-left-color: var(--primary-light);
 }
 
 .submenu {
@@ -242,7 +243,7 @@ body {
 .submenu .nav-link.active {
   background-color: transparent;
   border-left-color: transparent;
-  color: var(--primary);
+  color: var(--primary-light);
   font-weight: 500;
 }
 
@@ -720,7 +721,7 @@ body.sidebar-collapsed .submenu {
   display: flex;
   justify-content: space-between;
   align-items: center; /* This gets overridden to flex-start in inline styles where needed */
-  background: #0F4C3A; /* Verde Escuro do Painel/Sidebar */
+  background: #0F3A4C; /* Verde Escuro do Painel/Sidebar */
   margin: -24px -32px 24px -32px;
   padding: 24px 32px;
   border-radius: 12px 12px 0 0;
