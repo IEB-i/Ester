@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (i.contato_cache && i.contato_cache.replace(/\D/g, '').length >= 10) {
                         let phone = i.contato_cache.replace(/\D/g, '');
                         if (phone.length === 10 || phone.length === 11) phone = '55' + phone;
-                        const msg = encodeURIComponent(`Olá ${i.nome_pessoa_cache.split(' ')[0]}, tudo bem? Falando da IEBI, sobre a turma ${turmaData.nome_turma}.`);
+                        const msg = encodeURIComponent(`Olá ${i.nome_pessoa_cache.split(' ')[0]}, tudo bem? Aqui é a Josi, Secretária da Escola Bíblica da IEBI.\nGostaria de confirmar a sua inscrição na turma ${turmaData.nome_turma}.`);
                         whatsappBtn = `<a href="https://wa.me/${phone}?text=${msg}" target="_blank" class="btn-whatsapp" title="Enviar WhatsApp">
                                         <i class="ph ph-whatsapp-logo"></i>
                                       </a>`;
