@@ -131,13 +131,18 @@ class Sidebar extends HTMLElement {
                 <span class="nav-text">Eventos</span>
               </a>
             </li>
-            <li class="nav-item has-submenu ${isActive('ensino') || isMenuActive(['calendario', 'cursos', 'turmas'])}">
-              <a href="#" class="nav-link submenu-toggle ${isActive('ensino') || isMenuActive(['calendario', 'cursos', 'turmas'])}">
+            <li class="nav-item has-submenu ${isActive('ensino') || isMenuActive(['dashboard_ensino', 'calendario', 'cursos', 'turmas'])}">
+              <a href="#" class="nav-link submenu-toggle ${isActive('ensino') || isMenuActive(['dashboard_ensino', 'calendario', 'cursos', 'turmas'])}">
                 <i class="ph ph-graduation-cap nav-icon"></i>
                 <span class="nav-text">Ensino</span>
                 <span class="nav-arrow">▼</span>
               </a>
-              <ul class="submenu" ${isMenuOpen(['ensino', 'calendario', 'cursos', 'turmas'])}>
+              <ul class="submenu" ${isMenuOpen(['ensino', 'dashboard_ensino', 'calendario', 'cursos', 'turmas'])}>
+                <li>
+                  <a href="dashboard_ensino.html" class="nav-link ${isActive('dashboard_ensino')}">
+                    <i class="ph ph-chart-line-up nav-icon"></i> Dashboard
+                  </a>
+                </li>
                 <li>
                   <a href="calendario.html" class="nav-link ${isActive('calendario')}">
                     <i class="ph ph-calendar nav-icon"></i> Calendário

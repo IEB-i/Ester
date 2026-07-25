@@ -92,7 +92,7 @@
     }
 
     .btn-certificado {
-        color: var(--primary);
+        color: #2980b9;
         background: transparent;
         border: none;
         padding: 6px;
@@ -105,7 +105,7 @@
         justify-content: center;
     }
     .btn-certificado:hover {
-        background: rgba(15, 76, 58, 0.1);
+        background: rgba(41, 128, 185, 0.1);
     }
     
     /* Otimização Mobile */
@@ -115,9 +115,9 @@
         .students-table { table-layout: fixed; width: 100%; margin: 0; min-width: 0 !important; }
         .students-table th, .students-table td { padding: 12px 4px !important; }
         
-        .col-nome { width: 55%; overflow: hidden; }
-        .col-freq { width: 20%; text-align: center; }
-        .col-acao { width: 25%; text-align: center; }
+        .col-nome { width: 70%; overflow: hidden; }
+        .col-acao { width: 30%; text-align: right !important; }
+        .mobile-action-flex { justify-content: flex-end !important; }
         
         .btn-remover, .btn-certificado, .btn-whatsapp { margin: 0; }
     }
@@ -196,7 +196,7 @@
                         <th class="hide-on-mobile">Or</th>
                         <th class="col-nome">Nome do Aluno</th>
                         <th class="hide-on-mobile" style="text-align: center;">Data Inscrição</th>
-                        <th class="col-freq" style="text-align: center;">% F.</th>
+                        <th class="col-freq hide-on-mobile" style="text-align: center;">% F.</th>
                         <th class="col-acao" style="text-align: center;">Ações</th>
                     </tr>
                 </thead>
@@ -216,6 +216,21 @@
           <h3 id="alertModalTitle" style="margin-bottom: 8px; color: var(--text-main); font-size: 1.5rem;">Atenção</h3>
           <p id="alertModalMessage" style="color: var(--text-muted); margin-bottom: 24px;">Mensagem.</p>
           <button type="button" class="btn btn-primary" id="btnOkAlert" style="width: 100%;">OK, Entendi</button>
+        </div>
+      </div>
+
+      <!-- Modal de Confirmação -->
+      <div class="modal-overlay" id="confirmModal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+          <div id="confirmModalIcon" style="font-size: 4rem; color: #F39C12; margin-bottom: 16px;">
+            <i class="ph ph-warning-circle"></i>
+          </div>
+          <h3 id="confirmModalTitle" style="margin-bottom: 8px; color: var(--text-main); font-size: 1.5rem;">Atenção</h3>
+          <p id="confirmModalMessage" style="color: var(--text-muted); margin-bottom: 24px;">Mensagem de confirmação.</p>
+          <div style="display: flex; gap: 12px; justify-content: center;">
+            <button type="button" class="btn btn-secondary" id="btnCancelConfirm" style="flex: 1;">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="btnOkConfirm" style="flex: 1; background-color: #F39C12; border-color: #F39C12;">Sim, Continuar</button>
+          </div>
         </div>
       </div>
 

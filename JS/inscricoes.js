@@ -31,6 +31,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    let confirmCallback = null;
+    function showConfirmModal(message, onConfirm) {
+        const modal = document.getElementById('confirmModal');
+        const msgEl = document.getElementById('confirmModalMessage');
+        if (modal && msgEl) {
+            msgEl.textContent = message;
+            confirmCallback = onConfirm;
+            modal.classList.add('active');
+        } else {
+            if (confirm(message)) onConfirm();
+        }
+    }
+
+    const btnCancelConfirm = document.getElementById('btnCancelConfirm');
+    if(btnCancelConfirm) {
+        btnCancelConfirm.addEventListener('click', () => {
+            document.getElementById('confirmModal').classList.remove('active');
+            confirmCallback = null;
+        });
+    }
+
+    const btnOkConfirm = document.getElementById('btnOkConfirm');
+    if(btnOkConfirm) {
+        btnOkConfirm.addEventListener('click', () => {
+            document.getElementById('confirmModal').classList.remove('active');
+            if(confirmCallback) {
+                confirmCallback();
+                confirmCallback = null;
+            }
+        });
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const turmaId = urlParams.get('id');
 
@@ -200,7 +232,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                     let acoesHtml = '';
                     if (turmaData.status === 'Encerrada') {
                         let colorBadge = i.status_final === 'Aprovado' ? '#27AE60' : (i.status_final === 'Desistente' ? '#7F8C8D' : '#E74C3C');
-                        acoesHtml = `<span style="display:inline-block; padding: 4px 8px; border-radius: 4px; background: ${colorBadge}22; color: ${colorBadge}; font-size:0.8rem; font-weight:bold; margin-right: 8px;">${i.status_final || 'Encerrado'}</span>`;
+                        
+                        let iconClass = 'ph-info';
+                        if (i.status_final === 'Aprovado') iconClass = 'ph-check-circle';
+                        else if (i.status_final === 'Reprovado') iconClass = 'ph-x-circle';
+                        else if (i.status_final === 'Desistente') iconClass = 'ph-minus-circle';
+
+                        acoesHtml = `<span style="display:inline-flex; align-items:center; padding: 6px; background: transparent; color: ${colorBadge}; font-weight:bold;" title="${i.status_final || 'Encerrado'}">
+                            <i class="ph ${iconClass}" style="font-size: 1.25rem;"></i>
+                            <span class="hide-on-mobile" style="margin-left: 4px; font-size: 0.8rem;">${i.status_final || 'Encerrado'}</span>
+                        </span>`;
+                        
                         if (i.status_final === 'Aprovado') {
                             acoesHtml += `<button class="btn-certificado" onclick="window.open('certificado.html?inscricaoId=${i.id}', '_blank')" title="Certificado"><i class="ph ph-certificate"></i></button>`;
                         }
@@ -212,7 +254,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         `;
                     }
                     
-                    const botoesAcao = `<div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                    const botoesAcao = `<div class="mobile-action-flex" style="display: flex; gap: 1px; justify-content: center; align-items: center;">
                         ${whatsappBtn}
                         ${acoesHtml}
                     </div>`;
@@ -225,7 +267,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${i.contato_cache || '-'}</div>
                         </td>
                         <td class="hide-on-mobile" style="text-align: center; color: var(--text-muted);">${formatDateFromTimestamp(i.data_inscricao)}</td>
-                        <td class="col-freq" style="text-align: center; font-weight: bold; color: ${frequenciaColor};">${frequenciaStr}</td>
+                        <td class="col-freq hide-on-mobile" style="text-align: center; font-weight: bold; color: ${frequenciaColor};">${frequenciaStr}</td>
                         <td class="col-acao" style="text-align: center;">${botoesAcao}</td>
                     `;
                     listaInscritos.appendChild(tr);
@@ -313,50 +355,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(!pId) return;
         
         const vagasTotais = parseInt(turmaData.vagas_totais) || 0;
-        if (vagasTotais > 0 && inscritosAtuais >= vagasTotais) {
-            if(!confirm("Atenção: A turma já atingiu a capacidade máxima de vagas! Deseja forçar a matrícula mesmo assim?")) {
-                return;
-            }
-        }
+        
+        const efetuarMatricula = async () => {
+            btnMatricular.disabled = true;
+            btnMatricular.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
 
-        btnMatricular.disabled = true;
-        btnMatricular.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
+            try {
+                // Verificar duplicidade
+                const qDup = query(
+                    collection(db, 'igrejas', 'iebi', 'inscricoes'), 
+                    where('id_turma', '==', turmaId),
+                    where('id_pessoa', '==', pId)
+                );
+                const snapDup = await getDocs(qDup);
+                if(!snapDup.empty) {
+                    showAlertModal("Este aluno já está matriculado nesta turma!");
+                    btnMatricular.disabled = false;
+                    btnMatricular.innerHTML = '<i class="ph ph-user-plus"></i> Matricular';
+                    return;
+                }
 
-        try {
-            // Verificar duplicidade
-            const qDup = query(
-                collection(db, 'igrejas', 'iebi', 'inscricoes'), 
-                where('id_turma', '==', turmaId),
-                where('id_pessoa', '==', pId)
-            );
-            const snapDup = await getDocs(qDup);
-            if(!snapDup.empty) {
-                showAlertModal("Este aluno já está matriculado nesta turma!");
-                btnMatricular.disabled = false;
+                // Inserir
+                await addDoc(collection(db, 'igrejas', 'iebi', 'inscricoes'), {
+                    id_turma: turmaId,
+                    id_pessoa: pId,
+                    nome_pessoa_cache: pNome,
+                    contato_cache: pContato,
+                    data_inscricao: serverTimestamp(),
+                    status: 'Ativa'
+                });
+
+                // Recarregar tudo
+                buscaAluno.value = '';
+                selectedAlunoId.value = '';
+                await carregarDadosTurma();
+
+            } catch (error) {
+                console.error("Erro ao matricular:", error);
+                showAlertModal("Erro ao realizar matrícula.");
+            } finally {
                 btnMatricular.innerHTML = '<i class="ph ph-user-plus"></i> Matricular';
-                return;
             }
+        };
 
-            // Inserir
-            await addDoc(collection(db, 'igrejas', 'iebi', 'inscricoes'), {
-                id_turma: turmaId,
-                id_pessoa: pId,
-                nome_pessoa_cache: pNome,
-                contato_cache: pContato,
-                data_inscricao: serverTimestamp(),
-                status: 'Ativa'
-            });
-
-            // Recarregar tudo
-            buscaAluno.value = '';
-            selectedAlunoId.value = '';
-            await carregarDadosTurma();
-
-        } catch (error) {
-            console.error("Erro ao matricular:", error);
-            showAlertModal("Erro ao realizar matrícula.");
-        } finally {
-            btnMatricular.innerHTML = '<i class="ph ph-user-plus"></i> Matricular';
+        if (vagasTotais > 0 && inscritosAtuais >= vagasTotais) {
+            showConfirmModal("Atenção: A turma já atingiu a capacidade máxima de vagas! Deseja forçar a matrícula mesmo assim?", efetuarMatricula);
+        } else {
+            efetuarMatricula();
         }
     });
 
@@ -365,7 +410,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const idInscricao = e.currentTarget.getAttribute('data-id');
         const nomeAluno = e.currentTarget.getAttribute('data-nome');
         
-        if(confirm(`Tem certeza que deseja remover a matrícula de ${nomeAluno}?`)) {
+        showConfirmModal(`Tem certeza que deseja remover a matrícula de ${nomeAluno}?`, async () => {
             try {
                 await deleteDoc(doc(db, 'igrejas', 'iebi', 'inscricoes', idInscricao));
                 await carregarDadosTurma();
@@ -373,7 +418,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.error("Erro ao remover:", error);
                 showAlertModal("Erro ao remover matrícula.");
             }
-        }
+        });
     }
 
     // Init

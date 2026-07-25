@@ -1,6 +1,6 @@
 # 📋 Backlog do Sistema IEBI - Módulo de Ensino (v2.0)
 
-Este documento serve como mapa de desenvolvimento para as próximas etapas do módulo de Ensino. O ciclo inicial (Cursos > Turmas > Matrícula) foi concluído, e as fases abaixo definem o funcionamento operacional, pastoral e analítico de uma escola bíblica.
+Este documento serve como mapa de desenvolvimento para as próximas etapas do módulo de Ensino. O ciclo inicial (Fases 1 a 3: Cursos > Turmas > Matrícula) foi concluído e recentemente refinado com melhorias de UX (modais de confirmação customizados) e responsividade focada na experiência Mobile. As fases abaixo definem os próximos passos para o funcionamento operacional, pastoral e analítico da escola bíblica.
 
 ## Fase 4: Dashboard Gerencial de Ensino (Analytics & KPIs)
 Antes de focar na rotina de sala de aula, construir um painel visual exclusivo para os líderes de Ensino analisarem a saúde dos cursos.
