@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             listaCursosAtivos.sort((a,b) => a.nome.localeCompare(b.nome));
             
-            inputCurso.innerHTML = '<option value="" disabled selected>Selecione o curso base</option>';
+            inputCurso.innerHTML = '<option value="" selected>Nenhum (Turma sem curso base)</option>';
             listaCursosAtivos.forEach(c => {
                 inputCurso.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
             });

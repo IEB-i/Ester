@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function getStatusColor(status) {
-        if(status === 'Inscrições Abertas') return { bg: 'rgba(39, 174, 96, 0.1)', color: 'var(--primary)' };
+        if(status === 'Inscrições Abertas') return { bg: 'rgba(39, 96, 174, 0.1)', color: 'var(--primary)' };
         if(status === 'Em Andamento') return { bg: 'rgba(243, 156, 18, 0.1)', color: '#F39C12' };
         if(status === 'Concluída') return { bg: 'rgba(41, 128, 185, 0.1)', color: '#2980B9' };
         return { bg: 'rgba(231, 76, 60, 0.1)', color: '#E74C3C' };
