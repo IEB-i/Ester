@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargos e Permissões - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script type="module" src="../JS/auth-guard.js"></script>
+  <style>
+    .module-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .module-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .module-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(39, 96, 174, 0.1);
+        color: var(--primary);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+    }
+    .module-title {
+        font-weight: 600;
+        color: var(--text-main);
+    }
+    .perm-options {
+        display: flex;
+        gap: 16px;
+    }
+    .perm-radio {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+    .perm-radio input {
+        accent-color: var(--primary);
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+    #modulesContainer {
+        max-height: 280px;
+        overflow-y: auto;
+        padding-right: 8px;
+        margin-bottom: 8px;
+    }
+    .fab-btn {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        font-size: 1.6rem;
+        box-shadow: 0 4px 14px rgba(39, 96, 174, 0.4);
+        cursor: pointer;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    .fab-btn:active {
+        transform: scale(0.93);
+    }
+    @media (max-width: 768px) {
+        #btnNovoCargo {
+            display: none !important;
+        }
+        .fab-btn {
+            display: flex !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .modal-content {
+            padding: 16px 14px !important;
+        }
+        .modal-header {
+            margin: -16px -14px 16px -14px !important;
+            padding: 16px 14px !important;
+        }
+        .module-card {
+            padding: 10px 8px !important;
+            gap: 6px !important;
+        }
+        .module-info {
+            gap: 6px !important;
+        }
+        .module-icon {
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 1rem !important;
+        }
+        .module-title {
+            font-size: 0.85rem !important;
+        }
+        .perm-options select {
+            width: 100px !important;
+            font-size: 0.8rem !important;
+            padding: 4px 6px !important;
+            height: auto !important;
+        }
+    }
+  </style>
+</head>
+<body>
+  <!-- Botão Flutuante (FAB) para Mobile -->
+  <button class="fab-btn" id="btnNovoCargoMobile" title="Novo Cargo">
+    <i class="ph ph-plus"></i>
+  </button>
+  <!-- Topbar Header -->
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <!-- Sidebar Menu -->
+    <iebi-sidebar active-menu="cargos"></iebi-sidebar>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-title-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 class="page-title" style="display: flex; align-items: center; gap: 8px;"><i class="ph ph-shield-check" style="color: var(--primary);"></i> Cargos e Permissões</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; margin-bottom: 0;">Configure cargos, controle de acessos e permissões para os usuários.</p>
+        </div>
+        <button id="btnNovoCargo" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px;">
+          <i class="ph ph-plus-circle" style="font-size: 1.25rem;"></i>
+          Novo Cargo
+        </button>
+      </div>
+
+      <div class="table-responsive" style="margin-top: 24px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nome do Cargo</th>
+              <th>Módulos com Acesso</th>
+              <th style="width: 100px; text-align: center;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="listaCargos">
+            <tr><td colspan="3" style="text-align:center; padding: 20px;">Carregando cargos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal Novo/Editar Cargo -->
+  <div class="modal-overlay" id="modalCargo">
+    <div class="modal-content" style="max-width: 520px; width: calc(100% - 32px); box-sizing: border-box;">
+      <div class="modal-header" style="display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; flex-wrap: nowrap !important; width: auto;">
+        <h2 id="modalTitle" style="color: #ffffff; margin: 0; font-size: 1.15rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%;">Configurar Cargo</h2>
+        <button id="btnFecharModal" style="background: none; border: none; color: #ffffff; cursor: pointer; padding: 4px; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s; flex-shrink: 0;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      <form id="formCargo" class="form-grid">
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label">Nome do Cargo</label>
+          <input type="text" id="nomeCargo" class="form-control" required placeholder="Ex: Diácono, Ministro de Louvor">
+          <small class="form-text text-muted" style="margin-top: 4px; display: block;">Ao criar o cargo aqui, ele aparecerá na lista para ser atribuído aos usuários.</small>
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1; margin-top: 20px;">
+          <h3 style="margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Permissões por Módulo</h3>
+          <div id="modulesContainer">
+             <!-- Módulos injetados via JS -->
+          </div>
+        </div>
+
+        <div class="form-actions" style="grid-column: 1 / -1;">
+          <button type="button" class="btn btn-outline" id="btnCancelar">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btnSalvar">
+            <i class="ph ph-floppy-disk"></i> Salvar Cargo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <iebi-bottom-nav active-item="home"></iebi-bottom-nav>
+
+  <script type="module" src="../JS/components.js"></script>
+  <script type="module" src="../JS/cargos.js"></script>
+  <script type="module">
+    import { Permissions } from '../JS/permissions.js';
+    // Proteção da interface se for apenas leitura
+    Permissions.enforceReadOnly('configuracoes');
+  </script>
+</body>
+</html>

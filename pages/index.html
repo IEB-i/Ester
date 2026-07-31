@@ -1,167 +1,519 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Sistema IEBI</title>
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mural</title>
   <link rel="stylesheet" href="../CSS/index.css">
-  <style>
-    /* Estilos específicos do Dashboard */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-top: 24px;
-    }
-    .stat-card {
-      background: var(--card-bg);
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-color);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      transition: var(--transition);
-    }
-    .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-      border-color: var(--primary);
-    }
-    .stat-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: rgba(39, 96, 174, 0.1);
-      color: var(--primary);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 2rem;
-    }
-    .stat-info h3 {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    .stat-info p {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1;
-    }
-    .welcome-banner {
-      background: linear-gradient(135deg, var(--header-bg), var(--primary));
-      color: white;
-      padding: 32px;
-      border-radius: var(--radius-lg);
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 10px 20px rgba(39, 96, 174, 0.2);
-    }
-    .welcome-text h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .welcome-text p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-    .welcome-image i {
-      font-size: 7rem;
-      opacity: 0.2;
-    }
-  </style>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#0F3A4C">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <script type="module" src="../JS/auth-guard.js"></script>
+
+  <style>
+    /* Estilos Feed Unificado (Agenda + Avisos) */
+    .unified-feed-container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding-bottom: 110px !important;
+      }
+
+      .unified-feed-container {
+        padding-bottom: 60px !important;
+      }
+    }
+
+    .welcome-hero-card-small {
+      background: linear-gradient(135deg, #0F3A4C 0%, #2760AE 100%);
+      color: #FFFFFF;
+      padding: 20px 20px;
+      border-radius: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(15, 58, 76, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .welcome-hero-card-small h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .welcome-hero-card-small p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    /* Filtros em Pílula */
+    .feed-filter-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .feed-filter-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip-btn {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chip-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(39, 96, 174, 0.25);
+    }
+
+    /* Card Unificado no Feed */
+    .feed-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      position: relative;
+      transition: transform 0.15s;
+    }
+
+    /* Estilo Especial para Card de Evento da Agenda */
+    .feed-card.card-evento {
+      border-left: 5px solid var(--primary);
+      background: #F9FBFD;
+    }
+
+    .feed-card.card-aviso-fixado {
+      border-left: 5px solid #F39C12;
+      background: #FFFDF9;
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .card-type-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-type-tag.evento {
+      background: #EBF3FA;
+      color: #2760AE;
+    }
+
+    .card-type-tag.importante {
+      background: #FADBD8;
+      color: #C0392B;
+    }
+
+    .card-type-tag.ensino {
+      background: #F4ECF7;
+      color: #8E44AD;
+    }
+
+    .card-type-tag.culto {
+      background: #D5F5E3;
+      color: #27AE60;
+    }
+
+    .card-type-tag.geral {
+      background: #F2F4F4;
+      color: #5D6D7E;
+    }
+
+    .card-date-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(39, 96, 174, 0.08);
+      padding: 3px 10px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0 0 6px 0;
+      line-height: 1.35;
+    }
+
+    .card-content {
+      font-size: 0.88rem;
+      color: #4A5568;
+      line-height: 1.55;
+      margin: 0;
+      white-space: pre-line;
+    }
+
+    .card-footer-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Estado Vazio */
+    .empty-feed {
+      text-align: center;
+      padding: 48px 20px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px dashed var(--border-color);
+    }
+
+    .empty-feed i {
+      font-size: 3rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .empty-feed h3 {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      margin: 0 0 4px 0;
+      font-weight: 700;
+    }
+
+    .empty-feed p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+  </style>
 </head>
+
 <body>
 
   <!-- Topbar Header -->
   <iebi-topbar></iebi-topbar>
 
   <div class="app-container">
-    <!-- Sidebar Menu -->
-    <iebi-sidebar active-menu="dashboard"></iebi-sidebar>
+    <!-- Sidebar (Desktop) -->
+    <iebi-sidebar active-menu="home"></iebi-sidebar>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main class="main-content">
-      <div class="content-header">
-        <div class="breadcrumb">
-          Membresia / Dashboard
-        </div>
-      </div>
 
-      <div class="welcome-banner">
-        <div class="welcome-text">
-          <h1>Bem-vindo ao Sistema IEBI!</h1>
-          <p>Aqui você tem uma visão geral de todos os ministérios e atividades.</p>
-        </div>
-        <div class="welcome-image">
-          <i class="ph ph-church"></i>
-        </div>
-      </div>
+      <div class="unified-feed-container">
 
-      <div class="page-title-container">
-        <h2 class="page-title">Visão Geral</h2>
-      </div>
-
-      <div class="dashboard-grid">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="ph ph-users"></i>
+        <!-- Banner de Boas-Vindas -->
+        <div class="welcome-hero-card-small">
+          <div>
+            <h2><i class="ph ph-hands-praying"></i> Olá, <span id="welcomeUserName">Irmão(ã)</span></h2>
+            <p>Seus avisos e compromissos dos próximos 10 dias.</p>
           </div>
-          <div class="stat-info">
-            <h3>Membros Ativos</h3>
-            <p id="count-membros">Carregando...</p>
-          </div>
+          <i class="ph ph-bell-ringing" style="font-size: 2.2rem; opacity: 0.7;"></i>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="ph ph-calendar-check"></i>
-          </div>
-          <div class="stat-info">
-            <h3>Eventos do Mês</h3>
-            <p id="count-eventos">0</p>
+        <!-- Filtros em Pílulas (Agenda + Avisos) -->
+        <div class="feed-filter-chips" id="categoriesContainer">
+          <button class="chip-btn active" data-cat="Todos">Todos</button>
+          <button class="chip-btn" data-cat="Eventos">📅 Agenda / Eventos</button>
+          <button class="chip-btn" data-cat="Importante">🔥 Importante</button>
+          <button class="chip-btn" data-cat="Cultos & Eventos">⛪ Cultos</button>
+          <button class="chip-btn" data-cat="Ensino">🎓 Ensino</button>
+          <button class="chip-btn" data-cat="Geral">📢 Geral</button>
+        </div>
+
+        <!-- Feed Único Unificado -->
+        <div id="unifiedFeedContainer">
+          <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+            <i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i>
+            <p style="margin-top: 8px;">Carregando agenda e avisos...</p>
           </div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="ph ph-graduation-cap"></i>
-          </div>
-          <div class="stat-info">
-            <h3>Alunos no Ensino</h3>
-            <p id="count-alunos">320</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="ph ph-users-three"></i>
-          </div>
-          <div class="stat-info">
-            <h3>Células Ativas</h3>
-            <p id="count-celulas">0</p>
-          </div>
-        </div>
       </div>
 
     </main>
   </div>
 
+  <!-- Bottom Navigation Bar (Mobile App) -->
+  <iebi-bottom-nav active-item="home"></iebi-bottom-nav>
+
   <script src="../JS/components.js"></script>
   <script src="../JS/script.js"></script>
-  <script type="module" src="../JS/dashboard.js"></script>
+
+  <script type="module">
+    import { db } from '../JS/firebase.js';
+    import { collection, onSnapshot, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const welcomeUserName = document.getElementById('welcomeUserName');
+      const feedContainer = document.getElementById('unifiedFeedContainer');
+      const categoriesContainer = document.getElementById('categoriesContainer');
+
+      let currentCategory = 'Todos';
+      let allItems = []; // Combina Eventos e Avisos
+
+      // Obter nome do usuário logado
+      try {
+        const stored = sessionStorage.getItem('authenticated_user') || localStorage.getItem('authenticated_user');
+        if (stored) {
+          const u = JSON.parse(stored);
+          if (u.nome) welcomeUserName.textContent = u.nome.split(' ')[0];
+        }
+      } catch (e) { }
+
+      // Limpar exemplos antigos de aviso no Firestore se existirem
+      async function limparExemplosAntigos() {
+        try {
+          const snap = await getDocs(collection(db, "igrejas", "iebi", "avisos"));
+          snap.forEach(async (d) => {
+            const data = d.data();
+            if (data.titulo === "Bem-vindo ao Sistema IEBI!" || data.titulo === "Aulas da Escola Bíblica") {
+              await deleteDoc(doc(db, "igrejas", "iebi", "avisos", d.id));
+            }
+          });
+        } catch (e) { }
+      }
+
+      limparExemplosAntigos();
+
+      // Formatar Data Extensa / Relativa
+      function formatEventDate(dateStr) {
+        if (!dateStr) return 'Data a confirmar';
+        const hojeStr = new Date().toISOString().split('T')[0];
+        if (dateStr === hojeStr) return '🔥 HOJE';
+
+        const partes = dateStr.split('-');
+        if (partes.length === 3) {
+          const d = new Date(partes[0], partes[1] - 1, partes[2]);
+          const diaSemana = d.toLocaleDateString('pt-BR', { weekday: 'short' });
+          return `${diaSemana.toUpperCase()}, ${partes[2]}/${partes[1]}`;
+        }
+        return dateStr;
+      }
+
+      function formatTimestamp(timestamp) {
+        if (!timestamp) return 'Recente';
+        const d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        const dia = String(d.getDate()).padStart(2, '0');
+        const mes = String(d.getMonth() + 1).padStart(2, '0');
+        const hora = String(d.getHours()).padStart(2, '0');
+        const min = String(d.getMinutes()).padStart(2, '0');
+        return `${dia}/${mes} às ${hora}:${min}`;
+      }
+
+      // Renderizar o Feed Unificado
+      function renderFeed() {
+        let filtered = allItems;
+        if (currentCategory === 'Eventos') {
+          filtered = allItems.filter(i => i.isEvento);
+        } else if (currentCategory !== 'Todos') {
+          filtered = allItems.filter(i => i.categoria === currentCategory || (i.isEvento && currentCategory === 'Cultos & Eventos'));
+        }
+
+        if (filtered.length === 0) {
+          feedContainer.innerHTML = `
+            <div class="empty-feed">
+              <i class="ph ph-calendar-x"></i>
+              <h3>Nenhum item em "${currentCategory}"</h3>
+              <p>Os eventos da agenda e avisos publicados aparecerão aqui juntos.</p>
+            </div>
+          `;
+          return;
+        }
+
+        feedContainer.innerHTML = filtered.map(item => {
+          if (item.isEvento) {
+            // Render de Evento da Agenda
+            return `
+              <div class="feed-card card-evento" style="border-left-color: ${item.color || 'var(--primary)'};">
+                <div class="card-top-row">
+                  <span class="card-type-tag evento" style="background: rgba(39, 96, 174, 0.1); color: ${item.color || 'var(--primary)'};">
+                    <i class="ph ph-calendar-check"></i> Evento / Agenda
+                  </span>
+                  <span class="card-date-badge" style="color: ${item.color || 'var(--primary)'}; background: rgba(39, 96, 174, 0.08);">
+                    <i class="ph ph-clock"></i> ${formatEventDate(item.date)}
+                  </span>
+                </div>
+                <h3 class="card-title">${item.title}</h3>
+                ${item.description ? `<p class="card-content">${item.description}</p>` : ''}
+              </div>
+            `;
+          } else {
+            // Render de Aviso do Mural
+            let catClass = 'geral';
+            if (item.categoria === 'Importante') catClass = 'importante';
+            if (item.categoria === 'Ensino') catClass = 'ensino';
+            if (item.categoria === 'Cultos & Eventos') catClass = 'culto';
+
+            return `
+              <div class="feed-card ${item.fixado ? 'card-aviso-fixado' : ''}">
+                <div class="card-top-row">
+                  <span class="card-type-tag ${catClass}">
+                    ${item.fixado ? '📌 ' : ''}${item.categoria || 'Aviso'}
+                  </span>
+                  <span style="font-size: 0.73rem; color: var(--text-muted);">
+                    <i class="ph ph-clock"></i> ${formatTimestamp(item.criado_em)}
+                  </span>
+                </div>
+                <h3 class="card-title">${item.titulo}</h3>
+                <p class="card-content">${item.conteudo}</p>
+                <div class="card-footer-info">
+                  <span><i class="ph ph-user"></i> ${item.autor || 'Secretaria IEBI'}</span>
+                </div>
+              </div>
+            `;
+          }
+        }).join('');
+      }
+
+      // Conectar a ambas as coleções no Firestore (Avisos + Agenda) com janela estrita de 10 dias
+      async function carregarTudo() {
+        allItems = [];
+
+        const hojeDate = new Date();
+        const limite10Date = new Date(hojeDate);
+        limite10Date.setDate(limite10Date.getDate() + 10);
+
+        const hojeStr = hojeDate.toISOString().split('T')[0];
+        const limite10DiasStr = limite10Date.toISOString().split('T')[0];
+
+        // 1. Ouvir os Avisos (últimos 10 dias ou fixados)
+        onSnapshot(collection(db, "igrejas", "iebi", "avisos"), (snapshot) => {
+          const avisos = [];
+          snapshot.forEach(d => {
+            const data = d.data();
+            // Verifica data do aviso
+            let dataAvisoStr = '0000';
+            if (data.criado_em?.seconds) {
+              dataAvisoStr = new Date(data.criado_em.seconds * 1000).toISOString().split('T')[0];
+            }
+
+            // Exibe se for fixado OU se estiver na janela dos últimos 10 dias até os próximos 10 dias
+            const dezDiasAtrasDate = new Date(hojeDate);
+            dezDiasAtrasDate.setDate(dezDiasAtrasDate.getDate() - 10);
+            const dezDiasAtrasStr = dezDiasAtrasDate.toISOString().split('T')[0];
+
+            if (data.fixado || (dataAvisoStr >= dezDiasAtrasStr && dataAvisoStr <= limite10DiasStr)) {
+              avisos.push({ id: d.id, isEvento: false, source: 'avisos', ...data });
+            }
+          });
+
+          allItems = [...allItems.filter(i => i.source !== 'avisos'), ...avisos];
+          ordenarEExibir(hojeStr, limite10DiasStr);
+        });
+
+        // 2. Ouvir os Eventos da Agenda (estritamente dos próximos 10 dias)
+        onSnapshot(collection(db, "igrejas", "iebi", "calendario"), (snapshot) => {
+          const eventos = [];
+          snapshot.forEach(d => {
+            const ev = d.data();
+            if (ev.date >= hojeStr && ev.date <= limite10DiasStr) {
+              eventos.push({ id: d.id, isEvento: true, source: 'calendario', ...ev });
+            }
+          });
+
+          allItems = [...allItems.filter(i => i.source !== 'calendario'), ...eventos];
+          ordenarEExibir(hojeStr, limite10DiasStr);
+        });
+
+        // 3. Ouvir as Aulas da EBD / Ensino (estritamente dos próximos 10 dias)
+        onSnapshot(collection(db, "igrejas", "iebi", "aulas"), (snapshot) => {
+          const aulas = [];
+          snapshot.forEach(d => {
+            const data = d.data();
+            const dateStr = data.date || data.data_aula;
+            if (dateStr && dateStr >= hojeStr && dateStr <= limite10DiasStr) {
+              aulas.push({
+                id: d.id,
+                isEvento: true,
+                source: 'aulas',
+                title: data.title || 'Aula EBD',
+                date: dateStr,
+                color: data.color || '#E74C3C',
+                categoria: 'Ensino'
+              });
+            }
+          });
+
+          allItems = [...allItems.filter(i => i.source !== 'aulas'), ...aulas];
+          ordenarEExibir(hojeStr, limite10DiasStr);
+        });
+      }
+
+      function ordenarEExibir(hojeStr, limite10DiasStr) {
+        allItems.sort((a, b) => {
+          // Fixados primeiro
+          if (a.fixado && !b.fixado) return -1;
+          if (!a.fixado && b.fixado) return 1;
+
+          // Pegar data comparável
+          const dateA = a.isEvento ? a.date : (a.criado_em?.seconds ? new Date(a.criado_em.seconds * 1000).toISOString().split('T')[0] : '9999');
+          const dateB = b.isEvento ? b.date : (b.criado_em?.seconds ? new Date(b.criado_em.seconds * 1000).toISOString().split('T')[0] : '9999');
+
+          return dateA.localeCompare(dateB);
+        });
+
+        renderFeed();
+      }
+
+      // Listeners dos Filtros
+      categoriesContainer.querySelectorAll('.chip-btn').forEach(chip => {
+        chip.addEventListener('click', () => {
+          categoriesContainer.querySelectorAll('.chip-btn').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          currentCategory = chip.getAttribute('data-cat');
+          renderFeed();
+        });
+      });
+
+      carregarTudo();
+    });
+  </script>
 </body>
+
 </html>

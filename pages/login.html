@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Sistema IEBI</title>
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    body {
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .login-logo {
+      max-width: 150px;
+      margin-bottom: 24px;
+    }
+    .login-container h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+    .login-container p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .error-message {
+      color: #E74C3C;
+      font-size: 0.85rem;
+      background: rgba(231, 76, 60, 0.1);
+      padding: 10px;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      display: none;
+    }
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+    .input-with-icon input {
+      padding-left: 38px;
+      width: 100%;
+    }
+    .pin-hint {
+      font-size: 0.78rem;
+      color: var(--primary);
+      margin-top: 4px;
+      margin-bottom: 0;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <img src="../assets/Logo.png" alt="IEBI Logo" class="login-logo" onerror="this.src='https://placehold.co/150x50?text=IEBI'">
+    <h2>Acesso ao Sistema</h2>
+    <p id="loginSubtitle">Insira seu e-mail ou telefone e sua senha numérica de 6 dígitos.</p>
+
+    <div id="errorMsg" class="error-message"></div>
+
+    <form id="loginForm">
+      <div class="form-group" style="text-align: left;">
+        <label class="form-label" id="labelLoginInput">E-mail ou Telefone</label>
+        <div class="input-with-icon">
+          <i class="ph ph-user"></i>
+          <input type="text" id="emailInput" class="form-control" required placeholder="seu@email.com ou (83) 99999-9999">
+        </div>
+      </div>
+      
+      <div class="form-group" style="text-align: left; margin-top: 16px;">
+        <label class="form-label">Senha (6 números)</label>
+        <div class="input-with-icon">
+          <i class="ph ph-lock"></i>
+          <input type="password" id="senhaInput" class="form-control" required placeholder="Ex: 123456" maxlength="6" inputmode="numeric" pattern="[0-9]{6}">
+        </div>
+        <p class="pin-hint"><i class="ph ph-info"></i> Digite apenas os 6 números da sua senha.</p>
+      </div>
+
+      <div id="registerFields" style="display: none;">
+        <div class="form-group" style="text-align: left; margin-top: 16px;">
+          <label class="form-label">Seu Nome Completo</label>
+          <div class="input-with-icon">
+            <i class="ph ph-user-circle"></i>
+            <input type="text" id="nomeInput" class="form-control" placeholder="Ex: João da Silva">
+          </div>
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-top: 16px;">
+          <label class="form-label">Telefone / Celular</label>
+          <div class="input-with-icon">
+            <i class="ph ph-phone"></i>
+            <input type="tel" id="telefoneInput" class="form-control" placeholder="(83) 99999-9999">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" id="btnLogin" class="btn btn-primary" style="width: 100%; margin-top: 24px; padding: 12px; font-size: 1rem;">
+        <i class="ph ph-sign-in"></i> Entrar
+      </button>
+
+      <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;" id="btnToggleRegister">
+        Não tem conta? Cadastre-se aqui
+      </div>
+    </form>
+  </div>
+
+  <script type="module" src="../JS/login.js"></script>
+</body>
+</html>

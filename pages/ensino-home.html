@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ensino - Sistema IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F3A4C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <script type="module" src="../JS/auth-guard.js"></script>
+  <style>
+    .ensino-menu-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .ensino-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 10px;
+    }
+
+    .ensino-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+      transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.15),
+                  box-shadow 0.22s ease,
+                  border-color 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ensino-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(15, 76, 58, 0.08);
+      border-color: rgba(39, 96, 174, 0.2);
+    }
+
+    .ensino-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary) 0%, #27AE60 100%);
+    }
+
+    .ensino-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .ensino-card:hover .ensino-icon-wrapper {
+      transform: scale(1.08);
+    }
+
+    .ensino-card.admin-card .ensino-icon-wrapper {
+      background: rgba(39, 96, 174, 0.1);
+      color: var(--primary);
+    }
+
+    .ensino-card.professor-card .ensino-icon-wrapper {
+      background: rgba(39, 174, 96, 0.1);
+      color: #27AE60;
+    }
+
+    .ensino-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .ensino-card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+
+    .ensino-card-btn {
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .ensino-card.admin-card .ensino-card-btn {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .ensino-card.admin-card:hover .ensino-card-btn {
+      background: var(--primary-hover);
+    }
+
+    .ensino-card.professor-card .ensino-card-btn {
+      background: #27AE60;
+      color: #FFFFFF;
+    }
+
+    .ensino-card.professor-card:hover .ensino-card-btn {
+      background: #1E9651;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding-bottom: 110px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Topbar Header -->
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <iebi-sidebar active-menu="ensino"></iebi-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">Ensino - Início</div>
+      </div>
+
+      <div class="ensino-menu-container">
+        <div style="margin-bottom: 8px;">
+          <h2 class="page-title" style="display: flex; align-items: center; gap: 10px;">
+            <i class="ph ph-graduation-cap" style="color: var(--primary);"></i> Ensino IEBI
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">Escolha a área do sistema de ensino que deseja acessar.</p>
+        </div>
+
+        <div class="ensino-grid">
+          <!-- Card 1: Dashboard / Administrativo -->
+          <a href="dashboard_ensino.html" class="ensino-card admin-card">
+            <div class="ensino-icon-wrapper">
+              <i class="ph ph-chart-line-up"></i>
+            </div>
+            <h3 class="ensino-card-title">Painel Administrativo</h3>
+            <p class="ensino-card-desc">Visualize indicadores gerais, turmas em andamento, matrículas de alunos, frequência e relatórios consolidados.</p>
+            <span class="ensino-card-btn">
+              Acessar Painel <i class="ph ph-arrow-right"></i>
+            </span>
+          </a>
+
+          <!-- Card 2: Área do Professor -->
+          <a href="#" id="professorCard" class="ensino-card professor-card">
+            <div class="ensino-icon-wrapper">
+              <i class="ph ph-chalkboard-teacher"></i>
+            </div>
+            <h3 class="ensino-card-title">Área do Professor</h3>
+            <p class="ensino-card-desc">Faça o controle de chamada das aulas, visualize cronogramas de sua turma, registre notas e avaliações de alunos.</p>
+            <span class="ensino-card-btn" id="professorCardBtn">
+              Acessar Área <i class="ph ph-arrow-right"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Alert Modal Customizado -->
+  <div class="alert-modal-overlay" id="alertModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 40, 50, 0.5); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 20000;">
+    <div class="alert-modal-content" style="background: #FFFFFF; border-radius: 18px; padding: 24px; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+      <div id="alertModalIcon" style="font-size: 3rem; margin-bottom: 12px; color: #E74C3C;"><i class="ph ph-warning-circle"></i></div>
+      <h3 style="margin-bottom: 8px; color: var(--text-main); font-size: 1.15rem; font-weight: 700;">Acesso Restrito</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4;">Você precisa estar cadastrado como professor titular ou substituto em uma turma ativa para acessar esta área.</p>
+      <button id="btnOkAlert" class="btn btn-primary" style="width: 100%; justify-content: center;">OK</button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Menu -->
+  <iebi-bottom-nav active-item="ensino"></iebi-bottom-nav>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module">
+    import { db } from '../JS/firebase.js';
+    import { collection, doc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+    const professorCard = document.getElementById('professorCard');
+    const professorCardBtn = document.getElementById('professorCardBtn');
+    const alertModal = document.getElementById('alertModal');
+    const btnOkAlert = document.getElementById('btnOkAlert');
+
+    // Recupera dados do usuário autenticado no localStorage ou sessionStorage
+    const userDataStr = sessionStorage.getItem('authenticated_user') || localStorage.getItem('authenticated_user');
+    const currentUser = userDataStr ? JSON.parse(userDataStr) : null;
+
+    btnOkAlert.addEventListener('click', () => {
+      alertModal.style.display = 'none';
+    });
+
+    professorCard.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (!currentUser) {
+        alert("Sessão inválida ou expirada. Por favor, refaça o login.");
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const originalBtnHtml = professorCardBtn.innerHTML;
+      professorCardBtn.innerHTML = 'Verificando... <i class="ph ph-spinner ph-spin"></i>';
+      professorCardBtn.style.pointerEvents = 'none';
+
+      try {
+        // 1. Verifica se é Admin
+        const userRole = currentUser.role || sessionStorage.getItem('user_role') || localStorage.getItem('user_role');
+        if (userRole === 'admin') {
+          window.location.href = 'professor-area.html';
+          return;
+        }
+
+        // 2. Busca dados atualizados do usuário pelo ID (id salvo no login)
+        const userId = currentUser.id || currentUser.uid;
+        if (userId) {
+          const userDoc = await getDoc(doc(db, 'igrejas', 'iebi', 'usuarios', userId));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const userNomeNorm = (userData.nome || '').trim().toUpperCase();
+
+            // 3. Busca turmas ativas para validar se é titular ou substituto
+            const turmasSnap = await getDocs(collection(db, 'igrejas', 'iebi', 'turmas'));
+            let isProfessor = false;
+
+            turmasSnap.forEach(d => {
+              const data = d.data();
+              if (data.status !== 'Cancelada' && data.status !== 'Encerrada') {
+                const profNorm = (data.professor || '').trim().toUpperCase();
+                const subNorm = (data.professor_substituto || '').trim().toUpperCase();
+                if (profNorm === userNomeNorm || subNorm === userNomeNorm) {
+                  isProfessor = true;
+                }
+              }
+            });
+
+            if (isProfessor) {
+              window.location.href = 'professor-area.html';
+              return;
+            }
+          }
+        }
+
+        // Se não for professor, exibe modal de erro
+        professorCardBtn.innerHTML = originalBtnHtml;
+        professorCardBtn.style.pointerEvents = 'auto';
+        alertModal.style.display = 'flex';
+
+      } catch (err) {
+        console.error("Erro ao validar professor:", err);
+        professorCardBtn.innerHTML = originalBtnHtml;
+        professorCardBtn.style.pointerEvents = 'auto';
+        alert("Ocorreu um erro ao verificar permissões.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -29,6 +29,27 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 58, 76, 0.2) transparent;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 58, 76, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 58, 76, 0.4);
 }
 
 body {
@@ -51,7 +72,7 @@ body {
   left: 0;
   right: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .topbar-brand {
@@ -93,9 +114,39 @@ body {
 }
 
 .topbar-title {
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  font-size: 1.05rem;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 340px;
+}
+
+@media (max-width: 768px) {
+  .topbar-brand {
+    display: none !important;
+  }
+  .topbar-content {
+    padding: 0 14px !important;
+  }
+  .topbar-left {
+    gap: 10px !important;
+    flex: 1;
+    min-width: 0;
+  }
+  .topbar-title {
+    font-size: 0.98rem !important;
+    font-weight: 700 !important;
+    max-width: calc(100vw - 150px) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .topbar-right {
+    gap: 12px !important;
+  }
 }
 
 .topbar-right {
@@ -123,6 +174,69 @@ body {
   padding: 2px 6px;
   border-radius: 12px;
   font-weight: bold;
+}
+
+/* Dropdown de Perfil do Topbar */
+.profile-dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 140px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 6px 0;
+  display: none;
+  z-index: 1100;
+  animation: profileDropdownFade 0.15s ease-out;
+}
+
+.profile-dropdown-menu.show {
+  display: block;
+}
+
+.profile-dropdown-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 16px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.profile-dropdown-menu .dropdown-item:hover {
+  background-color: rgba(231, 76, 60, 0.08);
+  color: #E74C3C;
+}
+
+.profile-dropdown-menu .dropdown-item i {
+  font-size: 1.1rem;
+}
+
+@keyframes profileDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Layout */
@@ -677,6 +791,12 @@ body.sidebar-collapsed .submenu {
 /* =========================================
    Modal (Offcanvas/Flutuante)
 ========================================= */
+body.modal-open {
+  overflow: hidden !important;
+  height: 100vh !important;
+  touch-action: none !important;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1194,8 +1314,17 @@ body.sidebar-collapsed .submenu {
 @media (max-width: 768px) {
     /* Topbar */
     .topbar-brand { display: none; }
-    .topbar-content { padding: 0 16px; width: 100%; }
-    .topbar-title { display: none; }
+    .topbar-content { padding: 0 12px; width: 100%; }
+    .topbar-title {
+        display: block !important;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
+        color: #FFFFFF !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: calc(100vw - 140px) !important;
+    }
     
     /* Layout Setup */
     .app-container {
@@ -1319,4 +1448,317 @@ body.sidebar-collapsed .submenu {
 /* Bloqueia rolagem do fundo da pagina quando houver modal aberto */
 body:has(.modal-overlay.active) {
     overflow: hidden;
+}
+
+/* =========================================
+   Mobile App Navigation (Bottom Bar) - Mobile Only (Estilo Fintech)
+========================================= */
+@media (min-width: 769px) {
+  .bottom-nav, iebi-bottom-nav {
+    display: none !important;
+  }
+}
+
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 64px !important;
+    background: #FFFFFF !important;
+    border-radius: 20px 20px 0 0 !important;
+    box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    z-index: 10000 !important;
+    padding: 0 6px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    text-decoration: none;
+    font-size: 0.68rem;
+    font-weight: 600;
+    gap: 3px;
+    flex: 1;
+    height: 100%;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  /* Indicador Superior no Item Ativo (Tracinho no topo igual a imagem) */
+  .bottom-nav .nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 24px;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 0 0 3px 3px;
+  }
+
+  .bottom-nav .nav-item.active {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .bottom-nav .nav-item i {
+    font-size: 1.35rem;
+  }
+
+  /* Botão Central — Círculo Azul Claro, Ícone Azul Marinho */
+  .bottom-nav .nav-item-center {
+    position: relative;
+    top: -16px;
+    z-index: 10001;
+    flex: 0 0 64px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    height: auto !important;
+    gap: 0 !important;
+  }
+
+  .bottom-nav .nav-item-center::before {
+    display: none !important;
+  }
+
+  .bottom-nav .center-fab-circle {
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    min-height: 54px !important;
+    border-radius: 50% !important;
+    background: #0D2B4E !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 3px 10px rgba(100, 160, 230, 0.3);
+    border: none !important;
+    transition: transform 0.18s ease;
+    flex-shrink: 0;
+    overflow: visible !important;
+  }
+
+  /* Ícone: azul marinho, visível, centralizado */
+  .bottom-nav .nav-item-center .center-fab-circle i.ph {
+    font-size: 1.5rem !important;
+    color: #0D2B4E !important;
+    display: block !important;
+    line-height: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .bottom-nav .nav-item-center:active .center-fab-circle {
+    transform: scale(0.92);
+  }
+
+  .bottom-nav .nav-item-center.active .center-fab-circle {
+    background: #A8D4F7 !important;
+    box-shadow: 0 4px 14px rgba(74, 159, 238, 0.4);
+  }
+
+  .bottom-nav .nav-item-center > span {
+    font-size: 0.68rem !important;
+    font-weight: 600 !important;
+    color: #64748B !important;
+    margin-top: 4px !important;
+    text-decoration: none !important;
+    display: block !important;
+  }
+}
+
+/* Feed / Mural de Avisos Mobile Styles */
+.avisos-feed-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+.welcome-hero-card {
+  background: linear-gradient(135deg, var(--header-bg), #1a5670);
+  color: white;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(15, 58, 76, 0.15);
+}
+
+.welcome-hero-card .hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.welcome-hero-card h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.welcome-hero-card p {
+  font-size: 0.95rem;
+  opacity: 0.92;
+  line-height: 1.5;
+}
+
+.welcome-hero-card .hero-bg-icon {
+  position: absolute;
+  right: -15px;
+  bottom: -20px;
+  font-size: 8rem;
+  opacity: 0.12;
+  color: white;
+  pointer-events: none;
+}
+
+/* Tags de Categoria do Mural de Avisos */
+.avisos-categories {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+}
+
+.avisos-categories::-webkit-scrollbar {
+  display: none;
+}
+
+.category-chip {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.category-chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Cards de Aviso */
+.aviso-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: var(--transition);
+  position: relative;
+}
+
+.aviso-card.fixado {
+  border-left: 4px solid var(--primary);
+  background: #FAFDFB;
+}
+
+.aviso-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.badge-aviso {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.badge-aviso.geral { background: rgba(39, 96, 174, 0.12); color: var(--primary); }
+.badge-aviso.importante { background: rgba(231, 76, 60, 0.12); color: #E74C3C; }
+.badge-aviso.ensino { background: rgba(155, 89, 182, 0.12); color: #8E44AD; }
+.badge-aviso.culto { background: rgba(46, 204, 113, 0.12); color: #27AE60; }
+
+.aviso-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.aviso-body {
+  font-size: 0.9rem;
+  color: #4A5568;
+  line-height: 1.55;
+  margin-bottom: 14px;
+  white-space: pre-line;
+}
+
+.aviso-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding-top: 10px;
+}
+
+.aviso-footer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Floating Action Button (FAB) para Criar Novo Aviso */
+.fab-novo-aviso {
+  position: fixed;
+  bottom: 75px;
+  right: 20px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 28px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(39, 96, 174, 0.35);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 990;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.fab-novo-aviso:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
 }

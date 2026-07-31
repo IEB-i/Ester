@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inputNome = document.getElementById('turmaNome');
     const inputStatus = document.getElementById('turmaStatus');
     const inputProfessor = document.getElementById('turmaProfessor');
+    const inputProfessorSubstituto = document.getElementById('turmaProfessorSubstituto');
     const inputDataInicio = document.getElementById('turmaDataInicio');
     const inputDataFim = document.getElementById('turmaDataFim');
     const inputHorario = document.getElementById('turmaHorario');
@@ -72,10 +73,63 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 400); // 400ms debounce
     });
 
-    // Fechar dropdown ao clicar fora
+    // Autocomplete do Professor Substituto
+    const substitutoDropdown = document.getElementById('substitutoAutocomplete');
+    let timeoutSubId = null;
+
+    inputProfessorSubstituto.addEventListener('input', (e) => {
+        const val = e.target.value.toUpperCase();
+        clearTimeout(timeoutSubId);
+        
+        if (val.length < 3) {
+            substitutoDropdown.style.display = 'none';
+            return;
+        }
+
+        timeoutSubId = setTimeout(async () => {
+            try {
+                const q = query(
+                    collection(db, 'igrejas', 'iebi', 'pessoas'),
+                    where('nome', '>=', val),
+                    where('nome', '<=', val + '\uf8ff'),
+                    limit(5)
+                );
+                
+                const snap = await getDocs(q);
+                substitutoDropdown.innerHTML = '';
+                
+                if(snap.empty) {
+                    substitutoDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum cadastro encontrado</div>';
+                    substitutoDropdown.style.display = 'block';
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    const div = document.createElement('div');
+                    div.className = 'autocomplete-item';
+                    div.textContent = data.nome;
+                    div.onclick = () => {
+                        inputProfessorSubstituto.value = data.nome;
+                        substitutoDropdown.style.display = 'none';
+                    };
+                    substitutoDropdown.appendChild(div);
+                });
+                
+                substitutoDropdown.style.display = 'block';
+            } catch(err) {
+                console.error("Erro no autocomplete:", err);
+            }
+        }, 400); // 400ms debounce
+    });
+
+    // Fechar dropdowns ao clicar fora
     document.addEventListener('click', (e) => {
         if(e.target !== inputProfessor && e.target !== professorDropdown) {
             if(professorDropdown) professorDropdown.style.display = 'none';
+        }
+        if(e.target !== inputProfessorSubstituto && e.target !== substitutoDropdown) {
+            if(substitutoDropdown) substitutoDropdown.style.display = 'none';
         }
     });
 
@@ -113,6 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             inputNome.value = editData.nome_turma;
             inputStatus.value = editData.status;
             inputProfessor.value = editData.professor;
+            inputProfessorSubstituto.value = editData.professor_substituto || '';
             inputDataInicio.value = editData.data_inicio;
             inputDataFim.value = editData.data_fim;
             inputHorario.value = editData.horario;
@@ -129,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             turmaEmEdicaoId = null;
             form.reset();
+            inputProfessorSubstituto.value = '';
             document.querySelectorAll('input[name="turmaDias"]').forEach(cb => cb.checked = false);
             modalTitle.textContent = 'Abrir Nova Turma';
             inputStatus.value = 'Inscrições Abertas';
@@ -241,7 +297,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h3 class="turma-title">${turma.nome_turma}</h3>
                 
                 <div class="turma-meta">
-                    <div><i class="ph ph-chalkboard-teacher"></i> ${turma.professor}</div>
+                    <div><i class="ph ph-chalkboard-teacher"></i> Titular: ${turma.professor}</div>
+                    ${turma.professor_substituto ? `<div><i class="ph ph-user"></i> Substituto: ${turma.professor_substituto}</div>` : ''}
                     <div><i class="ph ph-calendar"></i> ${formatDateBr(turma.data_inicio)} a ${formatDateBr(turma.data_fim)}</div>
                     <div><i class="ph ph-clock"></i> ${turma.horario}</div>
                 </div>
@@ -374,6 +431,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             nome_turma: inputNome.value,
             status: inputStatus.value,
             professor: inputProfessor.value,
+            professor_substituto: inputProfessorSubstituto.value.trim(),
             data_inicio: inputDataInicio.value,
             data_fim: inputDataFim.value,
             horario: inputHorario.value,

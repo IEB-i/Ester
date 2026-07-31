@@ -266,10 +266,17 @@
             </div>
           </div>
 
-          <div class="form-group" style="position: relative;">
-            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Professor / Instrutor</label>
-            <input type="text" id="turmaProfessor" class="form-control" required placeholder="Nome do responsável por ministrar" autocomplete="off" style="padding: 6px 10px; font-size: 0.85rem;">
-            <div id="professorAutocomplete" class="autocomplete-dropdown"></div>
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group" style="position: relative;">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Professor / Instrutor</label>
+              <input type="text" id="turmaProfessor" class="form-control" required placeholder="Nome do responsável por ministrar" autocomplete="off" style="padding: 6px 10px; font-size: 0.85rem;">
+              <div id="professorAutocomplete" class="autocomplete-dropdown"></div>
+            </div>
+            <div class="form-group" style="position: relative;">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Professor Substituto (Opcional)</label>
+              <input type="text" id="turmaProfessorSubstituto" class="form-control" placeholder="Nome do substituto" autocomplete="off" style="padding: 6px 10px; font-size: 0.85rem;">
+              <div id="substitutoAutocomplete" class="autocomplete-dropdown"></div>
+            </div>
           </div>
           
           <div class="form-grid keep-2-cols" style="grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -317,6 +324,7 @@
     </div>
   </div>
 
+  <iebi-bottom-nav active-item="ensino"></iebi-bottom-nav>
   <script src="../JS/components.js"></script>
   <script src="../JS/script.js"></script>
   <script type="module" src="../JS/firebase.js"></script>
