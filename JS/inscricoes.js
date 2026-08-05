@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const msgEl = document.getElementById('confirmModalMessage');
         if (modal && msgEl) {
             msgEl.textContent = message;
+            msgEl.style.whiteSpace = 'pre-line';
             confirmCallback = onConfirm;
             modal.classList.add('active');
         } else {
@@ -93,6 +94,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     const selectedAlunoNome = document.getElementById('selectedAlunoNome');
     const selectedAlunoContato = document.getElementById('selectedAlunoContato');
     const btnMatricular = document.getElementById('btnMatricular');
+
+    let listaPessoas = [];
+    let carregandoPessoas = false;
+
+    async function carregarListaPessoas() {
+        if (listaPessoas.length > 0 || carregandoPessoas) return;
+        carregandoPessoas = true;
+        try {
+            const pessoasRef = collection(db, 'igrejas', 'iebi', 'pessoas');
+            const snap = await getDocs(pessoasRef);
+            listaPessoas = [];
+            snap.forEach(d => {
+                listaPessoas.push({ id: d.id, ...d.data() });
+            });
+        } catch (err) {
+            console.error("Erro ao carregar pessoas para busca:", err);
+        } finally {
+            carregandoPessoas = false;
+        }
+    }
 
     // Funções utilitárias
     function formatDateBr(dateString) {
@@ -287,8 +308,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Autocomplete
     let timeoutId = null;
-    buscaAluno.addEventListener('input', (e) => {
-        const val = e.target.value.toUpperCase();
+    buscaAluno.addEventListener('input', async (e) => {
+        const val = e.target.value.toLowerCase().trim();
         clearTimeout(timeoutId);
         
         selectedAlunoId.value = '';
@@ -299,45 +320,47 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        timeoutId = setTimeout(async () => {
-            try {
-                const q = query(
-                    collection(db, 'igrejas', 'iebi', 'pessoas'),
-                    where('nome', '>=', val),
-                    where('nome', '<=', val + '\uf8ff'),
-                    limit(5)
-                );
-                
-                const snap = await getDocs(q);
-                alunoAutocomplete.innerHTML = '';
-                
-                if(snap.empty) {
-                    alunoAutocomplete.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum aluno encontrado</div>';
-                    alunoAutocomplete.style.display = 'block';
-                    return;
-                }
+        // Garantir que a lista esteja carregada
+        if (listaPessoas.length === 0) {
+            alunoAutocomplete.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;"><i class="ph ph-spinner ph-spin"></i> Carregando banco de dados...</div>';
+            alunoAutocomplete.style.display = 'block';
+            await carregarListaPessoas();
+        }
 
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    const div = document.createElement('div');
-                    div.className = 'autocomplete-item';
-                    div.innerHTML = `<strong>${data.nome}</strong><br><span style="font-size:0.8rem; color:gray;">${data.celular || 'Sem número'}</span>`;
-                    div.onclick = () => {
-                        buscaAluno.value = data.nome;
-                        selectedAlunoId.value = doc.id;
-                        selectedAlunoNome.value = data.nome;
-                        selectedAlunoContato.value = data.celular || '';
-                        alunoAutocomplete.style.display = 'none';
-                        btnMatricular.disabled = false;
-                    };
-                    alunoAutocomplete.appendChild(div);
-                });
-                
+        timeoutId = setTimeout(() => {
+            // Filtrar localmente por qualquer parte do nome ignorando acentos
+            const normalizeStr = str => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            const valNormalized = normalizeStr(val);
+            
+            const filtrados = listaPessoas.filter(p => 
+                normalizeStr(p.nome).includes(valNormalized)
+            ).slice(0, 10);
+
+            alunoAutocomplete.innerHTML = '';
+            
+            if(filtrados.length === 0) {
+                alunoAutocomplete.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum aluno encontrado</div>';
                 alunoAutocomplete.style.display = 'block';
-            } catch(err) {
-                console.error("Erro no autocomplete:", err);
+                return;
             }
-        }, 400);
+
+            filtrados.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-item';
+                div.innerHTML = `<strong>${p.nome}</strong><br><span style="font-size:0.8rem; color:gray;">${p.celular || 'Sem número'}</span>`;
+                div.onclick = () => {
+                    buscaAluno.value = p.nome;
+                    selectedAlunoId.value = p.id;
+                    selectedAlunoNome.value = p.nome;
+                    selectedAlunoContato.value = p.celular || '';
+                    alunoAutocomplete.style.display = 'none';
+                    btnMatricular.disabled = false;
+                };
+                alunoAutocomplete.appendChild(div);
+            });
+            
+            alunoAutocomplete.style.display = 'block';
+        }, 150);
     });
 
     document.addEventListener('click', (e) => {
@@ -356,52 +379,120 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         const vagasTotais = parseInt(turmaData.vagas_totais) || 0;
         
-        const efetuarMatricula = async () => {
-            btnMatricular.disabled = true;
-            btnMatricular.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
+        btnMatricular.disabled = true;
+        btnMatricular.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
 
-            try {
-                // Verificar duplicidade
-                const qDup = query(
-                    collection(db, 'igrejas', 'iebi', 'inscricoes'), 
-                    where('id_turma', '==', turmaId),
-                    where('id_pessoa', '==', pId)
-                );
-                const snapDup = await getDocs(qDup);
-                if(!snapDup.empty) {
-                    showAlertModal("Este aluno já está matriculado nesta turma!");
-                    btnMatricular.disabled = false;
-                    btnMatricular.innerHTML = '<i class="ph ph-user-plus"></i> Matricular';
-                    return;
-                }
-
-                // Inserir
-                await addDoc(collection(db, 'igrejas', 'iebi', 'inscricoes'), {
-                    id_turma: turmaId,
-                    id_pessoa: pId,
-                    nome_pessoa_cache: pNome,
-                    contato_cache: pContato,
-                    data_inscricao: serverTimestamp(),
-                    status: 'Ativa'
-                });
-
-                // Recarregar tudo
-                buscaAluno.value = '';
-                selectedAlunoId.value = '';
-                await carregarDadosTurma();
-
-            } catch (error) {
-                console.error("Erro ao matricular:", error);
-                showAlertModal("Erro ao realizar matrícula.");
-            } finally {
+        try {
+            // 1. Verificar duplicidade na turma atual
+            const qDup = query(
+                collection(db, 'igrejas', 'iebi', 'inscricoes'), 
+                where('id_turma', '==', turmaId),
+                where('id_pessoa', '==', pId)
+            );
+            const snapDup = await getDocs(qDup);
+            if(!snapDup.empty) {
+                showAlertModal("Este aluno já está matriculado nesta turma!");
+                btnMatricular.disabled = false;
                 btnMatricular.innerHTML = '<i class="ph ph-user-plus"></i> Matricular';
+                return;
             }
-        };
 
-        if (vagasTotais > 0 && inscritosAtuais >= vagasTotais) {
-            showConfirmModal("Atenção: A turma já atingiu a capacidade máxima de vagas! Deseja forçar a matrícula mesmo assim?", efetuarMatricula);
-        } else {
-            efetuarMatricula();
+            // 2. Verificar se o aluno já está matriculado em outro curso ativo
+            const outrosCursos = [];
+            const qInsc = query(
+                collection(db, 'igrejas', 'iebi', 'inscricoes'),
+                where('id_pessoa', '==', pId)
+            );
+            const snapInsc = await getDocs(qInsc);
+            
+            const diasNomes = {
+                "1": "Segunda-feira",
+                "2": "Terça-feira",
+                "3": "Quarta-feira",
+                "4": "Quinta-feira",
+                "5": "Sexta-feira",
+                "6": "Sábado",
+                "0": "Domingo"
+            };
+
+            for (const docInsc of snapInsc.docs) {
+                const dataInsc = docInsc.data();
+                if (dataInsc.id_turma === turmaId) continue; // ignora a turma atual
+
+                const turmaRef = doc(db, 'igrejas', 'iebi', 'turmas', dataInsc.id_turma);
+                const snapTurma = await getDoc(turmaRef);
+                if (snapTurma.exists()) {
+                    const dataTurma = snapTurma.data();
+                    const statusLower = (dataTurma.status || '').toLowerCase();
+                    const isAtiva = statusLower.includes('inscr') || statusLower.includes('andamento') || statusLower === 'ativa' || statusLower === 'ativo';
+                    if (isAtiva) {
+                        const dias = (dataTurma.dias_semana || []).map(d => diasNomes[d] || d).join(', ');
+                        outrosCursos.push({
+                            nomeCurso: dataTurma.nome_curso_cache || 'Sem Curso Base',
+                            nomeTurma: dataTurma.nome_turma || 'Sem Nome',
+                            dias: dias || 'Não informado',
+                            horario: dataTurma.horario || 'Não informado'
+                        });
+                    }
+                }
+            }
+
+            const efetuarMatricula = async () => {
+                btnMatricular.disabled = true;
+                btnMatricular.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
+
+                try {
+                    // Inserir
+                    await addDoc(collection(db, 'igrejas', 'iebi', 'inscricoes'), {
+                        id_turma: turmaId,
+                        id_pessoa: pId,
+                        nome_pessoa_cache: pNome,
+                        contato_cache: pContato,
+                        data_inscricao: serverTimestamp(),
+                        status: 'Ativa'
+                    });
+
+                    // Recarregar tudo
+                    buscaAluno.value = '';
+                    selectedAlunoId.value = '';
+                    await carregarDadosTurma();
+
+                } catch (error) {
+                    console.error("Erro ao matricular:", error);
+                    showAlertModal("Erro ao realizar matrícula.");
+                } finally {
+                    btnMatricular.innerHTML = '<i class="ph ph-user-plus"></i> Matricular';
+                }
+            };
+
+            const verificarVagasEProsseguir = () => {
+                if (vagasTotais > 0 && inscritosAtuais >= vagasTotais) {
+                    showConfirmModal("Atenção: A turma já atingiu a capacidade máxima de vagas! Deseja forçar a matrícula mesmo assim?", efetuarMatricula);
+                } else {
+                    efetuarMatricula();
+                }
+            };
+
+            if (outrosCursos.length > 0) {
+                let msg = `Atenção: Este aluno já está matriculado em outro(s) curso(s) ativo(s):\n`;
+                outrosCursos.forEach(c => {
+                    msg += `\n• ${c.nomeCurso} (${c.nomeTurma}):\n  Dias: ${c.dias}\n  Horário: ${c.horario}\n`;
+                });
+                msg += `\nDeseja realizar esta nova matrícula mesmo assim?`;
+                
+                showConfirmModal(msg, verificarVagasEProsseguir);
+            } else {
+                verificarVagasEProsseguir();
+            }
+
+        } catch (error) {
+            console.error("Erro na verificação/matrícula:", error);
+            showAlertModal("Erro ao realizar a matrícula.");
+        } finally {
+            // Se o confirmModal for ativado, ele exibirá a popup e precisamos re-habilitar o botão Matricular
+            // para que não fique travado se o usuário fechar/cancelar
+            btnMatricular.disabled = false;
+            btnMatricular.innerHTML = '<i class="ph ph-user-plus"></i> Matricular';
         }
     });
 
@@ -423,6 +514,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Init
     carregarDadosTurma();
+    carregarListaPessoas();
 
     // ==========================================
     // LOGICA DE TRANSFERENCIA DE ALUNOS (LOTE)

@@ -1762,3 +1762,10 @@ body:has(.modal-overlay.active) {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
 }
+
+/* Regras globais de impressão para ocultar elementos de navegação e controles */
+@media print {
+  iebi-topbar, iebi-sidebar, iebi-bottom-nav, .topbar, .sidebar, .bottom-bar, .breadcrumb, .content-header, .btn-ajuda, .btn {
+    display: none !important;
+  }
+}

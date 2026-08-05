@@ -23,12 +23,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     let listaTurmas = [];
     let listaCursosAtivos = [];
 
+    let listaPessoas = [];
+    let carregandoPessoas = false;
+
+    async function carregarListaPessoas() {
+        if (listaPessoas.length > 0 || carregandoPessoas) return;
+        carregandoPessoas = true;
+        try {
+            const pessoasRef = collection(db, 'igrejas', 'iebi', 'pessoas');
+            const snap = await getDocs(pessoasRef);
+            listaPessoas = [];
+            snap.forEach(d => {
+                listaPessoas.push({ id: d.id, ...d.data() });
+            });
+        } catch (err) {
+            console.error("Erro ao carregar pessoas para busca:", err);
+        } finally {
+            carregandoPessoas = false;
+        }
+    }
+
     // Autocomplete do Professor
     const professorDropdown = document.getElementById('professorAutocomplete');
     let timeoutId = null;
 
-    inputProfessor.addEventListener('input', (e) => {
-        const val = e.target.value.toUpperCase();
+    inputProfessor.addEventListener('input', async (e) => {
+        const val = e.target.value.toLowerCase().trim();
         clearTimeout(timeoutId);
         
         if (val.length < 3) {
@@ -36,49 +56,51 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        timeoutId = setTimeout(async () => {
-            try {
-                const q = query(
-                    collection(db, 'igrejas', 'iebi', 'pessoas'),
-                    where('nome', '>=', val),
-                    where('nome', '<=', val + '\uf8ff'),
-                    limit(5)
-                );
-                
-                const snap = await getDocs(q);
-                professorDropdown.innerHTML = '';
-                
-                if(snap.empty) {
-                    professorDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum cadastro encontrado</div>';
-                    professorDropdown.style.display = 'block';
-                    return;
-                }
+        // Garantir que a lista esteja carregada
+        if (listaPessoas.length === 0) {
+            professorDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;"><i class="ph ph-spinner ph-spin"></i> Carregando...</div>';
+            professorDropdown.style.display = 'block';
+            await carregarListaPessoas();
+        }
 
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    const div = document.createElement('div');
-                    div.className = 'autocomplete-item';
-                    div.textContent = data.nome;
-                    div.onclick = () => {
-                        inputProfessor.value = data.nome;
-                        professorDropdown.style.display = 'none';
-                    };
-                    professorDropdown.appendChild(div);
-                });
-                
+        timeoutId = setTimeout(() => {
+            // Filtrar localmente por qualquer parte do nome ignorando acentos
+            const normalizeStr = str => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            const valNormalized = normalizeStr(val);
+            
+            const filtrados = listaPessoas.filter(p => 
+                normalizeStr(p.nome).includes(valNormalized)
+            ).slice(0, 10);
+
+            professorDropdown.innerHTML = '';
+            
+            if(filtrados.length === 0) {
+                professorDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum cadastro encontrado</div>';
                 professorDropdown.style.display = 'block';
-            } catch(err) {
-                console.error("Erro no autocomplete:", err);
+                return;
             }
-        }, 400); // 400ms debounce
+
+            filtrados.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-item';
+                div.textContent = p.nome;
+                div.onclick = () => {
+                    inputProfessor.value = p.nome;
+                    professorDropdown.style.display = 'none';
+                };
+                professorDropdown.appendChild(div);
+            });
+            
+            professorDropdown.style.display = 'block';
+        }, 150);
     });
 
     // Autocomplete do Professor Substituto
     const substitutoDropdown = document.getElementById('substitutoAutocomplete');
     let timeoutSubId = null;
 
-    inputProfessorSubstituto.addEventListener('input', (e) => {
-        const val = e.target.value.toUpperCase();
+    inputProfessorSubstituto.addEventListener('input', async (e) => {
+        const val = e.target.value.toLowerCase().trim();
         clearTimeout(timeoutSubId);
         
         if (val.length < 3) {
@@ -86,41 +108,43 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        timeoutSubId = setTimeout(async () => {
-            try {
-                const q = query(
-                    collection(db, 'igrejas', 'iebi', 'pessoas'),
-                    where('nome', '>=', val),
-                    where('nome', '<=', val + '\uf8ff'),
-                    limit(5)
-                );
-                
-                const snap = await getDocs(q);
-                substitutoDropdown.innerHTML = '';
-                
-                if(snap.empty) {
-                    substitutoDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum cadastro encontrado</div>';
-                    substitutoDropdown.style.display = 'block';
-                    return;
-                }
+        // Garantir que a lista esteja carregada
+        if (listaPessoas.length === 0) {
+            substitutoDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;"><i class="ph ph-spinner ph-spin"></i> Carregando...</div>';
+            substitutoDropdown.style.display = 'block';
+            await carregarListaPessoas();
+        }
 
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    const div = document.createElement('div');
-                    div.className = 'autocomplete-item';
-                    div.textContent = data.nome;
-                    div.onclick = () => {
-                        inputProfessorSubstituto.value = data.nome;
-                        substitutoDropdown.style.display = 'none';
-                    };
-                    substitutoDropdown.appendChild(div);
-                });
-                
+        timeoutSubId = setTimeout(() => {
+            // Filtrar localmente por qualquer parte do nome ignorando acentos
+            const normalizeStr = str => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            const valNormalized = normalizeStr(val);
+            
+            const filtrados = listaPessoas.filter(p => 
+                normalizeStr(p.nome).includes(valNormalized)
+            ).slice(0, 10);
+
+            substitutoDropdown.innerHTML = '';
+            
+            if(filtrados.length === 0) {
+                substitutoDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum cadastro encontrado</div>';
                 substitutoDropdown.style.display = 'block';
-            } catch(err) {
-                console.error("Erro no autocomplete:", err);
+                return;
             }
-        }, 400); // 400ms debounce
+
+            filtrados.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-item';
+                div.textContent = p.nome;
+                div.onclick = () => {
+                    inputProfessorSubstituto.value = p.nome;
+                    substitutoDropdown.style.display = 'none';
+                };
+                substitutoDropdown.appendChild(div);
+            });
+            
+            substitutoDropdown.style.display = 'block';
+        }, 150);
     });
 
     // Fechar dropdowns ao clicar fora
@@ -230,9 +254,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function getStatusClass(status) {
-        if(status === 'Inscrições Abertas') return 'badge-abertas';
-        if(status === 'Em Andamento') return 'badge-andamento';
-        if(status === 'Concluída') return 'badge-concluida';
+        if(!status) return 'badge-cancelada';
+        const s = status.toLowerCase();
+        if(s.includes('inscr')) return 'badge-abertas';
+        if(s.includes('andamento')) return 'badge-andamento';
+        if(s.includes('conclu') || s.includes('encerr')) return 'badge-concluida';
         return 'badge-cancelada';
     }
 
@@ -255,7 +281,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
         turmasParaExibir = listaTurmas.filter(t => {
-            const matchesStatus = allowedStatuses.has(t.status);
+            const statusLower = (t.status || '').toLowerCase();
+            let isAllowed = false;
+            allowedStatuses.forEach(allowed => {
+                const allowedLower = allowed.toLowerCase();
+                if (allowedLower.includes('inscr') && statusLower.includes('inscr')) isAllowed = true;
+                else if (allowedLower.includes('andamento') && statusLower.includes('andamento')) isAllowed = true;
+                else if (allowedLower.includes('encerr') && (statusLower.includes('encerr') || statusLower.includes('conclu'))) isAllowed = true;
+                else if (allowedLower.includes('cancel') && statusLower.includes('cancel')) isAllowed = true;
+                else if (allowedLower === statusLower) isAllowed = true;
+            });
+            const matchesStatus = isAllowed;
             const nomeTurma = (t.nome_turma || '').toLowerCase();
             const nomeCurso = (t.nome_curso_cache || '').toLowerCase();
             const matchesSearch = searchTerm === '' || nomeTurma.includes(searchTerm) || nomeCurso.includes(searchTerm);
@@ -276,8 +312,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         turmasGrid.innerHTML = '';
         
-        // Sort by start date asc
-        turmasParaExibir.sort((a,b) => new Date(a.data_inicio) - new Date(b.data_inicio));
+        // Sort alphabetically by class name
+        turmasParaExibir.sort((a, b) => (a.nome_turma || '').localeCompare(b.nome_turma || '', 'pt-BR', { sensitivity: 'base' }));
 
         turmasParaExibir.forEach(turma => {
             const card = document.createElement('div');
@@ -477,5 +513,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     carregarCursosBase().then(() => {
         carregarTurmas();
+        carregarListaPessoas();
     });
 });
