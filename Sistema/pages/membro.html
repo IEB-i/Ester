@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil do Membro - Sistema IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 992px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .profile-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-top: 4px solid var(--sidebar-bg);
+    }
+
+    .profile-avatar-container {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0F3A4C 0%, #27AE60 100%);
+      color: #fff;
+      font-size: 2.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 4px 14px rgba(15, 58, 76, 0.2);
+    }
+
+    .profile-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .profile-sub {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .profile-badges {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .badge-pill {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-primary { background: #0F3A4C; color: #fff; }
+    .badge-success { background: #27AE60; color: #fff; }
+    .badge-info { background: #2980B9; color: #fff; }
+    .badge-secondary { background: #7F8C8D; color: #fff; }
+
+    .quick-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .info-group-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 0;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border-color);
+      font-size: 0.88rem;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .info-value { font-weight: 600; color: var(--text-main); text-align: right; }
+
+    /* Tabs para Coluna Direita */
+    .tab-header {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 18px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: #0F3A4C;
+    }
+
+    .tab-btn.active {
+      color: #0F3A4C;
+      border-bottom-color: #27AE60;
+    }
+
+    /* Linha do Tempo (Timeline) */
+    .timeline {
+      position: relative;
+      padding-left: 36px;
+      margin-top: 16px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      bottom: 10px;
+      width: 2px;
+      background: var(--border-color);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .timeline-icon {
+      position: absolute;
+      left: -36px;
+      top: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #0F3A4C;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      box-shadow: 0 0 0 4px var(--card-bg), 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .timeline-icon.cadastro { background: #27AE60; }
+    .timeline-icon.batismo { background: #2980B9; }
+    .timeline-icon.curso { background: #8E44AD; }
+    .timeline-icon.conclusao { background: #F39C12; }
+    .timeline-icon.celula { background: #E67E22; }
+
+    .timeline-content {
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .timeline-date {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #27AE60;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .timeline-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .timeline-description {
+      font-size: 0.88rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+  </style>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F3A4C">
+<script type="module" src="../JS/auth-guard.js"></script>
+</head>
+<body>
+  <iebi-topbar></iebi-topbar>
+  <div class="app-container">
+    <iebi-sidebar active-menu="procurar-cadastro"></iebi-sidebar>
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb" style="display:flex; align-items:center; gap:8px;">
+          <a href="procurar-cadastro.html" style="color: var(--text-muted); text-decoration: none;"><i class="ph ph-arrow-left"></i> Voltar para Pesquisa</a>
+          <span>/ Perfil do Membro</span>
+        </div>
+      </div>
+
+      <div class="profile-grid">
+        <!-- Coluna da Esquerda: Resumo do Membro -->
+        <div class="profile-card" id="profileCardLeft">
+          <div class="profile-avatar-container">
+            <div class="profile-avatar" id="avatarInitials">--</div>
+            <h2 class="profile-name" id="lblNomeMembro">Carregando...</h2>
+            <div class="profile-sub" id="lblSubtituloMembro">IEBI - Membresia</div>
+            <div class="profile-badges" id="containerBadges">
+              <span class="badge-pill badge-primary">Carregando...</span>
+            </div>
+          </div>
+
+          <!-- Ações Rápidas -->
+          <div class="quick-actions">
+            <a id="btnEditarMembro" href="#" class="btn btn-primary" style="text-decoration:none; display:flex; justify-content:center; align-items:center; gap:8px;">
+              <i class="ph ph-pencil-simple"></i> Editar Cadastro
+            </a>
+            <a id="btnWhatsapp" href="#" target="_blank" class="btn btn-secondary" style="text-decoration:none; display:flex; justify-content:center; align-items:center; gap:8px; color: #27AE60; border-color: #27AE60;">
+              <i class="ph ph-whatsapp-logo" style="font-size: 1.1rem;"></i> Contatar WhatsApp
+            </a>
+            <a id="btnCarteirinha" href="#" class="btn btn-secondary" style="text-decoration:none; display:flex; justify-content:center; align-items:center; gap:8px;">
+              <i class="ph ph-identification-card"></i> Ver Carteirinha
+            </a>
+          </div>
+
+          <!-- Informações de Contato -->
+          <div class="info-group-title">Contato & Redes</div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-phone"></i> Celular</span>
+            <span class="info-value" id="lblCelular">--</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-envelope"></i> E-mail</span>
+            <span class="info-value" id="lblEmail">--</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-instagram-logo"></i> Instagram</span>
+            <span class="info-value" id="lblInstagram">--</span>
+          </div>
+
+          <!-- Informações Pessoais -->
+          <div class="info-group-title">Dados Pessoais</div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-calendar-blank"></i> Nascimento</span>
+            <span class="info-value" id="lblNascimento">--</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-heart"></i> Estado Civil</span>
+            <span class="info-value" id="lblEstadoCivil">--</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-drop"></i> Tipo Sanguíneo</span>
+            <span class="info-value" id="lblTipoSanguineo">--</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-first-aid"></i> Doador Órgãos</span>
+            <span class="info-value" id="lblDoadorOrgaos">--</span>
+          </div>
+
+          <!-- Endereço -->
+          <div class="info-group-title">Endereço</div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-map-pin"></i> Cidade/UF</span>
+            <span class="info-value" id="lblCidadeUf">--</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="ph ph-house"></i> Bairro</span>
+            <span class="info-value" id="lblBairro">--</span>
+          </div>
+        </div>
+
+        <!-- Coluna da Direita: Timeline e Abas -->
+        <div class="profile-card" style="padding: 24px;">
+          <div class="tab-header">
+            <button class="tab-btn active" data-tab="tab-timeline" id="btnTabTimeline">
+              <i class="ph ph-clock-counter-clockwise"></i> Linha do Tempo
+            </button>
+            <button class="tab-btn" data-tab="tab-cursos" id="btnTabCursos">
+              <i class="ph ph-graduation-cap"></i> Cursos & Ensino
+            </button>
+            <button class="tab-btn" data-tab="tab-dados" id="btnTabDados">
+              <i class="ph ph-file-text"></i> Dados Completos
+            </button>
+          </div>
+
+          <!-- Conteúdo Aba 1: Timeline -->
+          <div id="tab-timeline" class="tab-pane">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="font-size: 1.1rem; color: #0F3A4C; font-weight: 700; margin: 0;">Linha do Tempo Espiritual & Histórico</h3>
+              <span style="font-size: 0.8rem; color: var(--text-muted);" id="lblTotalEventos">0 eventos registrados</span>
+            </div>
+            
+            <div class="timeline" id="containerTimeline">
+              <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+                <i class="ph ph-spinner ph-spin" style="font-size: 1.8rem;"></i><br>Carregando histórico do membro...
+              </div>
+            </div>
+          </div>
+
+          <!-- Conteúdo Aba 2: Cursos -->
+          <div id="tab-cursos" class="tab-pane" style="display: none;">
+            <h3 style="font-size: 1.1rem; color: #0F3A4C; font-weight: 700; margin-bottom: 16px;">Turmas & Histórico Acadêmico</h3>
+            <div class="table-responsive">
+              <table class="data-table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th>Curso / Turma</th>
+                    <th>Período</th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="text-align: center;">Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="listaCursosMembro">
+                  <tr><td colspan="4" style="text-align:center; padding: 30px; color: var(--text-muted);">Carregando inscrições...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Conteúdo Aba 3: Dados Completos -->
+          <div id="tab-dados" class="tab-pane" style="display: none;">
+            <h3 style="font-size: 1.1rem; color: #0F3A4C; font-weight: 700; margin-bottom: 20px;">Ficha Cadastral Detalhada</h3>
+            <div id="containerDadosCompletos">
+              <!-- Preenchido via JS em seções -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <iebi-bottom-nav active-item="membresia"></iebi-bottom-nav>
+  <script src="../JS/components.js"></script>
+  <script type="module" src="../JS/membro.js"></script>
+</body>
+</html>

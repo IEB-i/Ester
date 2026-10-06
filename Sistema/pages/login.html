@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Acesso · IEBI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100dvh;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 8px 32px rgba(0, 0, 0, 0.08);
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .logo img {
+      height: 56px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+    }
+
+    /* ── Heading ── */
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    /* ── Alert ── */
+    #loginAlert {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    /* ── Field ── */
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      color: #0f172a;
+      background: #fff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none;
+    }
+
+    .field input::placeholder {
+      color: #6b7280;
+    }
+
+    .field input:focus {
+      border-color: #064e3b;
+      box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.12);
+    }
+
+    /* Remover ícone nativo de senha do Edge/IE */
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear {
+      display: none;
+    }
+
+    .field-hint {
+      font-size: 0.76rem;
+      color: #6b7280;
+      margin-top: 5px;
+    }
+
+    /* ── Password Wrapper ── */
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .toggle-password:focus-visible {
+      outline: 2px solid #064e3b;
+      border-radius: 4px;
+    }
+
+    /* ── Button ── */
+    #btnKeypadEnter {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      background: #059669;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    #btnKeypadEnter:hover:not(:disabled) {
+      background: #047857;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+    }
+
+    #btnKeypadEnter:active:not(:disabled) {
+      transform: scale(.98);
+    }
+    
+    #btnKeypadEnter:focus-visible {
+      outline: 2px solid #059669;
+      outline-offset: 2px;
+    }
+
+    #btnKeypadEnter:disabled {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .footer a {
+      color: #064e3b;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 400px) {
+      .card {
+        padding: 36px 24px 28px;
+      }
+    }
+
+    /* ── Modal ── */
+    dialog.modal-content {
+      margin: auto;
+      background: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 32px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    dialog.modal-content::backdrop {
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    #welcomeName {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .modal-content p {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+
+    #btnContinue {
+      width: 100%;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #fff;
+      background: #064e3b;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    #btnContinue:hover {
+      background: #065f46;
+    }
+
+    #btnContinue:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+
+    <!-- Logo -->
+    <div class="logo">
+      <img src="../assets/Logo.png" alt="IEBI – Igreja Evangélica Batista de Intermares" width="200" height="56" />
+    </div>
+
+    <!-- Heading -->
+    <h1>Acesso Restrito</h1>
+    <p class="subtitle">Acesse sua conta com seu celular e senha.</p>
+
+    <!-- Alert -->
+    <div id="loginAlert" role="alert" aria-live="assertive">
+      <span id="loginAlertText"></span>
+    </div>
+
+    <!-- Form -->
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="telefoneInput">Celular (com DDD)</label>
+        <input id="telefoneInput" type="tel" inputmode="numeric" placeholder="(00) 90000-0000" autocomplete="tel"
+          maxlength="16" required autofocus />
+        <p id="phoneCounter" class="field-hint"></p>
+      </div>
+
+      <div class="field">
+        <label for="pinInput">Senha (4 dígitos)</label>
+        <div class="password-wrapper">
+          <input id="pinInput" type="password" inputmode="numeric" placeholder="••••" maxlength="4" pattern="\d{4}"
+            autocomplete="current-password" required />
+          <button type="button" class="toggle-password" id="togglePasswordBtn" aria-label="Mostrar senha">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 14 Q 12 4 20 14"></path>
+              <circle cx="12" cy="14" r="2.5"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="btnKeypadEnter" disabled>Entrar</button>
+    </form>
+
+    <p class="footer">
+      Precisa de ajuda?
+      <a href="https://wa.me/5583993979455?text=Ol%C3%A1.%20Estou%20com%20problemas%20no%20login%2C%20pode%20me%20ajudar%3F"
+        target="_blank" rel="noopener noreferrer">Fale com o Administrador</a>
+    </p>
+
+  </div>
+
+  <!-- Modal -->
+  <dialog id="welcomeModal" class="modal-content" aria-labelledby="welcomeName">
+    <div class="modal-icon">👋</div>
+    <h2 id="welcomeName">Olá!</h2>
+    <p>Acesso autorizado com sucesso.</p>
+    <button id="btnContinue">Continuar</button>
+  </dialog>
+
+  <script type="module" src="../JS/login.js"></script>
+</body>
+
+</html>

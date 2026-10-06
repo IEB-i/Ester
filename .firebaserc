@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "iebi-2e84e"
+  },
+  "targets": {
+    "iebi-2e84e": {
+      "hosting": {
+        "sistema": [
+          "iebi-sistema"
+        ],
+        "site": [
+          "iebi-2e84e"
+        ]
+      }
+    }
+  }
+}

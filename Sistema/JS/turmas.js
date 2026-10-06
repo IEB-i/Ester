@@ -1,0 +1,803 @@
+import { db, collection, addDoc, doc, updateDoc, serverTimestamp } from './firebase.js';
+import { getDocs, query, where, limit, deleteDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const turmasGrid = document.getElementById('turmasGrid');
+    const modal = document.getElementById('turmaModal');
+    const form = document.getElementById('turmaForm');
+    const modalTitle = document.getElementById('modalTitleText');
+    const saveBtn = document.getElementById('saveTurmaBtn');
+    
+    // Form Inputs
+    const inputCurso = document.getElementById('turmaCurso');
+    const inputNome = document.getElementById('turmaNome');
+    const inputStatus = document.getElementById('turmaStatus');
+    const inputProfessor = document.getElementById('turmaProfessor');
+    const inputProfessorSubstituto = document.getElementById('turmaProfessorSubstituto');
+    const inputDataInicio = document.getElementById('turmaDataInicio');
+    const inputDataFim = document.getElementById('turmaDataFim');
+    const inputHorario = document.getElementById('turmaHorario');
+    const inputVagas = document.getElementById('turmaVagas');
+    const inputInscricaoSite = document.getElementById('turmaInscricaoSite');
+
+    let turmaEmEdicaoId = null;
+    let listaTurmas = [];
+    let listaCursosAtivos = [];
+
+    let listaPessoas = [];
+    let carregandoPessoas = false;
+
+    async function carregarListaPessoas() {
+        if (listaPessoas.length > 0 || carregandoPessoas) return;
+        carregandoPessoas = true;
+        try {
+            const pessoasRef = collection(db, 'igrejas', 'iebi', 'pessoas');
+            const snap = await getDocs(pessoasRef);
+            listaPessoas = [];
+            snap.forEach(d => {
+                listaPessoas.push({ id: d.id, ...d.data() });
+            });
+        } catch (err) {
+            console.error("Erro ao carregar pessoas para busca:", err);
+        } finally {
+            carregandoPessoas = false;
+        }
+    }
+
+    // Autocomplete do Professor
+    const professorDropdown = document.getElementById('professorAutocomplete');
+    let timeoutId = null;
+
+    inputProfessor.addEventListener('input', async (e) => {
+        const val = e.target.value.toLowerCase().trim();
+        clearTimeout(timeoutId);
+        
+        if (val.length < 3) {
+            professorDropdown.style.display = 'none';
+            return;
+        }
+
+        // Garantir que a lista esteja carregada
+        if (listaPessoas.length === 0) {
+            professorDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;"><i class="ph ph-spinner ph-spin"></i> Carregando...</div>';
+            professorDropdown.style.display = 'block';
+            await carregarListaPessoas();
+        }
+
+        timeoutId = setTimeout(() => {
+            // Filtrar localmente por qualquer parte do nome ignorando acentos
+            const normalizeStr = str => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            const valNormalized = normalizeStr(val);
+            
+            const filtrados = listaPessoas.filter(p => 
+                normalizeStr(p.nome).includes(valNormalized)
+            ).slice(0, 10);
+
+            professorDropdown.innerHTML = '';
+            
+            if(filtrados.length === 0) {
+                professorDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum cadastro encontrado</div>';
+                professorDropdown.style.display = 'block';
+                return;
+            }
+
+            filtrados.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-item';
+                div.textContent = p.nome;
+                div.onclick = () => {
+                    inputProfessor.value = p.nome;
+                    professorDropdown.style.display = 'none';
+                };
+                professorDropdown.appendChild(div);
+            });
+            
+            professorDropdown.style.display = 'block';
+        }, 150);
+    });
+
+    // Autocomplete do Professor Substituto
+    const substitutoDropdown = document.getElementById('substitutoAutocomplete');
+    let timeoutSubId = null;
+
+    inputProfessorSubstituto.addEventListener('input', async (e) => {
+        const val = e.target.value.toLowerCase().trim();
+        clearTimeout(timeoutSubId);
+        
+        if (val.length < 3) {
+            substitutoDropdown.style.display = 'none';
+            return;
+        }
+
+        // Garantir que a lista esteja carregada
+        if (listaPessoas.length === 0) {
+            substitutoDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;"><i class="ph ph-spinner ph-spin"></i> Carregando...</div>';
+            substitutoDropdown.style.display = 'block';
+            await carregarListaPessoas();
+        }
+
+        timeoutSubId = setTimeout(() => {
+            // Filtrar localmente por qualquer parte do nome ignorando acentos
+            const normalizeStr = str => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            const valNormalized = normalizeStr(val);
+            
+            const filtrados = listaPessoas.filter(p => 
+                normalizeStr(p.nome).includes(valNormalized)
+            ).slice(0, 10);
+
+            substitutoDropdown.innerHTML = '';
+            
+            if(filtrados.length === 0) {
+                substitutoDropdown.innerHTML = '<div style="padding:10px; color:gray; font-size: 0.85rem; text-align: center;">Nenhum cadastro encontrado</div>';
+                substitutoDropdown.style.display = 'block';
+                return;
+            }
+
+            filtrados.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-item';
+                div.textContent = p.nome;
+                div.onclick = () => {
+                    inputProfessorSubstituto.value = p.nome;
+                    substitutoDropdown.style.display = 'none';
+                };
+                substitutoDropdown.appendChild(div);
+            });
+            
+            substitutoDropdown.style.display = 'block';
+        }, 150);
+    });
+
+    // Fechar dropdowns ao clicar fora
+    document.addEventListener('click', (e) => {
+        if(e.target !== inputProfessor && e.target !== professorDropdown) {
+            if(professorDropdown) professorDropdown.style.display = 'none';
+        }
+        if(e.target !== inputProfessorSubstituto && e.target !== substitutoDropdown) {
+            if(substitutoDropdown) substitutoDropdown.style.display = 'none';
+        }
+    });
+
+    // Carregar lista de cursos ativos para o dropdown
+    async function carregarCursosBase() {
+        inputCurso.innerHTML = '<option value="">Carregando...</option>';
+        try {
+            const cursosRef = collection(db, 'igrejas', 'iebi', 'cursos');
+            const snap = await getDocs(cursosRef);
+            listaCursosAtivos = [];
+            snap.forEach(d => {
+                const c = d.data();
+                if (c.status === 'Ativo') {
+                    listaCursosAtivos.push({ id: d.id, nome: c.nome });
+                }
+            });
+            
+            listaCursosAtivos.sort((a,b) => a.nome.localeCompare(b.nome));
+            
+            inputCurso.innerHTML = '<option value="" selected>Nenhum (Turma sem curso base)</option>';
+            listaCursosAtivos.forEach(c => {
+                inputCurso.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+            });
+        } catch (e) {
+            console.error("Erro ao carregar cursos base:", e);
+            inputCurso.innerHTML = '<option value="">Erro ao carregar cursos</option>';
+        }
+    }
+
+    function openModal(editData = null) {
+        if (editData) {
+            turmaEmEdicaoId = editData.id;
+            modalTitle.textContent = 'Editar Turma';
+            inputCurso.value = editData.id_curso;
+            inputNome.value = editData.nome_turma;
+            inputStatus.value = editData.status;
+            inputProfessor.value = editData.professor;
+            inputProfessorSubstituto.value = editData.professor_substituto || '';
+            inputDataInicio.value = editData.data_inicio;
+            inputDataFim.value = editData.data_fim;
+            inputHorario.value = editData.horario;
+            inputVagas.value = editData.vagas_totais;
+            if(inputInscricaoSite) inputInscricaoSite.checked = editData.inscricao_site === true;
+            
+            // Set checkboxes
+            document.querySelectorAll('input[name="turmaDias"]').forEach(cb => cb.checked = false);
+            if(editData.dias_semana) {
+                editData.dias_semana.forEach(d => {
+                    const cb = document.querySelector(`input[name="turmaDias"][value="${d}"]`);
+                    if(cb) cb.checked = true;
+                });
+            }
+        } else {
+            turmaEmEdicaoId = null;
+            form.reset();
+            inputProfessorSubstituto.value = '';
+            document.querySelectorAll('input[name="turmaDias"]').forEach(cb => cb.checked = false);
+            modalTitle.textContent = 'Abrir Nova Turma';
+            inputStatus.value = 'Inscrições Abertas';
+            if(inputInscricaoSite) inputInscricaoSite.checked = false;
+        }
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        setTimeout(() => form.reset(), 300);
+    }
+
+    document.getElementById('btnNovaTurma').addEventListener('click', () => openModal());
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+
+    async function carregarTurmas() {
+        turmasGrid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+              <i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i>
+              <p style="margin-top: 12px;">Carregando turmas...</p>
+            </div>
+        `;
+        
+        listaTurmas = [];
+        try {
+            const ref = collection(db, 'igrejas', 'iebi', 'turmas');
+            const snap = await getDocs(ref);
+            
+            snap.forEach((doc) => {
+                listaTurmas.push({ id: doc.id, ...doc.data() });
+            });
+            
+            renderizarTurmas();
+        } catch (error) {
+            console.error("Erro ao carregar turmas:", error);
+            turmasGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #E74C3C;">
+                  <i class="ph ph-warning-circle" style="font-size: 2rem;"></i>
+                  <p style="margin-top: 12px;">Erro ao carregar as turmas.</p>
+                </div>
+            `;
+        }
+    }
+
+    function getStatusClass(status) {
+        if(!status) return 'badge-cancelada';
+        const s = status.toLowerCase();
+        if(s.includes('inscr')) return 'badge-abertas';
+        if(s.includes('andamento')) return 'badge-andamento';
+        if(s.includes('conclu') || s.includes('encerr')) return 'badge-concluida';
+        return 'badge-cancelada';
+    }
+
+    function formatDateBr(dateString) {
+        if(!dateString) return '';
+        const [y, m, d] = dateString.split('-');
+        return `${d}/${m}/${y}`;
+    }
+
+    function renderizarTurmas() {
+        let turmasParaExibir = [];
+        
+        const filterCheckboxes = document.querySelectorAll('.chk-status-filter');
+        let allowedStatuses = new Set();
+        filterCheckboxes.forEach(cb => {
+            if(cb.checked) allowedStatuses.add(cb.value);
+        });
+
+        const searchInput = document.getElementById('searchTurmaInput');
+        const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+        turmasParaExibir = listaTurmas.filter(t => {
+            const statusLower = (t.status || '').toLowerCase();
+            let isAllowed = false;
+            allowedStatuses.forEach(allowed => {
+                const allowedLower = allowed.toLowerCase();
+                if (allowedLower.includes('inscr') && statusLower.includes('inscr')) isAllowed = true;
+                else if (allowedLower.includes('andamento') && statusLower.includes('andamento')) isAllowed = true;
+                else if (allowedLower.includes('encerr') && (statusLower.includes('encerr') || statusLower.includes('conclu'))) isAllowed = true;
+                else if (allowedLower.includes('cancel') && statusLower.includes('cancel')) isAllowed = true;
+                else if (allowedLower === statusLower) isAllowed = true;
+            });
+            const matchesStatus = isAllowed;
+            const nomeTurma = (t.nome_turma || '').toLowerCase();
+            const nomeCurso = (t.nome_curso_cache || '').toLowerCase();
+            const matchesSearch = searchTerm === '' || nomeTurma.includes(searchTerm) || nomeCurso.includes(searchTerm);
+            
+            return matchesStatus && matchesSearch;
+        });
+
+        if (turmasParaExibir.length === 0) {
+            turmasGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 40px; background: var(--card-bg); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
+                  <i class="ph ph-users-three" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 16px;"></i>
+                  <h3 style="color: var(--text-main); font-weight: 600; font-size: 1.1rem; margin-bottom: 8px;">Nenhuma turma encontrada</h3>
+                  <p style="color: var(--text-muted); font-size: 0.9rem;">Tente ajustar os filtros ou abra uma nova turma.</p>
+                </div>
+            `;
+            return;
+        }
+
+        turmasGrid.innerHTML = '';
+        
+        // Sort alphabetically by class name
+        turmasParaExibir.sort((a, b) => (a.nome_turma || '').localeCompare(b.nome_turma || '', 'pt-BR', { sensitivity: 'base' }));
+
+        turmasParaExibir.forEach(turma => {
+            const card = document.createElement('div');
+            card.className = 'turma-card';
+            
+            const badgeClass = getStatusClass(turma.status);
+            
+            // Calculo da barra de vagas (Fase atual tem inscricoes zeradas)
+            const vagasOcupadas = turma.vagas_ocupadas || 0;
+            const vagasTotais = parseInt(turma.vagas_totais) || 0;
+            const ocupacao = vagasTotais > 0 ? (vagasOcupadas / vagasTotais) * 100 : 0;
+            const barraCor = ocupacao >= 100 ? '#E74C3C' : 'var(--primary)';
+            
+            card.innerHTML = `
+                <span class="turma-badge ${badgeClass}">${turma.status}</span>
+                <p class="turma-curso">${turma.nome_curso_cache || 'Curso'}</p>
+                <h3 class="turma-title">${turma.nome_turma}</h3>
+                
+                <div class="turma-meta">
+                    <div><i class="ph ph-chalkboard-teacher"></i> Titular: ${turma.professor}</div>
+                    ${turma.professor_substituto ? `<div><i class="ph ph-user"></i> Substituto: ${turma.professor_substituto}</div>` : ''}
+                    <div><i class="ph ph-calendar"></i> ${formatDateBr(turma.data_inicio)} a ${formatDateBr(turma.data_fim)}</div>
+                    <div><i class="ph ph-clock"></i> ${turma.horario}</div>
+                </div>
+                
+                <div class="turma-vagas">
+                    <div class="vagas-header">
+                        <span>Ocupação das Vagas</span>
+                        <span>${vagasOcupadas}/${vagasTotais}</span>
+                    </div>
+                    <div class="vagas-bar">
+                        <div class="vagas-fill" style="width: ${Math.min(ocupacao, 100)}%; background: ${barraCor};"></div>
+                    </div>
+                </div>
+                
+                <div class="turma-actions" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary btn-editar" style="flex: 1; padding: 10px 0;" data-id="${turma.id}" title="Editar">
+                        <i class="ph ph-pencil-simple"></i> Editar
+                    </button>
+                    <button class="btn btn-secondary btn-materiais" style="flex: 1; padding: 10px 0;" data-id="${turma.id}" title="Materiais">
+                        <i class="ph ph-package"></i> Materiais
+                    </button>
+                    <button class="btn btn-secondary" style="flex: 1; padding: 10px 0;" onclick="window.location.href='aulas.html?id=${turma.id}'" title="Cronograma e Diário">
+                        <i class="ph ph-calendar-check"></i> Diário
+                    </button>
+                    <button class="btn btn-primary" style="flex: 1; padding: 10px 0; min-width: 100%;" onclick="window.location.href='inscricoes.html?id=${turma.id}'">
+                        <i class="ph ph-users"></i> Ver Inscrições
+                    </button>
+                    ${turma.status === 'Em Andamento' ? `
+                    <button class="btn" style="flex: 1; padding: 10px 0; min-width: 100%; background: #F39C12; color: #fff; border: none; font-weight: 600;" onclick="window.location.href='fechamento.html?id=${turma.id}'">
+                        <i class="ph ph-graduation-cap"></i> Encerrar Turma
+                    </button>
+                    ` : ''}
+                </div>
+            `;
+            
+            turmasGrid.appendChild(card);
+        });
+
+        document.querySelectorAll('.btn-editar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.currentTarget.getAttribute('data-id');
+                const t = listaTurmas.find(x => x.id === id);
+                if(t) openModal(t);
+            });
+        });
+
+        document.querySelectorAll('.btn-materiais').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.currentTarget.getAttribute('data-id');
+                const t = listaTurmas.find(x => x.id === id);
+                if(t) abrirModalMateriais(t);
+            });
+        });
+    }
+
+    async function gerarCronogramaAulas(idTurma, turma) {
+        const aulasRef = collection(db, 'igrejas', 'iebi', 'aulas');
+        
+        // Buscar todas as aulas existentes desta turma
+        const q = query(aulasRef, where('turmaId', '==', idTurma));
+        const snap = await getDocs(q);
+        
+        let aulasExistentes = [];
+        snap.forEach(d => {
+            aulasExistentes.push({ id: d.id, ...d.data() });
+        });
+
+        // Determinar quais datas deveriam existir no novo cronograma
+        const startStr = turma.data_inicio;
+        const endStr = turma.data_fim;
+        if (startStr > endStr) return; // Datas inválidas
+
+        let currentDate = new Date(startStr + 'T12:00:00');
+        let endDateObj = new Date(endStr + 'T12:00:00');
+        
+        let datasDesejadas = new Set();
+        
+        while (currentDate <= endDateObj) {
+            let dayStr = currentDate.getDay().toString();
+            if (turma.dias_semana && turma.dias_semana.includes(dayStr)) {
+                datasDesejadas.add(currentDate.toISOString().split('T')[0]);
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        let promises = [];
+
+        // 1. Apagar aulas antigas que NÃO estão nas datasDesejadas e AINDA estão "Agendada"
+        aulasExistentes.forEach(aula => {
+            if (!datasDesejadas.has(aula.data_aula)) {
+                if (aula.status === 'Agendada') {
+                    promises.push(deleteDoc(doc(db, 'igrejas', 'iebi', 'aulas', aula.id)));
+                }
+            }
+        });
+
+        // 2. Criar aulas para as datasDesejadas que AINDA NÃO EXISTEM
+        const datasExistentesSet = new Set(aulasExistentes.map(a => a.data_aula));
+        
+        datasDesejadas.forEach(dataStr => {
+            if (!datasExistentesSet.has(dataStr)) {
+                promises.push(addDoc(aulasRef, {
+                    turmaId: idTurma,
+                    nome_turma: turma.nome_turma,
+                    data_aula: dataStr,
+                    horario: turma.horario,
+                    status: 'Agendada',
+                    presentes: [],
+                    title: 'Aula: ' + turma.nome_turma,
+                    date: dataStr,
+                    color: '#2760AE',
+                    tipo: 'Aula'
+                }));
+            }
+        });
+
+        await Promise.all(promises);
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Salvando...';
+        saveBtn.disabled = true;
+        
+        const opt = inputCurso.options[inputCurso.selectedIndex];
+        const nomeCursoCache = opt ? opt.textContent : '';
+        
+        const diasMarcados = Array.from(document.querySelectorAll('input[name="turmaDias"]:checked')).map(cb => cb.value);
+        if(diasMarcados.length === 0) {
+            alert("Selecione pelo menos um dia da semana para as aulas.");
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+            return;
+        }
+
+        const turmaData = {
+            id_curso: inputCurso.value,
+            nome_curso_cache: nomeCursoCache,
+            nome_turma: inputNome.value,
+            status: inputStatus.value,
+            professor: inputProfessor.value,
+            professor_substituto: inputProfessorSubstituto.value.trim(),
+            data_inicio: inputDataInicio.value,
+            data_fim: inputDataFim.value,
+            horario: inputHorario.value,
+            dias_semana: diasMarcados,
+            vagas_totais: parseInt(inputVagas.value),
+            inscricao_site: inputInscricaoSite ? inputInscricaoSite.checked : false,
+            atualizado_em: serverTimestamp()
+        };
+
+        try {
+            if (turmaEmEdicaoId) {
+                const docRef = doc(db, 'igrejas', 'iebi', 'turmas', turmaEmEdicaoId);
+                await updateDoc(docRef, turmaData);
+                await gerarCronogramaAulas(turmaEmEdicaoId, turmaData);
+            } else {
+                turmaData.criado_em = serverTimestamp();
+                turmaData.vagas_ocupadas = 0; // Inicializa com 0 inscrições
+                const ref = collection(db, 'igrejas', 'iebi', 'turmas');
+                const docRef = await addDoc(ref, turmaData);
+                await gerarCronogramaAulas(docRef.id, turmaData);
+            }
+
+            closeModal();
+            await carregarTurmas(); // Reload
+        } catch (error) {
+            console.error("Erro ao salvar turma:", error);
+            alert("Erro ao salvar. Verifique o console.");
+        } finally {
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+        }
+    });
+
+    // Iniciar
+    const filterCheckboxes = document.querySelectorAll('.chk-status-filter');
+    filterCheckboxes.forEach(cb => {
+        cb.addEventListener('change', renderizarTurmas);
+    });
+
+    const searchTurmaInput = document.getElementById('searchTurmaInput');
+    if (searchTurmaInput) {
+        searchTurmaInput.addEventListener('input', renderizarTurmas);
+    }
+
+    // --- LÓGICA DE GESTÃO DE MATERIAIS ---
+    let turmaMateriaisAtiva = null;
+    let listaInscricoesMateriais = [];
+
+    function atualizarKPIsMateriais() {
+        const total = listaInscricoesMateriais.length;
+        const entregues = listaInscricoesMateriais.filter(i => i.material_entregue === true).length;
+        const pagos = listaInscricoesMateriais.filter(i => i.material_pago === true).length;
+
+        const pctEntregue = total > 0 ? ((entregues / total) * 100).toFixed(1) : "0.0";
+        const pctPago = total > 0 ? ((pagos / total) * 100).toFixed(1) : "0.0";
+
+        const elTotal = document.getElementById('kpiTotalAlunos');
+        const elEntregueQtd = document.getElementById('kpiEntregueQtd');
+        const elEntreguePct = document.getElementById('kpiEntreguePct');
+        const elEntregueBar = document.getElementById('kpiEntregueBar');
+        const elPagoQtd = document.getElementById('kpiPagoQtd');
+        const elPagoPct = document.getElementById('kpiPagoPct');
+        const elPagoBar = document.getElementById('kpiPagoBar');
+
+        if (elTotal) elTotal.textContent = total;
+        if (elEntregueQtd) elEntregueQtd.textContent = `${entregues}/${total}`;
+        if (elEntreguePct) elEntreguePct.textContent = `${pctEntregue}%`;
+        if (elEntregueBar) elEntregueBar.style.width = `${pctEntregue}%`;
+
+        if (elPagoQtd) elPagoQtd.textContent = `${pagos}/${total}`;
+        if (elPagoPct) elPagoPct.textContent = `${pctPago}%`;
+        if (elPagoBar) elPagoBar.style.width = `${pctPago}%`;
+    }
+
+    function renderizarTabelaMateriais() {
+        const tbody = document.getElementById('materiaisTbody');
+        const searchInput = document.getElementById('searchAlunoMateriais');
+        const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+        if (!tbody) return;
+
+        const filtrados = listaInscricoesMateriais.filter(i => {
+            const nome = (i.nome_pessoa_cache || '').toLowerCase();
+            return nome.includes(searchVal);
+        });
+
+        if (listaInscricoesMateriais.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                        Nenhum aluno matriculado nesta turma.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        if (filtrados.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 20px; color: var(--text-muted);">
+                        Nenhum aluno encontrado na busca.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = '';
+        filtrados.forEach(i => {
+            const tr = document.createElement('tr');
+            const nomeStr = (i.nome_pessoa_cache || 'Aluno').trim();
+            const isEntregue = i.material_entregue === true;
+            const isPago = i.material_pago === true;
+
+            tr.innerHTML = `
+                <td>
+                    <span style="font-weight: 600; font-size: 0.88rem; color: var(--text-main);">${nomeStr}</span>
+                </td>
+                <td style="text-align: center;">
+                    <label class="custom-check-pill type-entregue ${isEntregue ? 'active' : ''}" title="${isEntregue ? 'Mat. Entregue: Sim' : 'Mat. Entregue: Não'}">
+                        <input type="checkbox" class="chk-material chk-entregue" data-id="${i.id}" ${isEntregue ? 'checked' : ''}>
+                        <span class="check-icon-circle"><i class="ph ${isEntregue ? 'ph-check-bold' : 'ph-package'}"></i></span>
+                    </label>
+                </td>
+                <td style="text-align: center;">
+                    <label class="custom-check-pill type-pago ${isPago ? 'active' : ''}" title="${isPago ? 'Mat. Pago: Sim' : 'Mat. Pago: Não'}">
+                        <input type="checkbox" class="chk-material chk-pago" data-id="${i.id}" ${isPago ? 'checked' : ''}>
+                        <span class="check-icon-circle"><i class="ph ${isPago ? 'ph-check-bold' : 'ph-currency-dollar'}"></i></span>
+                    </label>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Listeners nos checkboxes (atualização em memória local)
+        tbody.querySelectorAll('.chk-entregue').forEach(chk => {
+            chk.addEventListener('change', (e) => {
+                const idInsc = e.target.getAttribute('data-id');
+                const isChecked = e.target.checked;
+                const labelPill = e.target.closest('.custom-check-pill');
+                if (labelPill) {
+                    if (isChecked) {
+                        labelPill.classList.add('active');
+                        labelPill.setAttribute('title', 'Mat. Entregue: Sim');
+                        labelPill.querySelector('.check-icon-circle').innerHTML = '<i class="ph ph-check-bold"></i>';
+                    } else {
+                        labelPill.classList.remove('active');
+                        labelPill.setAttribute('title', 'Mat. Entregue: Não');
+                        labelPill.querySelector('.check-icon-circle').innerHTML = '<i class="ph ph-package"></i>';
+                    }
+                }
+                const item = listaInscricoesMateriais.find(x => x.id === idInsc);
+                if (item) {
+                    item.material_entregue = isChecked;
+                }
+                atualizarKPIsMateriais();
+            });
+        });
+
+        tbody.querySelectorAll('.chk-pago').forEach(chk => {
+            chk.addEventListener('change', (e) => {
+                const idInsc = e.target.getAttribute('data-id');
+                const isChecked = e.target.checked;
+                const labelPill = e.target.closest('.custom-check-pill');
+                if (labelPill) {
+                    if (isChecked) {
+                        labelPill.classList.add('active');
+                        labelPill.setAttribute('title', 'Mat. Pago: Sim');
+                        labelPill.querySelector('.check-icon-circle').innerHTML = '<i class="ph ph-check-bold"></i>';
+                    } else {
+                        labelPill.classList.remove('active');
+                        labelPill.setAttribute('title', 'Mat. Pago: Não');
+                        labelPill.querySelector('.check-icon-circle').innerHTML = '<i class="ph ph-currency-dollar"></i>';
+                    }
+                }
+                const item = listaInscricoesMateriais.find(x => x.id === idInsc);
+                if (item) {
+                    item.material_pago = isChecked;
+                }
+                atualizarKPIsMateriais();
+            });
+        });
+    }
+
+    function showAlertModal(message, isError = false) {
+        const modal = document.getElementById('alertModal');
+        const titleEl = document.getElementById('alertModalTitle');
+        const msgEl = document.getElementById('alertModalMessage');
+        const iconEl = document.getElementById('alertModalIcon');
+        if (modal && titleEl && msgEl && iconEl) {
+            msgEl.textContent = message;
+            if (isError) {
+                titleEl.textContent = "Atenção!";
+                iconEl.style.color = "#E74C3C";
+                iconEl.innerHTML = '<i class="ph ph-warning-circle"></i>';
+            } else {
+                titleEl.textContent = "Sucesso!";
+                iconEl.style.color = "#27AE60";
+                iconEl.innerHTML = '<i class="ph ph-check-circle"></i>';
+            }
+            modal.classList.add('active');
+        } else {
+            alert(message);
+        }
+    }
+
+    const btnOkAlert = document.getElementById('btnOkAlert');
+    if (btnOkAlert) {
+        btnOkAlert.addEventListener('click', () => {
+            const alertModal = document.getElementById('alertModal');
+            if (alertModal) alertModal.classList.remove('active');
+        });
+    }
+
+    async function salvarTodosMateriais() {
+        const btn = document.getElementById('saveMateriaisBtn');
+        if (!btn || listaInscricoesMateriais.length === 0) return;
+
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Salvando...';
+
+        try {
+            const promises = listaInscricoesMateriais.map(item => {
+                const docRef = doc(db, 'igrejas', 'iebi', 'inscricoes', item.id);
+                return updateDoc(docRef, {
+                    material_entregue: item.material_entregue || false,
+                    material_pago: item.material_pago || false
+                });
+            });
+
+            await Promise.all(promises);
+            document.getElementById('materiaisModal').classList.remove('active');
+            showAlertModal("Registros de materiais salvos com sucesso!", false);
+        } catch (err) {
+            console.error("Erro ao salvar registros de materiais:", err);
+            showAlertModal("Erro ao salvar os registros. Tente novamente.", true);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+
+    async function abrirModalMateriais(turma) {
+        turmaMateriaisAtiva = turma;
+        const modalMateriais = document.getElementById('materiaisModal');
+        const subText = document.getElementById('materiaisModalSubText');
+        const tbody = document.getElementById('materiaisTbody');
+        const searchInput = document.getElementById('searchAlunoMateriais');
+
+        if (subText) subText.textContent = turma.nome_turma;
+        if (searchInput) searchInput.value = '';
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                    <i class="ph ph-spinner ph-spin" style="font-size: 1.5rem;"></i> Carregando alunos da turma...
+                </td>
+            </tr>
+        `;
+
+        modalMateriais.classList.add('active');
+
+        try {
+            const qInsc = query(collection(db, 'igrejas', 'iebi', 'inscricoes'), where('id_turma', '==', turma.id));
+            const snap = await getDocs(qInsc);
+            listaInscricoesMateriais = [];
+            snap.forEach(d => {
+                listaInscricoesMateriais.push({ id: d.id, ...d.data() });
+            });
+
+            listaInscricoesMateriais.sort((a, b) => (a.nome_pessoa_cache || '').localeCompare(b.nome_pessoa_cache || '', 'pt-BR', { sensitivity: 'base' }));
+
+            atualizarKPIsMateriais();
+            renderizarTabelaMateriais();
+        } catch (err) {
+            console.error("Erro ao carregar alunos para materiais:", err);
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 20px; color: #E74C3C;">
+                        Erro ao carregar lista de alunos.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    const closeMateriaisBtn = document.getElementById('closeMateriaisModalBtn');
+    if (closeMateriaisBtn) {
+        closeMateriaisBtn.addEventListener('click', () => {
+            document.getElementById('materiaisModal').classList.remove('active');
+        });
+    }
+
+    const cancelMateriaisBtn = document.getElementById('cancelMateriaisBtn');
+    if (cancelMateriaisBtn) {
+        cancelMateriaisBtn.addEventListener('click', () => {
+            document.getElementById('materiaisModal').classList.remove('active');
+        });
+    }
+
+    const saveMateriaisBtn = document.getElementById('saveMateriaisBtn');
+    if (saveMateriaisBtn) {
+        saveMateriaisBtn.addEventListener('click', salvarTodosMateriais);
+    }
+
+    const searchAlunoMateriais = document.getElementById('searchAlunoMateriais');
+    if (searchAlunoMateriais) {
+        searchAlunoMateriais.addEventListener('input', () => {
+            renderizarTabelaMateriais();
+        });
+    }
+
+    carregarCursosBase().then(() => {
+        carregarTurmas();
+        carregarListaPessoas();
+    });
+});

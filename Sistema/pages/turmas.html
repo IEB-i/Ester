@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Turmas - Sistema IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    /* Cards de Turmas */
+    .turmas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .turma-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .turma-card:hover {
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      border-color: rgba(39, 96, 174, 0.3);
+    }
+    .turma-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-abertas { background: rgba(39, 96, 174, 0.1); color: var(--primary); }
+    .badge-andamento { background: rgba(243, 156, 18, 0.1); color: #F39C12; }
+    .badge-concluida { background: rgba(41, 128, 185, 0.1); color: #2980B9; }
+    .badge-cancelada { background: rgba(231, 76, 60, 0.1); color: #E74C3C; }
+    
+    .turma-curso {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+    .turma-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .turma-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+    .turma-meta div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .turma-vagas {
+      background: rgba(0,0,0,0.02);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+    .vagas-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .vagas-bar {
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .vagas-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .turma-actions {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+    }
+    .turma-actions button {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.85rem;
+    }
+    
+    .filter-container {
+        margin-bottom: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--card-bg);
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        flex-wrap: wrap;
+    }
+    .filter-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+    .filter-options {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    
+    /* Força 1 coluna nos grids que tem estilo inline */
+    @media (max-width: 768px) {
+        .form-grid[style]:not(.keep-2-cols) {
+            grid-template-columns: 1fr !important;
+        }
+        .keep-2-cols {
+            grid-template-columns: 1fr 1fr !important;
+        }
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+    }
+
+    /* Estilos Modernizados do Modal de Materiais */
+    #materiaisModal .modal-content {
+      overflow: hidden !important;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+    }
+    #materiaisModal .modal-header {
+      margin: -16px -20px 14px -20px !important;
+      padding: 14px 20px !important;
+      border-radius: 16px 16px 0 0 !important;
+      background: linear-gradient(135deg, #0F3A4C 0%, #17526E 100%) !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      position: relative !important;
+      text-align: left !important;
+    }
+    #materiaisModal .modal-header div {
+      text-align: left !important;
+    }
+    #materiaisModal .modal-header h3 {
+      margin: 0 !important;
+      color: #ffffff !important;
+      font-size: 1.05rem !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.2px !important;
+      text-align: left !important;
+    }
+    #materiaisModal .modal-header p {
+      margin: 2px 0 0 0 !important;
+      font-size: 0.82rem !important;
+      color: rgba(255, 255, 255, 0.85) !important;
+      font-weight: 400 !important;
+      text-align: left !important;
+    }
+    #materiaisModal #closeMateriaisModalBtn {
+      background: none !important;
+      border: none !important;
+      color: #ffffff !important;
+      cursor: pointer !important;
+      padding: 4px !important;
+      font-size: 1.35rem !important;
+      opacity: 0.85 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      right: 18px !important;
+      margin: 0 !important;
+      transition: opacity 0.2s ease !important;
+    }
+    .materiais-kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+    .materiais-kpi-card {
+      background: var(--card-bg, #ffffff);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .materiais-kpi-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+    .materiais-kpi-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .materiais-kpi-val {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .materiais-kpi-pct {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .kpi-pct-entregue { background: rgba(39, 96, 174, 0.12); color: #2760AE; }
+    .kpi-pct-pago { background: rgba(39, 174, 96, 0.12); color: #27AE60; }
+    
+    .materiais-kpi-bar {
+      height: 5px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+    .materiais-kpi-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Tabela Modernizada */
+    .table-materiais-wrapper {
+      flex: 1;
+      min-height: 0;
+      max-height: 520px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--card-bg, #ffffff);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+    .table-materiais-wrapper::-webkit-scrollbar {
+      width: 6px;
+    }
+    .table-materiais-wrapper::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.02);
+    }
+    .table-materiais-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.15);
+      border-radius: 4px;
+    }
+    .table-materiais-wrapper::-webkit-scrollbar-thumb:hover {
+      background: rgba(0,0,0,0.25);
+    }
+
+    .table-materiais {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .table-materiais th {
+      text-align: left;
+      padding: 12px 16px;
+      background: #FAFBFD;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      border-bottom: 1.5px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .table-materiais td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      vertical-align: middle;
+      transition: background 0.15s ease;
+    }
+    .table-materiais tr:last-child td {
+      border-bottom: none;
+    }
+    .table-materiais tr:hover td {
+      background: rgba(15, 58, 76, 0.025);
+    }
+
+    /* Custom Checkbox Circles Compactos */
+    .custom-check-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      border: 1.5px solid var(--border-color);
+      background: var(--card-bg, #ffffff);
+      color: var(--text-muted);
+      padding: 0;
+    }
+    .custom-check-pill input[type="checkbox"] {
+      display: none;
+    }
+    .custom-check-pill:hover {
+      border-color: rgba(0,0,0,0.3);
+      transform: scale(1.15);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .custom-check-pill .check-icon-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+    }
+
+    /* Entregue Ativo (Azul IEBI) */
+    .custom-check-pill.type-entregue.active {
+      background: #2760AE;
+      border-color: #2760AE;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(39, 96, 174, 0.35);
+    }
+
+    /* Pago Ativo (Verde IEBI) */
+    .custom-check-pill.type-pago.active {
+      background: #27AE60;
+      border-color: #27AE60;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(39, 174, 96, 0.35);
+    }
+
+    /* Responsividade Mobile para a Tabela de Materiais */
+    @media (max-width: 600px) {
+      .table-materiais th:nth-child(2),
+      .table-materiais th:nth-child(3) {
+        width: 65px !important;
+        text-align: center;
+        padding: 10px 4px;
+      }
+      .table-materiais td {
+        padding: 10px 8px;
+      }
+    }
+  </style>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F3A4C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <iebi-topbar></iebi-topbar>
+  <div class="app-container">
+    <iebi-sidebar active-menu="turmas"></iebi-sidebar>
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">Ensino - Turmas</div>
+      </div>
+      
+      <div class="page-title-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 class="page-title">Gestão de Turmas</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; margin-bottom: 0;">Abra novas turmas vinculadas aos cursos ativos da IEBI.</p>
+        </div>
+        <button id="btnNovaTurma" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px;">
+          <i class="ph ph-plus-circle" style="font-size: 1.2rem;"></i>
+          Nova Turma
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; align-items: stretch;">
+          <div class="filter-container" style="margin-bottom: 0; flex: 2; min-width: 300px;">
+             <span class="filter-label"><i class="ph ph-funnel"></i> Exibir Status:</span>
+             
+             <div class="filter-options">
+                 <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">
+                    <input type="checkbox" class="chk-status-filter" value="Inscrições Abertas" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);" checked>
+                    Inscrições Abertas
+                 </label>
+                 
+                 <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">
+                    <input type="checkbox" class="chk-status-filter" value="Em Andamento" style="width: 16px; height: 16px; cursor: pointer; accent-color: #F39C12;" checked>
+                    Em Andamento
+                 </label>
+                 
+                 <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">
+                    <input type="checkbox" class="chk-status-filter" value="Encerrada" style="width: 16px; height: 16px; cursor: pointer; accent-color: #2980B9;">
+                    Encerradas
+                 </label>
+        
+                 <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">
+                    <input type="checkbox" class="chk-status-filter" value="Cancelada" style="width: 16px; height: 16px; cursor: pointer; accent-color: #E74C3C;">
+                    Canceladas
+                 </label>
+             </div>
+          </div>
+          
+          <div style="flex: 1; min-width: 250px; position: relative;">
+              <input type="text" id="searchTurmaInput" class="form-control" placeholder="Buscar por nome da turma ou curso..." style="width: 100%; height: 100%; padding-left: 40px; border-radius: 8px; font-size: 0.95rem;">
+              <i class="ph ph-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem;"></i>
+          </div>
+      </div>
+
+      <div class="turmas-grid" id="turmasGrid">
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+          <i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i>
+          <p style="margin-top: 12px;">Carregando turmas...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Nova Turma -->
+  <div id="turmaModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 600px; padding: 20px 24px;">
+      <div class="modal-header" style="align-items: flex-start; margin: -20px -24px 20px -24px; padding: 16px 24px; border-radius: 12px 12px 0 0;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;">
+            <i class="ph-fill ph-users-three" style="font-size: 1.4rem;"></i>
+          </div>
+          <div>
+            <h3 id="modalTitleText" style="margin: 0; color: #fff; font-size: 1.1rem; font-weight: 700;">Abrir Nova Turma</h3>
+            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: rgba(255, 255, 255, 0.8);">Configure os detalhes da execução.</p>
+          </div>
+        </div>
+        <button id="closeModalBtn" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px; font-size: 1.25rem; position: absolute; top: 16px; right: 16px;">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      
+      <form id="turmaForm">
+        <div class="form-grid" style="grid-template-columns: 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Curso Base</label>
+            <select id="turmaCurso" class="form-control" style="padding: 6px 10px; font-size: 0.85rem;">
+              <option value="">Carregando cursos...</option>
+            </select>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 2fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Nome da Turma / Identificação</label>
+              <input type="text" id="turmaNome" class="form-control" required placeholder="Ex: Turma Sábado 2026.2" style="padding: 6px 10px; font-size: 0.85rem;">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Status</label>
+              <select id="turmaStatus" class="form-control" required style="padding: 6px 10px; font-size: 0.85rem;">
+                <option value="Inscrições Abertas">Inscrições Abertas</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Encerrada">Encerrada</option>
+                <option value="Cancelada">Cancelada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group" style="position: relative;">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Professor / Instrutor</label>
+              <input type="text" id="turmaProfessor" class="form-control" required placeholder="Nome do responsável por ministrar" autocomplete="off" style="padding: 6px 10px; font-size: 0.85rem;">
+              <div id="professorAutocomplete" class="autocomplete-dropdown"></div>
+            </div>
+            <div class="form-group" style="position: relative;">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Professor Substituto (Opcional)</label>
+              <input type="text" id="turmaProfessorSubstituto" class="form-control" placeholder="Nome do substituto" autocomplete="off" style="padding: 6px 10px; font-size: 0.85rem;">
+              <div id="substitutoAutocomplete" class="autocomplete-dropdown"></div>
+            </div>
+          </div>
+          
+          <div class="form-grid keep-2-cols" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Data de Início</label>
+              <input type="date" id="turmaDataInicio" class="form-control" required style="padding: 6px 10px; font-size: 0.85rem;">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Data de Término</label>
+              <input type="date" id="turmaDataFim" class="form-control" required style="padding: 6px 10px; font-size: 0.85rem;">
+            </div>
+          </div>
+          
+          <div class="form-grid" style="grid-template-columns: 2fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Dias da Semana (Aulas)</label>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; padding: 6px 10px; background: rgba(0,0,0,0.02); border-radius: 6px; border: 1px solid var(--border-color);">
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="1"> Seg</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="2"> Ter</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="3"> Qua</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="4"> Qui</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="5"> Sex</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="6"> Sáb</label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.8rem; cursor: pointer;"><input type="checkbox" name="turmaDias" value="0"> Dom</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 2px;">Horário (Início)</label>
+              <input type="time" id="turmaHorario" class="form-control" required style="padding: 6px 10px; font-size: 0.85rem; margin-top: 2px;">
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 24px; margin-top: 12px; margin-bottom: 8px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label class="form-label" style="font-size: 0.85rem; margin: 0;">Total de Vagas:</label>
+              <input type="number" id="turmaVagas" class="form-control" required min="1" placeholder="Ex: 50" style="padding: 6px 10px; font-size: 0.85rem; width: 100px;">
+            </div>
+            
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin: 0;">
+              <input type="checkbox" id="turmaInscricaoSite" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+              Liberar inscrições no Site
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-actions" style="margin-top: 12px; padding-top: 12px;">
+          <button type="submit" id="saveTurmaBtn" class="btn btn-primary" style="width: 100%; padding: 10px;">Salvar Turma</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Gestão de Materiais -->
+  <div id="materiaisModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 720px; padding: 16px 20px; border-radius: 16px;">
+      <div class="modal-header" style="margin: -16px -20px 14px -20px; padding: 14px 20px; border-radius: 16px 16px 0 0; background: linear-gradient(135deg, #0F3A4C 0%, #17526E 100%); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="ph ph-package" style="font-size: 1.6rem; color: rgba(255, 255, 255, 0.9); flex-shrink: 0; font-weight: 300;"></i>
+          <div>
+            <h3 id="materiaisModalTitleText" style="margin: 0; color: #fff; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.2px;">Gestão de Materiais</h3>
+            <p id="materiaisModalSubText" style="margin: 2px 0 0 0; font-size: 0.82rem; color: rgba(255, 255, 255, 0.8); font-weight: 400;"></p>
+          </div>
+        </div>
+        <button id="closeMateriaisModalBtn" style="background: none; border: none; color: #fff; cursor: pointer; padding: 4px; font-size: 1.35rem; opacity: 0.85; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s ease;">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+
+      <!-- Indicadores / KPIs no Topo -->
+      <div class="materiais-kpi-grid">
+        <div class="materiais-kpi-card">
+          <div class="materiais-kpi-title"><i class="ph ph-package" style="color: #2760AE; font-size: 1rem;"></i> Mat. Entregue</div>
+          <div class="materiais-kpi-val">
+            <span id="kpiEntregueQtd">0/0</span>
+            <span id="kpiEntreguePct" class="materiais-kpi-pct kpi-pct-entregue">0%</span>
+          </div>
+          <div class="materiais-kpi-bar">
+            <div id="kpiEntregueBar" class="materiais-kpi-fill" style="width: 0%; background: linear-gradient(90deg, #2760AE, #2980B9);"></div>
+          </div>
+        </div>
+
+        <div class="materiais-kpi-card">
+          <div class="materiais-kpi-title"><i class="ph ph-currency-dollar" style="color: #27AE60; font-size: 1rem;"></i> Mat. Pago</div>
+          <div class="materiais-kpi-val">
+            <span id="kpiPagoQtd">0/0</span>
+            <span id="kpiPagoPct" class="materiais-kpi-pct kpi-pct-pago">0%</span>
+          </div>
+          <div class="materiais-kpi-bar">
+            <div id="kpiPagoBar" class="materiais-kpi-fill" style="width: 0%; background: linear-gradient(90deg, #27AE60, #2ECC71);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Busca e Lista de Alunos -->
+      <div style="margin-bottom: 12px; position: relative;">
+        <input type="text" id="searchAlunoMateriais" class="form-control" placeholder="Buscar aluno na turma pelo nome..." style="width: 100%; padding-left: 38px; font-size: 0.88rem; height: 38px; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--card-bg, #fff);">
+        <i class="ph ph-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem;"></i>
+      </div>
+
+      <div class="table-materiais-wrapper">
+        <table class="table-materiais">
+          <thead>
+            <tr>
+              <th>ALUNO</th>
+              <th style="text-align: center; width: 75px;">ENT.</th>
+              <th style="text-align: center; width: 75px;">PG</th>
+            </tr>
+          </thead>
+          <tbody id="materiaisTbody">
+            <tr>
+              <td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                <i class="ph ph-spinner ph-spin" style="font-size: 1.5rem;"></i> Carregando alunos...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Botões de Ação no Rodapé -->
+      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-shrink: 0;">
+        <button id="cancelMateriaisBtn" type="button" class="btn btn-secondary" style="padding: 9px 20px; font-size: 0.88rem; font-weight: 600;">
+          Cancelar
+        </button>
+        <button id="saveMateriaisBtn" type="button" class="btn btn-primary" style="padding: 9px 22px; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+          <i class="ph ph-floppy-disk" style="font-size: 1.1rem;"></i>
+          Salvar Registros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Genérico de Alerta -->
+  <div class="modal-overlay" id="alertModal" style="z-index: 25000;">
+    <div class="modal-content" style="max-width: 400px; text-align: center; padding: 24px; border-radius: 16px;">
+      <div id="alertModalIcon" style="font-size: 3.5rem; color: #27AE60; margin-bottom: 12px;">
+        <i class="ph ph-check-circle"></i>
+      </div>
+      <h3 id="alertModalTitle" style="margin-bottom: 8px; color: var(--text-main); font-size: 1.25rem; font-weight: 700;">Sucesso</h3>
+      <p id="alertModalMessage" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Registros de materiais salvos com sucesso!</p>
+      <button type="button" class="btn btn-primary" id="btnOkAlert" style="width: 100%; padding: 10px;">OK, Entendi</button>
+    </div>
+  </div>
+
+  <iebi-bottom-nav active-item="ensino"></iebi-bottom-nav>
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module" src="../JS/firebase.js"></script>
+  <script type="module" src="../JS/turmas.js"></script>
+</body>
+</html>

@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Área do Professor - IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#0F3A4C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <script type="module" src="../JS/auth-guard.js"></script>
+  <style>
+    .professor-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 16px 10px;
+    }
+
+    /* Grid de Métricas do Dashboard */
+    .professor-dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid rgba(15, 76, 58, 0.08);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
+    }
+
+    .metric-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .metric-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 2px 0 0 0;
+      line-height: 1.1;
+    }
+
+    .view-section {
+      display: none;
+      animation: slideIn 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Cards de Turmas */
+    .professor-turma-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid rgba(15, 76, 58, 0.08);
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(15, 76, 58, 0.01);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .professor-turma-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(15, 76, 58, 0.06);
+      border-color: rgba(39, 174, 96, 0.25);
+    }
+
+    .professor-turma-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--primary) 0%, #27AE60 100%);
+    }
+
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .substitute-badge {
+      background: rgba(243, 156, 18, 0.12);
+      color: #E67E22;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .class-status-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-aberta {
+      background: rgba(39, 96, 174, 0.08);
+      color: var(--primary);
+    }
+
+    .status-andamento {
+      background: rgba(39, 174, 96, 0.08);
+      color: #27AE60;
+    }
+
+    /* Lista de Aulas */
+    .aula-item-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+      transition: all 0.2s ease;
+    }
+
+    .aula-item-card:hover {
+      background: #F9FBFA;
+      border-color: rgba(39, 174, 96, 0.2);
+      transform: translateX(4px);
+    }
+
+    .aula-number-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(15, 58, 76, 0.06);
+      color: var(--header-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .aula-status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .status-realizada {
+      background: rgba(39, 174, 96, 0.1);
+      color: #27AE60;
+    }
+
+    .status-agendada {
+      background: rgba(243, 156, 18, 0.1);
+      color: #E67E22;
+    }
+
+    .status-atrasada {
+      background: rgba(231, 76, 60, 0.1);
+      color: #E74C3C;
+    }
+
+    .status-hoje {
+      background: rgba(39, 96, 174, 0.1);
+      color: var(--primary);
+    }
+
+    .status-futura {
+      background: rgba(149, 165, 166, 0.15);
+      color: #7F8C8D;
+    }
+
+    /* Chamada de Presença */
+    .aluno-presenca-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+      transition: all 0.2s ease;
+    }
+
+    .aluno-presenca-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+      border-color: rgba(15, 76, 58, 0.08);
+    }
+
+    .aluno-info-flex {
+      flex: 1;
+      min-width: 0;
+      padding-right: 16px;
+    }
+
+    .aluno-info-flex span {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+    }
+
+    /* Chip Único Interativo de Presença */
+    .aluno-presence-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      min-width: 115px;
+      box-sizing: border-box;
+    }
+
+    .aluno-presence-chip.presente {
+      background: #E8F8F5;
+      color: #27AE60;
+      border-color: rgba(39, 174, 96, 0.3);
+    }
+
+    .aluno-presence-chip.presente:hover {
+      background: #D5F5E3;
+      transform: translateY(-1px);
+    }
+
+    .aluno-presence-chip.falta {
+      background: #FADBD8;
+      color: #C0392B;
+      border-color: rgba(192, 57, 43, 0.3);
+    }
+
+    .aluno-presence-chip.falta:hover {
+      background: #F5B7B1;
+      transform: translateY(-1px);
+    }
+
+    /* Modal de Alerta Customizado */
+    .alert-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 40, 50, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .alert-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .alert-modal-content {
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 24px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transform: scale(0.9);
+      transition: transform 0.2s ease;
+    }
+
+    .alert-modal-overlay.active .alert-modal-content {
+      transform: scale(1);
+    }
+
+    .loading-state-box {
+      text-align: center;
+      padding: 48px;
+      color: var(--text-muted);
+    }
+
+    .professor-container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 14px 16px !important;
+        padding-bottom: 110px !important;
+      }
+
+      .professor-container {
+        padding: 0 !important;
+        width: 100% !important;
+      }
+
+      .table-responsive {
+        border-radius: 12px;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+      }
+
+      .students-table {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        table-layout: fixed !important;
+      }
+
+      .students-table th,
+      .students-table td {
+        padding: 12px 14px !important;
+      }
+
+      .aluno-cell {
+        gap: 10px !important;
+      }
+
+      .aluno-avatar {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 0.82rem !important;
+      }
+
+      .aluno-nome {
+        font-size: 0.85rem !important;
+      }
+
+      .aluno-phone-link,
+      .aluno-phone-text {
+        font-size: 0.74rem !important;
+      }
+
+      .freq-count {
+        font-size: 0.80rem !important;
+      }
+
+      .freq-pill {
+        font-size: 0.68rem !important;
+        padding: 2px 6px !important;
+      }
+
+      .select-status {
+        padding: 6px 4px !important;
+        font-size: 0.76rem !important;
+        max-width: 100% !important;
+      }
+
+      .tab-container {
+        gap: 4px !important;
+      }
+
+      .tab-button {
+        padding: 10px 8px !important;
+        font-size: 0.85rem !important;
+        gap: 5px !important;
+      }
+    }
+
+    /* Estilos das Abas */
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+      width: 100%;
+      box-sizing: border-box;
+      padding-bottom: 0;
+    }
+
+    .tab-container::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+      width: 0;
+      height: 0;
+    }
+
+    .tab-button {
+      padding: 10px 10px;
+      border: none;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      font-weight: 600;
+      font-size: 0.90rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-sizing: border-box;
+    }
+
+    .tab-button:hover {
+      color: var(--primary);
+    }
+
+    .tab-button.active {
+      border-bottom: 3px solid var(--primary) !important;
+      border-bottom-color: var(--primary) !important;
+      color: var(--primary) !important;
+      font-weight: 700 !important;
+    }
+
+    /* Tabelas de Alunos e Fechamento */
+    .table-responsive {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 76, 58, 0.12);
+      background: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+      box-sizing: border-box;
+    }
+
+    .students-table {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      table-layout: fixed !important;
+      border-collapse: collapse;
+      text-align: left;
+      margin: 0 auto;
+    }
+
+    /* Trava rígida de largura das colunas */
+    #tabContentAlunos .students-table th:first-child,
+    #tabContentAlunos .students-table td:first-child {
+      width: 68% !important;
+      max-width: 68% !important;
+      text-align: left !important;
+    }
+
+    #tabContentAlunos .students-table th:nth-child(2),
+    #tabContentAlunos .students-table td:nth-child(2) {
+      width: 32% !important;
+      max-width: 32% !important;
+      text-align: center !important;
+    }
+
+    #tabContentFechamento .students-table th:first-child,
+    #tabContentFechamento .students-table td:first-child {
+      width: 58% !important;
+      max-width: 58% !important;
+      text-align: left !important;
+    }
+
+    #tabContentFechamento .students-table th:nth-child(2),
+    #tabContentFechamento .students-table td:nth-child(2) {
+      width: 42% !important;
+      max-width: 42% !important;
+      text-align: center !important;
+    }
+
+    .students-table th {
+      background: #F8FAF9;
+      color: #5A6A75;
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(15, 76, 58, 0.12);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+    }
+
+    .students-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(15, 76, 58, 0.06);
+      vertical-align: middle;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+
+    .students-table tbody tr {
+      transition: background-color 0.15s ease;
+    }
+
+    .students-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .students-table tbody tr:hover td {
+      background: rgba(39, 174, 96, 0.03);
+    }
+
+    /* Elementos visuais internos da tabela */
+    .aluno-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      overflow: hidden !important;
+    }
+
+    .aluno-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(15, 76, 58, 0.08) 0%, rgba(39, 174, 96, 0.15) 100%);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      border: 1px solid rgba(15, 76, 58, 0.12);
+    }
+
+    .aluno-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 1;
+      overflow: hidden !important;
+    }
+
+    .aluno-nome {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.90rem;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      display: block !important;
+    }
+
+    .aluno-phone-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    .aluno-phone-link:hover {
+      color: #128C7E;
+      text-decoration: underline;
+    }
+
+    .aluno-phone-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    .aluno-freq-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1px;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    .freq-count-inline {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .freq-badge-container {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .freq-count {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    .freq-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .freq-pill.good {
+      background: rgba(39, 174, 96, 0.12);
+      color: #27AE60;
+    }
+
+    .freq-pill.warning {
+      background: rgba(231, 76, 60, 0.12);
+      color: #E74C3C;
+    }
+
+    .select-status {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      font-size: 0.82rem;
+      transition: all 0.2s ease;
+      max-width: 170px;
+      width: 100%;
+    }
+
+    .select-status.aprovado {
+      color: #2760AE;
+      border-color: rgba(39, 96, 174, 0.3);
+      background: rgba(39, 96, 174, 0.06);
+    }
+
+    .select-status.reprovado {
+      color: #E74C3C;
+      border-color: rgba(231, 76, 60, 0.3);
+      background: rgba(231, 76, 60, 0.06);
+    }
+
+    .select-status.desistente {
+      color: #7F8C8D;
+      border-color: rgba(127, 140, 141, 0.3);
+      background: rgba(127, 140, 141, 0.06);
+    }
+
+    /* Modal de Transferência */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 40, 50, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #FFFFFF;
+      border-radius: 14px;
+      padding: 24px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transform: scale(0.9);
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Topbar -->
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <!-- Sidebar -->
+    <iebi-sidebar active-menu="ensino-home"></iebi-sidebar>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="professor-container">
+
+        <!-- ================= TELA 1: LISTA DE TURMAS ================= -->
+        <div id="section-turmas" class="view-section active">
+          <div class="page-title-container"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+            <div>
+              <h2 class="page-title" style="display: flex; align-items: center; gap: 8px; margin: 0;"><i
+                  class="ph ph-chalkboard-teacher" style="color: var(--primary);"></i> Área do Professor</h2>
+              <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; margin-bottom: 0;">Visualize suas
+                turmas, registre chamadas e acompanhe a agenda de aulas.</p>
+            </div>
+          </div>
+
+          <!-- Dashboard de Métricas do Professor -->
+          <div class="professor-dashboard-grid" id="professorDashboard" style="display: none;">
+            <div class="metric-card">
+              <div class="metric-icon" style="background: rgba(39, 96, 174, 0.08); color: #2760AE;">
+                <i class="ph ph-users-three"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-label">Minhas Turmas</span>
+                <h3 class="metric-value" id="dashTotalTurmas">0</h3>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon" style="background: rgba(39, 174, 96, 0.08); color: #27AE60;">
+                <i class="ph ph-student"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-label">Total de Alunos</span>
+                <h3 class="metric-value" id="dashTotalAlunos">0</h3>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon" style="background: rgba(243, 156, 18, 0.08); color: #F39C12;">
+                <i class="ph ph-calendar-check"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-label">Aulas Concluídas</span>
+                <h3 class="metric-value" id="dashAulasMinistradas">0</h3>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon" style="background: rgba(155, 89, 182, 0.08); color: #9B59B6;">
+                <i class="ph ph-chart-line-up"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-label">Presença Média</span>
+                <h3 class="metric-value" id="dashPresencaMedia">--</h3>
+              </div>
+            </div>
+          </div>
+
+          <h3
+            style="font-size: 1.1rem; color: var(--text-main); font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
+            <i class="ph ph-users-three" style="color: var(--primary);"></i> Minhas Turmas Ativas
+          </h3>
+
+          <div id="turmasList">
+            <div class="loading-state-box"><i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i></div>
+          </div>
+        </div>
+
+        <!-- ================= TELA 2: LISTA DE AULAS (PAINEL DE GESTÃO) ================= -->
+        <div id="section-aulas" class="view-section">
+          <div class="content-header"
+            style="margin-bottom: 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+            <button class="btn btn-outline" onclick="window.PortalProfessor.showSection('turmas')"
+              style="width: 38px; height: 38px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); background: #ffffff; cursor: pointer; color: var(--text-main); transition: all 0.2s;"
+              onmouseover="this.style.background='#F0F4F8'; this.style.borderColor='var(--primary)';"
+              onmouseout="this.style.background='#ffffff'; this.style.borderColor='var(--border-color)';">
+              <i class="ph ph-arrow-left" style="font-size: 1.1rem;"></i>
+            </button>
+            <div>
+              <div class="breadcrumb" style="color: var(--primary); font-weight: 500; font-size: 0.85rem;">Área do
+                Professor - Painel da Turma</div>
+              <h2 id="aulasTurmaTitle" class="page-title"
+                style="margin-top: 2px; font-size: 1.2rem; font-weight: 700; color: var(--text-main);">Turma</h2>
+            </div>
+          </div>
+
+          <!-- Menu de Abas -->
+          <div class="tab-container">
+            <button class="tab-button active" onclick="switchTab('cronograma')" id="tabBtnCronograma">
+              <i class="ph ph-calendar-check" style="font-size: 1.15rem;"></i> Cronograma
+            </button>
+            <button class="tab-button" onclick="switchTab('alunos')" id="tabBtnAlunos">
+              <i class="ph ph-users" style="font-size: 1.15rem;"></i> Alunos
+            </button>
+            <button class="tab-button" onclick="switchTab('fechamento')" id="tabBtnFechamento">
+              <i class="ph ph-lock-key" style="font-size: 1.15rem;"></i> Fechamento
+            </button>
+          </div>
+
+          <!-- Conteúdo Aba 1: Cronograma -->
+          <div id="tabContentCronograma" class="tab-content" style="display: block;">
+            <div id="aulasList">
+              <div class="loading-state-box"><i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i></div>
+            </div>
+          </div>
+
+          <!-- Conteúdo Aba 2: Alunos (Lista Simplificada) -->
+          <div id="tabContentAlunos" class="tab-content" style="display: none;">
+            <div class="table-responsive">
+              <table class="students-table">
+                <thead>
+                  <tr>
+                    <th>Aluno</th>
+                    <th style="text-align: center; width: 90px;">% Freq.</th>
+                  </tr>
+                </thead>
+                <tbody id="alunosInscritosList">
+                  <tr>
+                    <td colspan="2" style="text-align: center; padding: 24px; color: var(--text-muted);"><i
+                        class="ph ph-spinner ph-spin"></i> Carregando alunos...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Conteúdo Aba 3: Fechamento -->
+          <div id="tabContentFechamento" class="tab-content" style="display: none;">
+            <div id="panelFechamentoEncerrado"
+              style="display: none; background: #f8f9fa; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; text-align: center; margin-bottom: 20px;">
+              <div style="font-size: 3rem; color: var(--primary); margin-bottom: 12px;"><i class="ph ph-lock"></i></div>
+              <h4 style="margin: 0 0 6px 0; color: var(--text-main); font-size: 1.1rem; font-weight: 700;">Turma
+                Encerrada</h4>
+              <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem;">Esta turma já foi fechada e não permite
+                novos ajustes ou chamadas.</p>
+            </div>
+
+            <div id="panelFechamentoAtivo">
+              <div
+                style="background: rgba(39, 96, 174, 0.05); border: 1px solid rgba(39, 96, 174, 0.15); color: var(--text-main); padding: 16px 20px; border-radius: var(--radius-lg); margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px;">
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--primary);">Finalizar e Encerrar
+                  Turma</h4>
+                <p style="margin: 0; color: var(--text-muted); font-size: 0.88rem; line-height: 1.4;">Revise a situação
+                  final dos alunos. Após confirmar, a turma será fechada permanentemente, atualizando os históricos dos
+                  alunos aprovados.</p>
+              </div>
+
+              <div class="table-responsive" style="margin-bottom: 20px;">
+                <table class="students-table">
+                  <thead>
+                    <tr>
+                      <th>Aluno</th>
+                      <th style="text-align: center; width: 140px;">Situação Final</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fechamentoAlunosList">
+                    <tr>
+                      <td colspan="2" style="text-align: center; padding: 24px; color: var(--text-muted);"><i
+                          class="ph ph-spinner ph-spin"></i> Carregando dados...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div
+                style="text-align: right; border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 16px;">
+                <button class="btn btn-primary" id="btnSalvarFechamentoProfessor"
+                  style="background: #E74C3C; border-color: #E74C3C; font-weight: 700; width: auto; padding: 12px 24px; justify-content: center; border-radius: 8px;">
+                  <i class="ph ph-lock-key"></i> Confirmar Encerramento da Turma
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TELA 3: CHAMADA DE PRESENÇA ================= -->
+        <div id="section-chamada" class="view-section">
+          <div class="content-header"
+            style="margin-bottom: 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+            <button class="btn btn-outline" onclick="window.PortalProfessor.showSection('aulas')"
+              style="width: 38px; height: 38px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); background: #ffffff; cursor: pointer; color: var(--text-main); transition: all 0.2s;"
+              onmouseover="this.style.background='#F0F4F8'; this.style.borderColor='var(--primary)';"
+              onmouseout="this.style.background='#ffffff'; this.style.borderColor='var(--border-color)';">
+              <i class="ph ph-arrow-left" style="font-size: 1.1rem;"></i>
+            </button>
+            <div>
+              <div class="breadcrumb" id="chamadaDate"
+                style="color: var(--primary); font-weight: 500; font-size: 0.85rem;">Data da Aula</div>
+              <h2 id="chamadaTitle" class="page-title"
+                style="margin-top: 2px; font-size: 1.2rem; font-weight: 700; color: var(--text-main);">Fazer Chamada
+              </h2>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <div id="alunosList">
+              <div class="loading-state-box"><i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i></div>
+            </div>
+          </div>
+
+          <button id="btnSalvarChamada" class="btn btn-primary"
+            style="width: 100%; padding: 14px 18px; font-size: 1.05rem; justify-content: center; border-radius: 10px;">
+            <i class="ph ph-floppy-disk" style="font-size: 1.2rem;"></i> Salvar Diário e Chamada
+          </button>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Alert Modal Reutilizado -->
+  <div class="alert-modal-overlay" id="alertModal">
+    <div class="alert-modal-content">
+      <div id="alertModalIcon" style="font-size: 3rem; margin-bottom: 12px;"></div>
+      <h3 id="alertModalTitle"
+        style="margin-bottom: 8px; color: var(--text-main); font-size: 1.15rem; font-weight: 700;"></h3>
+      <p id="alertModalMessage"
+        style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4;"></p>
+      <button id="btnOkAlert" class="btn btn-primary" style="width: 100%; justify-content: center;">OK</button>
+    </div>
+  </div>
+
+  <!-- Confirm Modal Reutilizado -->
+  <div class="alert-modal-overlay" id="confirmModal">
+    <div class="alert-modal-content" style="max-width: 400px; text-align: center;">
+      <div style="font-size: 3.5rem; color: #E74C3C; margin-bottom: 12px;">
+        <i class="ph ph-warning-octagon"></i>
+      </div>
+      <h3 style="margin-bottom: 8px; color: var(--text-main); font-size: 1.15rem; font-weight: 700;">Atenção</h3>
+      <p id="confirmModalMessage"
+        style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4;"></p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" id="btnCancelConfirm"
+          style="flex: 1; justify-content: center;">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnOkConfirm"
+          style="flex: 1; background: #E74C3C; border: none; justify-content: center;">Sim, Encerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Transferência Trilhas de Crescimento -->
+  <div class="modal-overlay" id="transferModal">
+    <div class="modal-content" style="max-width: 450px;">
+      <div
+        style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+        <div
+          style="width: 36px; height: 36px; border-radius: 8px; background: rgba(39, 96, 174, 0.08); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+          <i class="ph ph-share-network" style="font-size: 1.2rem;"></i>
+        </div>
+        <div>
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Transferir Alunos</h3>
+          <p style="margin: 2px 0 0 0; font-size: 0.78rem; color: var(--text-muted);">Trilha de Crescimento ativa</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+        Este curso possui uma sequência direta na trilha. Deseja pré-matricular os alunos <strong>Aprovados</strong> na
+        próxima turma?
+      </p>
+
+      <div
+        style="background: #f8f9fa; border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 8px; margin-bottom: 16px;">
+        <label
+          style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: block;">Turma
+          de Destino (Inscrições Abertas)</label>
+        <select id="transferTurmaSelect" class="form-control"
+          style="width: 100%; padding: 8px 10px; font-size: 0.85rem; border-radius: 6px; border: 1px solid var(--border-color);">
+          <option value="">Não transferir / Fechar apenas</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" id="btnCancelTransfer"
+          style="padding: 10px 16px; font-size: 0.88rem; border-radius: 6px;">Não Transferir</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmTransfer"
+          style="padding: 10px 20px; font-size: 0.88rem; border-radius: 6px; font-weight: 700; background: var(--primary);">Confirmar
+          Fechamento</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Menu -->
+  <iebi-bottom-nav active-item="ensino"></iebi-bottom-nav>
+
+  <script src="../JS/components.js"></script>
+  <script src="../JS/script.js"></script>
+  <script type="module" src="../JS/professor-area.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+{
+  "hosting": [
+    {
+      "target": "sistema",
+      "public": "Sistema",
+      "ignore": [
+        "firebase.json",
+        ".firebaserc",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "site",
+      "public": "Site",
+      "ignore": [
+        "firebase.json",
+        ".firebaserc",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
+}

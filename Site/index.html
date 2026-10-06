@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="IEBI - Igreja Evangélica Batista de Intermares. Um lugar de acolhimento, fé, adoração e propósito para você e toda a sua família. Conheça nossos cultos, horários, ministérios e eventos.">
+  <meta name="keywords"
+    content="IEBI, Igreja Evangélica Batista de Intermares, igreja, cultos, fé, oração, família, jesus, ministério infantil, bíblia, esperança">
+  <title>IEBI | Igreja Evangélica Batista de Intermares</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Favicon Oficial -->
+  <link rel="shortcut icon" href="assets/default_Branco.webp" type="image/png">
+  <link rel="icon" href="assets/default_Branco.webp" type="image/png">
+  <link rel="apple-touch-icon" href="assets/default_Branco.webp">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+
+  <!-- ==========================================
+       TOP BAR DE LOCALIZAÇÃO
+       ========================================== -->
+  <div class="top-announcement-bar">
+    <div class="container top-announcement-inner">
+      <div class="top-announcement-content">
+        <svg class="top-announcement-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+        <span class="top-announcement-text"> Av. Mar Tirreno, s/n - Intermares</span>
+      </div>
+      <div class="top-announcement-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Igreja+Evang%C3%A9lica+Batista+de+Intermares,+Av.+Mar+Tirreno,+s/n+-+Intermares,+Cabedelo+-+PB"
+          target="_blank" rel="noopener noreferrer" class="top-bar-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="3 11 22 2 13 21 11 13 3 11" />
+          </svg>
+          <span>Maps</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       HEADER & NAVBAR FIXA PREMIUM
+       ========================================== -->
+  <header class="site-header" id="main-header">
+    <div class="container header-inner">
+      <!-- Logo Oficial IEBI -->
+      <a href="#hero" class="logo-brand" id="header-logo"
+        aria-label="IEBI - Igreja Evangélica Batista de Intermares - Página Inicial">
+        <img src="assets/Logo.webp" width="200" height="50" alt="IEBI - Igreja Evangélica Batista de Intermares"
+          class="site-logo-img">
+      </a>
+
+      <!-- Menu de Navegação Desktop & Mobile -->
+      <nav class="nav-menu" id="nav-menu" aria-label="Navegação Principal">
+        <a href="#hero" class="nav-link active">Início</a>
+        <a href="#sobre" class="nav-link">Sobre Nós</a>
+        <a href="#celulas" class="nav-link nav-link-badge">
+          <span>Células</span>
+          <span class="nav-badge-pill">Nos Lares</span>
+        </a>
+        <a href="#mensagens" class="nav-link" style="display: none;">Mensagens</a>
+
+        <!-- Dropdown "Mais" para Navegação Completa -->
+        <div class="nav-dropdown" id="nav-more-dropdown">
+          <button type="button" class="nav-link nav-dropdown-toggle" id="dropdown-toggle-btn" aria-expanded="false"
+            aria-haspopup="true">
+            <span>Mais</span>
+            <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          <div class="dropdown-menu-card" id="dropdown-menu-panel">
+
+            <a href="#eventos" class="dropdown-item">
+              <div class="dropdown-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Eventos & Conferências</span>
+                <span class="dropdown-item-desc">Calendário e formulário de inscrição</span>
+              </div>
+            </a>
+
+            <a href="#oracao" class="dropdown-item" style="display: none;">
+              <div class="dropdown-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </div>
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Pedido de Oração</span>
+                <span class="dropdown-item-desc">Envie seu motivo para nossa equipe pastoral</span>
+              </div>
+            </a>
+
+            <a href="#dizimos" class="dropdown-item" style="display: none;">
+              <div class="dropdown-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </div>
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Dízimos & Ofertas (PIX)</span>
+                <span class="dropdown-item-desc">QR Code e chave PIX com cópia em 1 clique</span>
+              </div>
+            </a>
+
+            <a href="#contato" class="dropdown-item">
+              <div class="dropdown-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <div class="dropdown-item-info">
+                <span class="dropdown-item-title">Localização & Contato</span>
+                <span class="dropdown-item-desc">Mapa, rotas para Waze e WhatsApp</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Ações do Header (Botão de Célula e Menu Mobile) -->
+      <div class="header-actions">
+        <a href="../Sistema/index.html" class="btn-header-cta" id="btn-header-visit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" y1="12" x2="3" y2="12" />
+          </svg>
+          <span>área Logada</span>
+        </a>
+
+        <button class="mobile-toggle" id="mobile-toggle-btn" aria-label="Abrir Menu de Navegação" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         HERO SECTION
+         ========================================== -->
+    <section class="hero-section" id="hero">
+      <div class="hero-bg-wrapper">
+        <img src="assets/images/hero_worship.webp" width="800" height="600"
+          alt="Comunidade da Igreja em adoração e comunhão calorosa" class="hero-bg-img" fetchpriority="high">
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="container hero-content">
+        <div class="live-badge">
+          <span class="live-pulse"></span>
+          <span>Visão Celular &bull; No Templo e nos Lares</span>
+        </div>
+
+        <h1 class="hero-title">
+          Uma Igreja em Células. <span class="highlight">No Templo e de Casa em Casa</span>.
+        </h1>
+
+        <p class="hero-lead">
+          "E todos os dias, no templo e de casa em casa, não cessavam de ensinar e de pregar Jesus, o Cristo."
+          <strong>Atos 5:42</strong>
+        </p>
+
+        <div class="hero-actions">
+          <a href="#celulas" class="btn btn-primary btn-lg" id="hero-btn-cells">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            Encontre uma Célula
+          </a>
+          <a href="#sobre" class="btn btn-outline-white btn-lg" id="hero-btn-visit">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            Sobre a IEBI
+          </a>
+          <a href="#oracao" class="btn btn-outline-white btn-lg" id="hero-btn-prayer" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            Pedido de Oração
+          </a>
+        </div>
+
+        <!-- Widget de Contagem Regressiva em Tempo Real -->
+        <div class="hero-countdown-card" id="next-service-widget">
+          <div class="countdown-info">
+            <div class="countdown-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div>
+              <span class="countdown-label">Próximo Culto</span>
+              <h3 class="countdown-service-name" id="next-service-name">Culto no Templo IEBI</h3>
+              <div class="countdown-datetime" id="next-service-datetime">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span id="next-service-time-text">Domingo às 10:00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="countdown-grid" aria-label="Tempo restante para o próximo culto">
+            <div class="countdown-box">
+              <span class="countdown-number" id="cd-days">00</span>
+              <span class="countdown-unit">Dias</span>
+            </div>
+            <span class="countdown-divider">:</span>
+            <div class="countdown-box">
+              <span class="countdown-number" id="cd-hours">00</span>
+              <span class="countdown-unit">Horas</span>
+            </div>
+            <span class="countdown-divider">:</span>
+            <div class="countdown-box">
+              <span class="countdown-number" id="cd-minutes">00</span>
+              <span class="countdown-unit">Min</span>
+            </div>
+            <span class="countdown-divider">:</span>
+            <div class="countdown-box">
+              <span class="countdown-number" id="cd-seconds">00</span>
+              <span class="countdown-unit">Seg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SOBRE NÓS & NOSSA HISTÓRIA
+         ========================================== -->
+    <section class="section-padding" id="sobre">
+      <div class="container">
+
+        <!-- Bloco 1: Quem Somos & Boas-Vindas Pastoral -->
+        <div class="about-grid">
+          <!-- Conteúdo Sobre Quem Somos, Missão & Boas-Vindas (Esquerda) -->
+          <div class="about-content">
+            <div class="section-tag">Nossa Missão & História</div>
+            <h2 class="section-title">Uma Igreja com Raízes Firmes e Coração em Deus</h2>
+
+            <p class="lead-quote">
+              "Até aqui nos ajudou o Senhor — e para Ele são todas as coisas!" (1 Samuel 7:12 / Romanos 11:36)
+            </p>
+
+            <div class="about-story-paragraphs">
+              <p class="about-text">
+                A <strong>Igreja Evangélica Batista de Intermares (IEBI)</strong> nasceu no coração de Deus a partir de
+                um pequeno grupo de oração realizado em uma garagem em 1998. Ao longo de mais de duas décadas e meia,
+                temos testemunhado a fidelidade do Senhor transformando vidas, restaurando famílias e edificando uma
+                comunidade viva e acolhedora.
+              </p>
+              <p class="about-text">
+                Sob a liderança pastoral do <strong>Pr. Augusto Rodrigues e Pra. Ivete Rodrigues</strong>, nossa missão
+                é amar a Deus sobre todas as coisas, proclamar o Evangelho com fidelidade bíblica e ser uma família de
+                fé onde cada pessoa encontra refúgio, comunhão e propósito em Cristo.
+              </p>
+              <p class="about-text">
+                Seja você alguém em busca de um recomeço espiritual, uma família que procura um lar na fé ou um
+                visitante que chega pela primeira vez: <strong>as portas da nossa casa e os nossos corações estão
+                  abertos para você!</strong>
+              </p>
+            </div>
+          </div>
+
+          <!-- Imagem e Destaque Pastoral (Direita) -->
+          <div class="pastor-image-wrapper">
+            <img src="assets/images/pastor_welcome.webp" width="800" height="600" alt="Pastor Presidente da IEBI"
+              loading="lazy">
+            <div class="pastor-tag-floating">
+              <div class="pastor-tag-name">Pr. Augusto Rodrigues & Pra. Ivete Rodrigues</div>
+              <div class="pastor-tag-role">Pastores Presidentes da IEBI</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloco 2: Linha do Tempo Interativa (Card Único) -->
+        <div class="history-timeline-section" id="historia-timeline">
+          <div class="section-header text-center" style="margin-bottom: 2.5rem;">
+            <div class="section-tag">Nossa Trajetória</div>
+            <h3 class="section-title" style="font-size: 2.25rem;">Nossa História: Construindo Vidas desde 1998</h3>
+            <p class="section-subtitle">
+              Clique nos anos abaixo para navegar pela nossa linha do tempo e acompanhar a evolução da IEBI.
+            </p>
+          </div>
+
+          <!-- Linha do Tempo Horizontal / Stepper -->
+          <div class="timeline-stepper-container">
+            <div class="timeline-stepper-track" role="tablist" aria-label="Linha do Tempo da IEBI">
+              <!-- Linha de Fundo e Progresso -->
+              <div class="stepper-line-bg">
+                <div class="stepper-line-progress" id="timeline-stepper-progress"></div>
+              </div>
+
+              <!-- Ponto 1998 -->
+              <button class="stepper-step active" data-target="panel-1998" data-index="0" role="tab"
+                aria-selected="true" id="tab-1998" aria-controls="panel-1998">
+                <div class="stepper-node">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <span class="stepper-year">1998</span>
+                <span class="stepper-label">Garagem</span>
+              </button>
+
+              <!-- Ponto 1999 -->
+              <button class="stepper-step" data-target="panel-1999" data-index="1" role="tab" aria-selected="false"
+                id="tab-1999" aria-controls="panel-1999">
+                <div class="stepper-node">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                  </svg>
+                </div>
+                <span class="stepper-year">1999</span>
+                <span class="stepper-label">Congregação</span>
+              </button>
+
+              <!-- Ponto 2002 -->
+              <button class="stepper-step" data-target="panel-2002" data-index="2" role="tab" aria-selected="false"
+                id="tab-2002" aria-controls="panel-2002">
+                <div class="stepper-node">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                    <line x1="4" y1="22" x2="4" y2="15" />
+                  </svg>
+                </div>
+                <span class="stepper-year">2002</span>
+                <span class="stepper-label">Tendas</span>
+              </button>
+
+              <!-- Ponto 2010 -->
+              <button class="stepper-step" data-target="panel-2010" data-index="3" role="tab" aria-selected="false"
+                id="tab-2010" aria-controls="panel-2010">
+                <div class="stepper-node">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                </div>
+                <span class="stepper-year">2010</span>
+                <span class="stepper-label">Emancipação</span>
+              </button>
+
+              <!-- Ponto 2013 -->
+              <button class="stepper-step" data-target="panel-2013" data-index="4" role="tab" aria-selected="false"
+                id="tab-2013" aria-controls="panel-2013">
+                <div class="stepper-node">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                <span class="stepper-year">2013</span>
+                <span class="stepper-label">Visão MDA</span>
+              </button>
+
+              <!-- Ponto 2014 -->
+              <button class="stepper-step" data-target="panel-2014" data-index="5" role="tab" aria-selected="false"
+                id="tab-2014" aria-controls="panel-2014">
+                <div class="stepper-node">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg>
+                </div>
+                <span class="stepper-year">2014</span>
+                <span class="stepper-label">Templo 800</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- O Card Único Interativo de Exibição -->
+          <div class="timeline-single-display">
+            <!-- Painel 1998 -->
+            <div class="timeline-single-panel active" id="panel-1998" role="tabpanel" aria-labelledby="tab-1998">
+              <div class="timeline-card-showcase">
+                <div class="timeline-showcase-header">
+                  <div class="timeline-year-badge">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>30 de Janeiro de 1998</span>
+                  </div>
+                  <span class="timeline-tag-highlight">Origem Missionária</span>
+                </div>
+
+                <h4 class="timeline-showcase-title">O Primeiro Culto na Garagem</h4>
+                <p class="timeline-showcase-text">
+                  Nossa igreja surgiu como fruto do trabalho missionário da <strong>Igreja Evangélica Batista de João
+                    Pessoa</strong> que, através de um pequeno grupo de irmãos cheios de fé, realizou o primeiro culto
+                  na garagem de uma casa em Intermares, Cabedelo - PB.
+                </p>
+
+                <div class="timeline-showcase-footer">
+                  <span class="timeline-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Marco Inicial: A semente do Evangelho plantada em Intermares
+                  </span>
+
+                  <div class="timeline-nav-controls">
+                    <button class="btn-timeline-nav btn-timeline-next" data-goto="panel-1999"
+                      aria-label="Avançar para 1999">
+                      <span>Próximo (1999)</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 1999 -->
+            <div class="timeline-single-panel" id="panel-1999" role="tabpanel" aria-labelledby="tab-1999">
+              <div class="timeline-card-showcase">
+                <div class="timeline-showcase-header">
+                  <div class="timeline-year-badge">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>Ano de 1999</span>
+                  </div>
+                  <span class="timeline-tag-highlight">Nova Congregação</span>
+                </div>
+
+                <h4 class="timeline-showcase-title">Mudança para a Av. Mar Vermelho</h4>
+                <p class="timeline-showcase-text">
+                  Após um ano de reuniões e novos convertidos, o trabalho foi estabelecido formalmente como
+                  <strong>congregação</strong> e transferiu suas atividades para a principal avenida do bairro (Av. Mar
+                  Vermelho), expandindo sua visibilidade e acolhimento.
+                </p>
+
+                <div class="timeline-showcase-footer">
+                  <span class="timeline-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Marco de Expansão: Localização central e estratégica no bairro
+                  </span>
+
+                  <div class="timeline-nav-controls">
+                    <button class="btn-timeline-nav btn-timeline-prev" data-goto="panel-1998"
+                      aria-label="Voltar para 1998">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>1998</span>
+                    </button>
+                    <button class="btn-timeline-nav btn-timeline-next" data-goto="panel-2002"
+                      aria-label="Avançar para 2002">
+                      <span>2002</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 2002 -->
+            <div class="timeline-single-panel" id="panel-2002" role="tabpanel" aria-labelledby="tab-2002">
+              <div class="timeline-card-showcase">
+                <div class="timeline-showcase-header">
+                  <div class="timeline-year-badge">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>Ano de 2002</span>
+                  </div>
+                  <span class="timeline-tag-highlight">Conquista do Terreno</span>
+                </div>
+
+                <h4 class="timeline-showcase-title">Posse do Terreno & As Primeiras Tendas</h4>
+                <p class="timeline-showcase-text">
+                  A congregação tomou posse de um terreno próprio doado pela prefeitura de Cabedelo. Para dar
+                  continuidade imediata às celebrações, foram instaladas tendas temporárias que testemunharam cultos
+                  cheios do Espírito Santo e intenso fervor espiritual.
+                </p>
+
+                <div class="timeline-showcase-footer">
+                  <span class="timeline-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Marco Fundiário: O endereço definitivo da nossa igreja
+                  </span>
+
+                  <div class="timeline-nav-controls">
+                    <button class="btn-timeline-nav btn-timeline-prev" data-goto="panel-1999"
+                      aria-label="Voltar para 1999">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>1999</span>
+                    </button>
+                    <button class="btn-timeline-nav btn-timeline-next" data-goto="panel-2010"
+                      aria-label="Avançar para 2010">
+                      <span>2010</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 2010 -->
+            <div class="timeline-single-panel" id="panel-2010" role="tabpanel" aria-labelledby="tab-2010">
+              <div class="timeline-card-showcase">
+                <div class="timeline-showcase-header">
+                  <div class="timeline-year-badge">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>13 de Março de 2010</span>
+                  </div>
+                  <span class="timeline-tag-highlight">Emancipação Solene</span>
+                </div>
+
+                <h4 class="timeline-showcase-title">1º Templo de Alvenaria & Emancipação da IEBI</h4>
+                <p class="timeline-showcase-text">
+                  Com a construção do primeiro templo de alvenaria concluída, realizou-se o culto solene de emancipação.
+                  A comunidade passou a se chamar oficialmente <strong>Igreja Evangélica Batista de Intermares
+                    (IEBI)</strong>, inaugurando uma nova era de maturidade e governo espiritual.
+                </p>
+
+                <div class="timeline-showcase-footer">
+                  <span class="timeline-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Marco Institucional: Autonomia e consagração solene
+                  </span>
+
+                  <div class="timeline-nav-controls">
+                    <button class="btn-timeline-nav btn-timeline-prev" data-goto="panel-2002"
+                      aria-label="Voltar para 2002">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>2002</span>
+                    </button>
+                    <button class="btn-timeline-nav btn-timeline-next" data-goto="panel-2013"
+                      aria-label="Avançar para 2013">
+                      <span>2013</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 2013 -->
+            <div class="timeline-single-panel" id="panel-2013" role="tabpanel" aria-labelledby="tab-2013">
+              <div class="timeline-card-showcase">
+                <div class="timeline-showcase-header">
+                  <div class="timeline-year-badge">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>Ano de 2013</span>
+                  </div>
+                  <span class="timeline-tag-highlight">Visão Celular (MDA)</span>
+                </div>
+
+                <h4 class="timeline-showcase-title">Transição Celular & Obras do Megatemplo</h4>
+                <p class="timeline-showcase-text">
+                  Nossa igreja adotou a estrutura de <strong>Igreja em Células na visão do MDA</strong> (Discipulado Um
+                  a Um e pastoreio nos lares), e em conjunto iniciou a construção do grande templo com arquitetura
+                  contemporânea e acústica tratada para acolher o constante crescimento.
+                </p>
+
+                <div class="timeline-showcase-footer">
+                  <span class="timeline-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Marco Ministerial: Discipulado pessoal e vida nos lares
+                  </span>
+
+                  <div class="timeline-nav-controls">
+                    <button class="btn-timeline-nav btn-timeline-prev" data-goto="panel-2010"
+                      aria-label="Voltar para 2010">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>2010</span>
+                    </button>
+                    <button class="btn-timeline-nav btn-timeline-next" data-goto="panel-2014"
+                      aria-label="Avançar para 2014">
+                      <span>2014</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 2014 -->
+            <div class="timeline-single-panel" id="panel-2014" role="tabpanel" aria-labelledby="tab-2014">
+              <div class="timeline-card-showcase highlight">
+                <div class="timeline-showcase-header">
+                  <div class="timeline-year-badge">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>Junho de 2014</span>
+                  </div>
+                  <span class="timeline-tag-highlight"
+                    style="background:#fef3c7; color:#b45309; border-color:#fde68a;">Templo Consagrado</span>
+                </div>
+
+                <h4 class="timeline-showcase-title">Inauguração do Templo para 800 Pessoas</h4>
+                <p class="timeline-showcase-text">
+                  Em uma celebração vibrante de gratidão a Deus, inauguramos o novo templo com capacidade para
+                  <strong>oitocentas pessoas</strong>. Hoje vivemos a plenitude desse propósito: celebrar a Deus no
+                  templo e cuidar de vidas de casa em casa!
+                </p>
+
+                <div class="timeline-showcase-footer">
+                  <span class="timeline-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Marco Presente: Casa de acolhimento para centenas de famílias
+                  </span>
+
+                  <div class="timeline-nav-controls">
+                    <button class="btn-timeline-nav btn-timeline-prev" data-goto="panel-2013"
+                      aria-label="Voltar para 2013">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>2013</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SEÇÃO DEDICADA: CÉLULAS POR FAIXA ETÁRIA
+         ========================================== -->
+    <section class="section-padding" id="celulas">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Vida em Célula</div>
+          <h2 class="section-title">Células IEBI: Um Lugar para Cada Fase da Vida</h2>
+          <p class="section-subtitle">
+            Células por faixa etária: Descubra o grupo ideal para você e sua família. Encontre o grupo mais próximo da
+            sua residência e venha participar!
+          </p>
+        </div>
+
+        <!-- Banner Dinâmico da Visão Celular -->
+        <div class="cells-intro-banner">
+          <div class="cells-intro-left">
+            <div class="cells-intro-header">
+              <div class="cells-intro-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <span>Comunhão &amp; Acolhimento</span>
+              </div>
+              <h3 class="cells-intro-quote">"Em uma célula, você nunca será só um número."</h3>
+              <p class="cells-intro-text">
+                Você é conhecido pelo nome, tem liberdade para compartilhar a vida, tirar suas dúvidas sobre a Palavra e
+                receber oração em um ambiente de amizade e cuidado verdadeiro.
+              </p>
+            </div>
+            <div class="cells-stats-row">
+              <div class="cell-stat-card">
+                <span class="cell-stat-num">+45</span>
+                <span class="cell-stat-label">Células Ativas</span>
+              </div>
+              <div class="cell-stat-card">
+                <span class="cell-stat-num">100%</span>
+                <span class="cell-stat-label">Faixas de Idades</span>
+              </div>
+              <div class="cell-stat-card">
+                <span class="cell-stat-num">Semanal</span>
+                <span class="cell-stat-label">Encontros nos Lares</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cells-structure-card">
+            <h4 class="cells-structure-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Como é um Encontro de Célula?
+            </h4>
+            <ul class="cells-steps-list">
+              <li class="cells-step-item">
+                <span class="cells-step-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div class="cells-step-content">
+                  <span class="cells-step-title">1. Quebra-gelo &amp; Boas-vindas:</span>
+                  <span class="cells-step-desc">Dinâmica rápida e acolhedora.</span>
+                </div>
+              </li>
+              <li class="cells-step-item">
+                <span class="cells-step-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div class="cells-step-content">
+                  <span class="cells-step-title">2. Louvor &amp; Adoração:</span>
+                  <span class="cells-step-desc">Cânticos entoados nas celebrações.</span>
+                </div>
+              </li>
+              <li class="cells-step-item">
+                <span class="cells-step-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div class="cells-step-content">
+                  <span class="cells-step-title">3. Estudo da Palavra:</span>
+                  <span class="cells-step-desc">Aplicação prática do sermão de domingo.</span>
+                </div>
+              </li>
+              <li class="cells-step-item">
+                <span class="cells-step-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div class="cells-step-content">
+                  <span class="cells-step-title">4. Oração &amp; Comunhão:</span>
+                  <span class="cells-step-desc">Clamor mútuo e lanche entre amigos.</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Os 4 Pilares da Visão Celular da IEBI (Stepper & Card Interativo) -->
+        <div class="cells-pillars-wrapper" id="dna-trilho-section">
+          <div class="section-header text-center" style="margin-bottom: 2.25rem;">
+            <div class="section-tag">Nosso DNA Celular</div>
+            <h3 class="section-title" style="font-size: 2.1rem;">Os 4 Pilares da Visão Celular</h3>
+            <p class="section-subtitle" style="font-size: 0.95rem; max-width: 720px; margin: 0 auto;">
+              Esse processo forma o trilho por onde o discípulo caminha, amadurece e se torna um multiplicador:
+            </p>
+          </div>
+
+          <!-- Linha do Trilho / Stepper dos 4 Pilares -->
+          <div class="dna-stepper-container">
+            <div class="dna-stepper-track" role="tablist" aria-label="Trilho dos 4 Pilares da Visão Celular">
+              <!-- Linha de Fundo e Progresso -->
+              <div class="dna-stepper-line-bg">
+                <div class="dna-stepper-line-progress" id="dna-stepper-progress"></div>
+              </div>
+
+              <!-- Ponto 1: Ganhar -->
+              <button class="dna-stepper-step active" data-target="dna-panel-ganhar" data-index="0" role="tab"
+                aria-selected="true" id="tab-dna-ganhar" aria-controls="dna-panel-ganhar">
+                <div class="dna-stepper-node">
+                  <span class="dna-node-num">1</span>
+                </div>
+                <span class="dna-stepper-title">Ganhar</span>
+                <span class="dna-stepper-label">Evangelismo</span>
+              </button>
+
+              <!-- Ponto 2: Consolidar -->
+              <button class="dna-stepper-step" data-target="dna-panel-consolidar" data-index="1" role="tab"
+                aria-selected="false" id="tab-dna-consolidar" aria-controls="dna-panel-consolidar">
+                <div class="dna-stepper-node">
+                  <span class="dna-node-num">2</span>
+                </div>
+                <span class="dna-stepper-title">Consolidar</span>
+                <span class="dna-stepper-label">Raízes</span>
+              </button>
+
+              <!-- Ponto 3: Treinar -->
+              <button class="dna-stepper-step" data-target="dna-panel-treinar" data-index="2" role="tab"
+                aria-selected="false" id="tab-dna-treinar" aria-controls="dna-panel-treinar">
+                <div class="dna-stepper-node">
+                  <span class="dna-node-num">3</span>
+                </div>
+                <span class="dna-stepper-title">Treinar</span>
+                <span class="dna-stepper-label">Discipulado</span>
+              </button>
+
+              <!-- Ponto 4: Enviar -->
+              <button class="dna-stepper-step" data-target="dna-panel-enviar" data-index="3" role="tab"
+                aria-selected="false" id="tab-dna-enviar" aria-controls="dna-panel-enviar">
+                <div class="dna-stepper-node">
+                  <span class="dna-node-num">4</span>
+                </div>
+                <span class="dna-stepper-title">Enviar</span>
+                <span class="dna-stepper-label">Multiplicação</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- O Card Único Interativo de Exibição dos Pilares -->
+          <div class="dna-single-display" id="dna-single-display">
+            <!-- Painel 1: Ganhar -->
+            <div class="dna-single-panel active" id="dna-panel-ganhar" role="tabpanel" aria-labelledby="tab-dna-ganhar">
+              <div class="dna-card-showcase">
+                <div class="dna-showcase-header">
+                  <div class="dna-step-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <line x1="20" y1="8" x2="20" y2="14" />
+                      <line x1="23" y1="11" x2="17" y2="11" />
+                    </svg>
+                    <span>1º Pilar da Visão</span>
+                  </div>
+                  <span class="dna-tag-highlight">Evangelismo Intencional</span>
+                </div>
+
+                <h4 class="dna-showcase-title">Ganhar: Alcançando Vidas com Amor e Testemunho</h4>
+                <p class="dna-showcase-text">
+                  A célula deve ser um ambiente de braços abertos. O foco não é apenas manter os que já estão na igreja
+                  reunidos, mas alcançar novas vidas de forma natural e relacional. Isso acontece através do testemunho
+                  no dia a dia, da oração intencional por amigos e do convite para que participem do ambiente acolhedor
+                  da célula.
+                </p>
+
+                <div class="dna-showcase-footer">
+                  <span class="dna-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Propósito: Conectar corações a Cristo e à família da fé
+                  </span>
+
+                  <div class="dna-nav-controls">
+                    <button class="btn-dna-nav btn-dna-next" data-goto="dna-panel-consolidar"
+                      aria-label="Avançar para Consolidar">
+                      <span>Próximo (2. Consolidar)</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 2: Consolidar -->
+            <div class="dna-single-panel" id="dna-panel-consolidar" role="tabpanel"
+              aria-labelledby="tab-dna-consolidar">
+              <div class="dna-card-showcase">
+                <div class="dna-showcase-header">
+                  <div class="dna-step-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      <polyline points="9 12 11 14 15 10" />
+                    </svg>
+                    <span>2º Pilar da Visão</span>
+                  </div>
+                  <span class="dna-tag-highlight">Criação de Raízes</span>
+                </div>
+
+                <h4 class="dna-showcase-title">Consolidar: O Cuidado de Perto nos Primeiros Passos</h4>
+                <p class="dna-showcase-text">
+                  É a etapa do "cuidado de perto". Quando alguém novo chega, o pilar da consolidação garante que essa
+                  pessoa não se sinta perdida. Ela é acompanhada, orientada nos primeiros passos da fé e integrada à
+                  comunhão, garantindo que crie raízes sólidas na comunidade.
+                </p>
+
+                <div class="dna-showcase-footer">
+                  <span class="dna-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Propósito: Acolher, orientar e enraizar vidas na comunhão
+                  </span>
+
+                  <div class="dna-nav-controls">
+                    <button class="btn-dna-nav btn-dna-prev" data-goto="dna-panel-ganhar"
+                      aria-label="Voltar para Ganhar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>1. Ganhar</span>
+                    </button>
+                    <button class="btn-dna-nav btn-dna-next" data-goto="dna-panel-treinar"
+                      aria-label="Avançar para Treinar">
+                      <span>Próximo (3. Treinar)</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 3: Treinar -->
+            <div class="dna-single-panel" id="dna-panel-treinar" role="tabpanel" aria-labelledby="tab-dna-treinar">
+              <div class="dna-card-showcase">
+                <div class="dna-showcase-header">
+                  <div class="dna-step-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                    <span>3º Pilar da Visão</span>
+                  </div>
+                  <span class="dna-tag-highlight">Edificação e Discipulado</span>
+                </div>
+
+                <h4 class="dna-showcase-title">Treinar: Formando Ministros Ativos e Discipuladores</h4>
+                <p class="dna-showcase-text">
+                  A visão DNA entende que a igreja não forma membros passivos, mas sim ministros ativos. Aqui, o
+                  discípulo recebe ensino sistemático, descobre seus dons espirituais, forja o caráter e é treinado por
+                  meio do exemplo (o famoso "vida na vida") para assumir responsabilidades no Reino.
+                </p>
+
+                <div class="dna-showcase-footer">
+                  <span class="dna-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Propósito: Descobrir dons, forjar caráter e capacitar líderes
+                  </span>
+
+                  <div class="dna-nav-controls">
+                    <button class="btn-dna-nav btn-dna-prev" data-goto="dna-panel-consolidar"
+                      aria-label="Voltar para Consolidar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>2. Consolidar</span>
+                    </button>
+                    <button class="btn-dna-nav btn-dna-next" data-goto="dna-panel-enviar"
+                      aria-label="Avançar para Enviar">
+                      <span>Próximo (4. Enviar)</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel 4: Enviar -->
+            <div class="dna-single-panel" id="dna-panel-enviar" role="tabpanel" aria-labelledby="tab-dna-enviar">
+              <div class="dna-card-showcase">
+                <div class="dna-showcase-header">
+                  <div class="dna-step-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="22" y1="2" x2="11" y2="13" />
+                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                    <span>4º Pilar da Visão</span>
+                  </div>
+                  <span class="dna-tag-highlight"
+                    style="background:#fef3c7; color:#b45309; border-color:#fde68a;">Multiplicação Saudável</span>
+                </div>
+
+                <h4 class="dna-showcase-title">Enviar: Multiplicando Líderes e Abrindo Novos Lares</h4>
+                <p class="dna-showcase-text">
+                  Uma célula saudável, assim como um organismo vivo, cresce e se multiplica. A multiplicação não é
+                  tratada como divisão, mas como o envio alegre e estratégico de líderes que foram treinados para abrir
+                  novas frentes, pastorear novas pessoas e reiniciar o ciclo.
+                </p>
+
+                <div class="dna-showcase-footer">
+                  <span class="dna-impact">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Propósito: Frutificar, pastorear novas vidas e expandir o Reino
+                  </span>
+
+                  <div class="dna-nav-controls">
+                    <button class="btn-dna-nav btn-dna-prev" data-goto="dna-panel-treinar"
+                      aria-label="Voltar para Treinar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      <span>3. Treinar</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grade de Células por Faixa de Idade -->
+        <div class="swiper cells-swiper" id="cells-cards-container" style="padding-bottom: 2rem;">
+          <div class="swiper-wrapper">
+            <!-- Card 1: Rede Kids -->
+            <div class="cell-card swiper-slide" data-cell-category="kids">
+              <div class="cell-header-top">
+                <span class="cell-age-badge kids">5 a 9 anos</span>
+              </div>
+              <h3 class="cell-name">Rede Kids</h3>
+              <div class="cell-day-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Quintas às 19h30</span>
+              </div>
+              <p class="cell-desc">Espaço alegre e acolhedor onde as crianças aprendem os caminhos de Deus, criam
+                amizades
+                saudáveis e crescem na fé através de momentos dinâmicos.</p>
+              <div class="cell-meta-list">
+                <div class="cell-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <div><strong>Bairro:</strong> Intermares</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Rede Teen -->
+            <div class="cell-card swiper-slide" data-cell-category="teens">
+              <div class="cell-header-top">
+                <span class="cell-age-badge teens">10 a 13 anos</span>
+              </div>
+              <h3 class="cell-name">Rede Teen</h3>
+              <div class="cell-day-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Sábados</span>
+              </div>
+              <p class="cell-desc">Ambiente dinâmico feito especialmente para pré-adolescentes fortalecerem sua fé em
+                Cristo, tirarem dúvidas e caminharem juntos com alegria.</p>
+              <div class="cell-meta-list">
+                <div class="cell-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <div><strong>Bairro:</strong> Intermares</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Rede Black -->
+            <div class="cell-card swiper-slide" data-cell-category="youth">
+              <div class="cell-header-top">
+                <span class="cell-age-badge youth">14 a 17 anos</span>
+              </div>
+              <h3 class="cell-name">Rede Black</h3>
+              <div class="cell-day-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Sextas e Sábados</span>
+              </div>
+              <p class="cell-desc">Lugar de conexão real para adolescentes debaterem temas práticos,
+                aprofundarem a fé, orarem uns pelos outros e viverem o evangelho.</p>
+              <div class="cell-meta-list">
+                <div class="cell-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <div><strong>Bairro:</strong> Intermares</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Células de Adultos -->
+            <div class="cell-card swiper-slide" data-cell-category="adults">
+              <div class="cell-header-top">
+                <span class="cell-age-badge adults">18+ anos</span>
+              </div>
+              <h3 class="cell-name">Células de Adultos</h3>
+              <div class="cell-day-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Todos os Dias</span>
+              </div>
+              <p class="cell-desc">Grupos de comunhão, oração mútua, cuidado pastoral e estudo bíblico prático com
+                encontros em diversos dias da semana para acolher você e sua família.</p>
+              <div class="cell-meta-list">
+                <div class="cell-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <div><strong>Bairro:</strong> Intermares</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-pagination cells-pagination"></div>
+        </div>
+
+        <!-- Banner de Ajuda para Encontrar Célula -->
+        <div class="cell-finder-cta-box">
+          <div class="cell-finder-cta-content">
+            <h3>Quer ajuda para encontrar a sua célula?</h3>
+            <p>Envie uma mensagem pelo WhatsApp informando seu bairro e faixa de idade. Nossa equipe de integração
+              indicará o líder e o endereço mais próximo da sua casa!</p>
+          </div>
+          <a href="https://wa.me/5583981945874?text=Ol%C3%A1!%20Gostaria%20de%20saber%20qual%20%C3%A9%20a%20c%C3%A9lula%20da%20IEBI%20mais%20pr%C3%B3xima%20da%20minha%20casa."
+            target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg"
+            style="background-color: white; border-color: #25D366; color: #065f46; font-weight: 700; gap: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+            </svg>
+            Falar com a Coordenação.
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==========================================
+         PRÓXIMOS EVENTOS & CALENDÁRIO
+         ========================================== -->
+    <section class="section-padding bg-soft" id="eventos">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Calendário da Igreja</div>
+          <h2 class="section-title">Próximos Grandes Eventos</h2>
+          <p class="section-subtitle">Conferências, retiros, batismos e ações sociais para você se envolver com a nossa
+            comunidade.</p>
+        </div>
+
+        <div class="swiper events-swiper" style="padding-bottom: 3rem;">
+          <div class="swiper-wrapper" id="events-wrapper">
+            <!-- Eventos carregados dinamicamente via Firebase por site-events.js -->
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         MENSAGENS & PODCAST (ÁUDIO INTERATIVO)
+         ========================================== -->
+    <section class="section-padding" id="mensagens" style="display: none;">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Mensagens & Estudos</div>
+          <h2 class="section-title">Alimente sua Fé Onde Você Estiver</h2>
+          <p class="section-subtitle">Ouça sermões edificantes, reflexões práticas e mensagens gravadas durante nossos
+            cultos dominicais.</p>
+        </div>
+
+        <!-- Card de Mensagem em Destaque com Player de áudio Real -->
+        <div class="sermon-highlight-card">
+          <div class="sermon-highlight-info">
+            <div class="sermon-badge">Último Sermão Dominical</div>
+            <h3 class="sermon-main-title" id="current-sermon-title">Vencendo a Ansiedade com a Paz que Excede Todo
+              Entendimento</h3>
+
+            <div class="sermon-speaker-meta">
+              <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                Pr. Ricardo Oliveira
+              </span>
+              <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Série: Esperança Viva
+              </span>
+            </div>
+
+            <p class="sermon-summary">
+              Com base em Filipenses 4:6-7, aprenda a entregar as preocupações em oração e experimentar o descanso que
+              sé a presença de Deus pode proporcionar no meio das tempestades da vida.
+            </p>
+
+            <!-- Reprodutor de áudio Customizado -->
+            <div class="audio-player-container">
+              <div class="player-controls-row">
+                <button class="btn-play-toggle" id="audio-play-btn" aria-label="Tocar ou pausar áudio da mensagem">
+                  <svg id="play-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="6 4 20 12 6 20 6 4" />
+                  </svg>
+                  <svg id="pause-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"
+                    style="display:none;">
+                    <rect x="6" y="4" width="4" height="16" />
+                    <rect x="14" y="4" width="4" height="16" />
+                  </svg>
+                </button>
+                <div class="player-track-info">
+                  <div class="track-name">Mensagem em áudio (Edição Completa)</div>
+                  <div class="track-state" id="audio-status-text">Célique para ouvir a mensagem</div>
+                </div>
+              </div>
+
+              <!-- Barra de Progresso Interativa -->
+              <div class="progress-bar-container" id="audio-progress-bar" role="slider"
+                aria-label="Progresso da mensagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                <div class="progress-bar-fill" id="audio-progress-fill"></div>
+              </div>
+
+              <div class="player-time-row">
+                <span id="current-audio-time">00:00</span>
+                <span id="total-audio-time">34:20</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prévia em Vídeo Simulada -->
+          <div class="sermon-video-preview">
+            <img src="assets/images/hero_worship.webp" width="800" height="600"
+              alt="Vídeo da pregação no canal do YouTube">
+            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="video-play-overlay"
+              aria-label="Assistir pregação no YouTube">
+              <div class="video-play-btn">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="8 5 19 12 8 19 8 5" />
+                </svg>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Grade de Mensagens Anteriores -->
+        <div class="recent-sermons-grid">
+          <div class="sermon-card">
+            <div class="sermon-card-series">Série: Famílias Inabaláveis</div>
+            <h4 class="sermon-card-title">Restaurando o Diálogo no Casamento</h4>
+            <div class="sermon-card-meta">Pr. Ricardo é Efésios 5:21-33</div>
+            <div class="sermon-card-footer">
+              <button class="btn btn-secondary btn-sm btn-load-sermon" data-title="Restaurando o Diálogo no Casamento"
+                data-speaker="Pr. Ricardo" data-duration="28:15">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 4 20 12 6 20 6 4" />
+                </svg>
+                Ouvir áudio
+              </button>
+              <a href="#oracao" class="btn-link"
+                style="font-size: 0.8125rem; font-weight: 600; color: var(--color-secondary-hover);">Ver Notas</a>
+            </div>
+          </div>
+
+          <div class="sermon-card">
+            <div class="sermon-card-series">Série: Fé & Coragem</div>
+            <h4 class="sermon-card-title">Dando Passos Ousados no Deserto</h4>
+            <div class="sermon-card-meta">Pra. Helena é Josué 1:1-9</div>
+            <div class="sermon-card-footer">
+              <button class="btn btn-secondary btn-sm btn-load-sermon" data-title="Dando Passos Ousados no Deserto"
+                data-speaker="Pra. Helena" data-duration="32:40">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 4 20 12 6 20 6 4" />
+                </svg>
+                Ouvir áudio
+              </button>
+              <a href="#oracao" class="btn-link"
+                style="font-size: 0.8125rem; font-weight: 600; color: var(--color-secondary-hover);">Ver Notas</a>
+            </div>
+          </div>
+
+          <div class="sermon-card">
+            <div class="sermon-card-series">Série: Vida com Propósito</div>
+            <h4 class="sermon-card-title">Despertando os Dons que Deus te Deu</h4>
+            <div class="sermon-card-meta">Pr. Gabriel é 1 Coríntios 12</div>
+            <div class="sermon-card-footer">
+              <button class="btn btn-secondary btn-sm btn-load-sermon" data-title="Despertando os Dons que Deus te Deu"
+                data-speaker="Pr. Gabriel" data-duration="35:05">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 4 20 12 6 20 6 4" />
+                </svg>
+                Ouvir áudio
+              </button>
+              <a href="#oracao" class="btn-link"
+                style="font-size: 0.8125rem; font-weight: 600; color: var(--color-secondary-hover);">Ver Notas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==========================================
+         PEDIDOS DE ORAÇÃO & ACONSELHAMENTO
+         ========================================== -->
+    <section class="section-padding bg-soft" id="oracao" style="display: none;">
+      <div class="container">
+        <div class="prayer-wrapper">
+          <!-- Sidebar Acolhedora -->
+          <div class="prayer-sidebar">
+            <div>
+              <div class="section-tag section-tag-dark" style="margin-bottom:1.5rem;">Cuidado Pastoral</div>
+              <h2 class="prayer-sidebar-title">Como podemos orar por você hoje?</h2>
+              <p class="prayer-sidebar-text">
+                Nossa equipe de intercessores e pastores se reúne diariamente para clamar diante de Deus por cada pedido
+                que chega até nós. Você não está sozinho.
+              </p>
+
+              <div class="verse-box">
+                <p class="verse-text">"Não andem ansiosos por coisa alguma, mas em tudo, pela oração e súplicas, e com
+                  ação de graças, apresentem seus pedidos a Deus."</p>
+                <div class="verse-ref">- Filipenses 4:6</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulário de Oração -->
+          <div class="prayer-form-area">
+            <h3
+              style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem;">
+              Envie o seu Motivo de Oração
+            </h3>
+            <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 1.75rem;">
+              Preencha os campos abaixo. Seus dados são tratados com total sigilo e amor.
+            </p>
+
+            <form id="prayer-form" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="prayer-name" class="form-label">Seu Nome Completo *</label>
+                  <input type="text" id="prayer-name" aria-label="Seu nome" class="form-control"
+                    placeholder="Ex: Maria dos Santos" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="prayer-phone" class="form-label">WhatsApp para Contato *</label>
+                  <input type="tel" id="prayer-phone" aria-label="Seu n?mero de telefone ou WhatsApp"
+                    class="form-control" placeholder="(11) 99999-9999" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="prayer-category" class="form-label">Motivo Principal da Oração *</label>
+                <select id="prayer-category" class="form-control" required>
+                  <option value="" disabled selected>Selecione uma área...</option>
+                  <option value="saude">Saúde & Cura Física / Emocional</option>
+                  <option value="familia">Família, Casamento & Filhos</option>
+                  <option value="espiritual">Vida Espiritual & Paz Interior</option>
+                  <option value="financas">Trabalho & Causas Financeiras</option>
+                  <option value="gratidao">Agradecimento por Bênção / Milagre</option>
+                  <option value="outro">Outra Necessidade</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="prayer-message" class="form-label">Descreva seu Pedido *</label>
+                <textarea id="prayer-message" aria-label="Seu pedido de ora??o" class="form-control"
+                  placeholder="Escreva aqui aquilo que está no seu coração para podermos interceder com precisão..."
+                  required></textarea>
+              </div>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="prayer-confidential" aria-label="Marcar pedido como confidencial">
+                <span>Desejo que este pedido seja <strong>estritamente confidencial</strong> e apenas lido pelo pastor
+                  presidente.</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="btn-submit-prayer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+                Enviar Pedido para a Equipe de Oração
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         DÍZIMOS & OFERTAS (GENEROSIDADE & PIX)
+         ========================================== -->
+    <section class="section-padding" id="dizimos" style="display: none;">
+      <div class="container">
+        <div class="giving-grid">
+          <div class="giving-content">
+            <div class="section-tag">Generosidade & Adoração</div>
+            <h2 class="section-title">Investindo no Reino e Transformando Vidas</h2>
+
+            <p class="about-text">
+              "Cada um dé conforme determinou em seu coração, não com pesar ou por obrigação, pois Deus ama quem dé com
+              alegria." (2 Coríntios 9:7)
+            </p>
+
+            <p class="about-text">
+              Sua fidelidade nos dízimos e ofertas voluntárias sustenta as atividades diárias do templo, a assistência
+              direta a centenas de famílias necessitadas e o envio de missionários pelo Brasil e pelo mundo.
+            </p>
+
+            <div class="pillars-grid" style="margin-top: 1rem;">
+              <div class="pillar-item">
+                <div class="pillar-icon" style="background:#ecfdf5; color:#059669;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="pillar-title">Transparência Total</h4>
+                  <p class="pillar-desc">Prestação de contas periódica e auditoria aberta aos membros.</p>
+                </div>
+              </div>
+
+              <div class="pillar-item">
+                <div class="pillar-icon" style="background:#fef3c7; color:#d97706;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="pillar-title">Impacto Direto</h4>
+                  <p class="pillar-desc">Mais de 40% das receitas direcionadas a projetos de acolhimento social.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Interativo de PIX e Contas -->
+          <div class="giving-card-interactive">
+            <div class="pix-box">
+              <div class="pix-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                Chave PIX Oficial (CNPJ)
+              </div>
+
+              <!-- QR Code Simulado Fiel -->
+              <div class="qr-code-img">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="1.5">
+                  <rect x="2" y="2" width="8" height="8" rx="1" />
+                  <rect x="14" y="2" width="8" height="8" rx="1" />
+                  <rect x="2" y="14" width="8" height="8" rx="1" />
+                  <rect x="4" y="4" width="4" height="4" fill="#0f172a" />
+                  <rect x="16" y="4" width="4" height="4" fill="#0f172a" />
+                  <rect x="4" y="16" width="4" height="4" fill="#0f172a" />
+                  <path d="M14 14h2v2h-2zM18 14h4v4h-4zM14 18h2v4h-2zM18 20h4v2h-4zM10 10h4v4h-4z" />
+                </svg>
+              </div>
+
+              <div class="pix-key-display">
+                <span class="pix-key-text" id="pix-key-val">12.345.678/0001-90</span>
+              </div>
+
+              <button class="btn-copy-pix" id="btn-copy-pix">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                <span id="pix-btn-label">Copiar Chave PIX</span>
+              </button>
+            </div>
+
+            <!-- Dados Bancários Alternativos -->
+            <div class="bank-accounts-accordion">
+              <div class="bank-item">
+                <div class="bank-item-title">Banco do Brasil (001)</div>
+                <div class="bank-item-details">
+                  Agência: 1234-5 | Conta Corrente: 98765-4<br>
+                  Favorecido: Igreja Evangélica Batista de Intermares
+                </div>
+              </div>
+
+              <div class="bank-item">
+                <div class="bank-item-title">Banco Bradesco (237)</div>
+                <div class="bank-item-details">
+                  Agência: 4321-0 | Conta Corrente: 56789-0<br>
+                  Favorecido: Igreja Evangélica Batista de Intermares
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         LOCALIZAÇÃO, MAPA & FAQ
+         ========================================== -->
+    <section class="section-padding bg-soft" id="contato">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Onde Estamos</div>
+          <h2 class="section-title">Venha Celebrar Conosco</h2>
+          <p class="section-subtitle">Fácil acesso, excelente infraestrutura e uma recepção calorosa te aguardando.</p>
+        </div>
+
+        <div class="location-grid">
+          <!-- Dados de Localização -->
+          <div class="location-info-card">
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="info-title">Nosso Endereço</h4>
+                <p class="info-desc">
+                  Av. Mar Tirreno, s/n - Intermares<br>
+                  Cabedelo - PB, CEP 58102-177
+                </p>
+                <div class="app-direction-buttons">
+                  <a href="https://www.google.com/maps/search/?api=1&query=Igreja+Evang%C3%A9lica+Batista+de+Intermares,+Av.+Mar+Tirreno,+s/n+-+Intermares,+Cabedelo+-+PB"
+                    target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                    </svg>
+                    Google Maps
+                  </a>
+                  <a href="https://waze.com/ul?q=Igreja%20Evang%C3%A9lica%20Batista%20de%20Intermares&navigate=yes"
+                    target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M8 12h8" />
+                      <path d="M12 8v8" />
+                    </svg>
+                    Abrir no Waze
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="info-title">Secretaria & WhatsApp</h4>
+                <p class="info-desc">
+                  Atendimento de Terça a Sexta, das 13h às 18h.<br>
+                  <strong>WhatsApp:</strong> (83) 98194-5874
+                </p>
+                <div style="margin-top:0.5rem;">
+                  <a href="https://wa.me/5583981945874" target="_blank" rel="noopener noreferrer"
+                    class="btn btn-primary btn-sm" style="background-color: #059669;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                    </svg>
+                    Falar no WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="info-title">E-mail Institucional</h4>
+                <p class="info-desc">iebintermares@gmail.com</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mapa Integrado Visual -->
+          <div class="map-container">
+            <iframe title="Mapa de Localização da IEBI - Igreja Evangélica Batista de Intermares"
+              src="https://maps.google.com/maps?q=Igreja+Evang%C3%A9lica+Batista+de+Intermares,+Av.+Mar+Tirreno,+s/n+-+Intermares,+Cabedelo+-+PB&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              loading="lazy" allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       RODAPÉ (FOOTER)
+       ========================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <!-- Marca & Descrição -->
+        <div class="footer-brand">
+          <a href="#hero" class="logo-brand footer-logo-brand"
+            aria-label="IEBI - Igreja Evangélica Batista de Intermares">
+            <img src="assets/LogoBranco.webp" width="200" height="50"
+              alt="IEBI - Igreja Evangélica Batista de Intermares" class="site-logo-footer-img">
+          </a>
+          <p class="footer-brand-desc">
+            Uma igreja acolhedora, centrada em Cristo, comprometida com a pregação bíblica e o cuidado genuíno com o
+            próximo.
+          </p>
+        </div>
+
+        <!-- Links Rápidos -->
+        <div>
+          <h4 class="footer-heading">Navegação</h4>
+          <ul class="footer-links-list">
+            <li><a href="#hero" class="footer-link">Início</a></li>
+            <li><a href="#sobre" class="footer-link">Sobre Nós</a></li>
+            <li><a href="#celulas" class="footer-link">Células nos Lares</a></li>
+            <li style="display: none;"><a href="#mensagens" class="footer-link">Mensagens em Áudio</a></li>
+            <li><a href="#eventos" class="footer-link">Eventos & Conferências</a></li>
+          </ul>
+        </div>
+
+        <!-- Links úteis -->
+        <div>
+          <h4 class="footer-heading">Envolva-se</h4>
+          <ul class="footer-links-list">
+            <li><a href="#eventos" class="footer-link">Agenda de Eventos</a></li>
+            <li style="display: none;"><a href="#oracao" class="footer-link">Pedido de Oração</a></li>
+            <li style="display: none;"><a href="#dizimos" class="footer-link">PIX & Dízimos</a></li>
+            <li><a href="#contato" class="footer-link">Como Chegar</a></li>
+          </ul>
+        </div>
+
+        <!-- Redes Sociais -->
+        <div>
+          <h4 class="footer-heading">Siga-nos</h4>
+          <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 1.25rem;">
+            Acompanhe nossas redes sociais para ficar por dentro de tudo o que acontece.
+          </p>
+          <div class="social-links">
+            <a href="https://www.instagram.com/iebintermares" target="_blank" rel="noopener noreferrer"
+              class="social-icon-btn" aria-label="Instagram da Igreja">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </a>
+            <a href="https://www.youtube.com/channel/UCvwLoSI04jNCIWyJmuKxGoA" target="_blank" rel="noopener noreferrer"
+              class="social-icon-btn" aria-label="YouTube da Igreja">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+              </svg>
+            </a>
+            <a href="https://www.facebook.com/iebiintermares/" target="_blank" rel="noopener noreferrer"
+              class="social-icon-btn" aria-label="Facebook da Igreja">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          2026 IEBI - Igreja Evangélica Batista de Intermares. Todos os direitos reservados.
+        </div>
+        <div style="display:flex; gap:1.25rem;">
+          <a href="#sobre" style="color: #94a3b8;">Estatuto</a>
+          <a href="#oracao" style="color: #94a3b8;">Privacidade</a>
+          <a href="#contato" style="color: #94a3b8;">Fale Conosco</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       MODAL DE CONFIRMAÇÃO DE ORAÇÃO
+       ========================================== -->
+  <div class="modal-backdrop" id="prayer-modal" role="dialog" aria-modal="true" aria-labelledby="prayer-modal-title">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="close-prayer-modal" aria-label="Fechar Modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 1.25rem;">
+        <div
+          style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; background-color: #dcfce7; color: #16a34a; flex-shrink: 0;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h3 class="modal-title" id="prayer-modal-title" style="margin: 0; font-size: 1.5rem; line-height: 1.2;">Pedido
+          Enviado!</h3>
+      </div>
+      <p class="modal-body-text" id="prayer-modal-message">
+        Sua solicitação foi enviada com sucesso à equipe pastoral e de intercessão da <strong>IEBI</strong>. Cremos que
+        Deus ouve e responde ao clamor do coração sincero.
+      </p>
+
+      <div
+        style="background: #f8fafc; border-left: 3px solid #059669; padding: 1rem; border-radius: 8px; font-style: italic; font-size: 0.875rem; color: #334155; margin-bottom: 1.5rem;">
+        "E esta é a confiança que temos para com ele: que, se pedirmos alguma coisa segundo a sua vontade, ele nos
+        ouve." - <strong>1 João 5:14</strong>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%;" id="btn-confirm-prayer-modal">Amém, Obrigado!</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL DE INSCRIÇÃO EM EVENTOS
+       ========================================== -->
+  <div class="modal-backdrop" id="event-modal" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="close-event-modal" aria-label="Fechar Modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <div class="modal-icon-header" style="background:#fef3c7; color:#d97706;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      </div>
+
+      <h3 class="modal-title" id="event-modal-title">Inscrição no Evento</h3>
+      <p class="modal-body-text" id="event-modal-subtitle">
+        Garanta o seu lugar e receba as informações de confirmação diretamente no seu WhatsApp.
+      </p>
+
+      <form id="event-registration-form">
+        <div class="form-group">
+          <label class="form-label">Evento Selecionado</label>
+          <input type="text" id="event-input-name" aria-label="Nome do Evento" class="form-control" readonly
+            style="font-weight: 700; background: #f1f5f9;">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Seu Nome *</label>
+          <input type="text" id="event-input-user-name" aria-label="Seu nome completo" class="form-control"
+            placeholder="Digite seu nome completo" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">WhatsApp *</label>
+          <input type="tel" id="event-input-user-phone" aria-label="Seu telefone ou WhatsApp" class="form-control"
+            placeholder="(11) 99999-9999" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Confirmar Minha Participação</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       TOAST DE NOTIFICAÇÃO (COPIAR PIX & AVISOS)
+       ========================================== -->
+  <div class="toast-notification" id="site-toast" role="status" aria-live="polite">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+    <span id="toast-message">Chave PIX copiada com sucesso!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script type="module" src="site-events.js?v=3"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

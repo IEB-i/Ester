@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="icon" type="image/png" href="../assets/favico_Branco.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Importar/Exportar Cadastros - Sistema IEBI</title>
+  <link rel="stylesheet" href="../CSS/index.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <meta name="theme-color" content="#0F3A4C">
+  <script type="module" src="../JS/auth-guard.js"></script>
+  <!-- SheetJS for XLS/XLSX reading and writing -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <!-- Topbar Header -->
+  <iebi-topbar></iebi-topbar>
+
+  <div class="app-container">
+    <!-- Sidebar Menu -->
+    <iebi-sidebar active-menu="importar"></iebi-sidebar>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <div class="breadcrumb">
+          Pessoas - Importar/Exportar
+        </div>
+      </div>
+
+      <div class="page-title-container">
+        <h2 class="page-title">Importar / Exportar Dados</h2>
+      </div>
+
+      <!-- Exportar Section -->
+      <div class="card form-card" style="margin-bottom: 24px; padding: 24px;">
+        <h3 style="margin-bottom: 8px;">Exportar Cadastros</h3>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">Exporte a lista completa de pessoas do sistema para uma planilha Excel (XLSX).</p>
+        
+        <button id="btnExportar" class="btn btn-secondary">
+          <i class="ph ph-download-simple"></i> Baixar Planilha de Cadastros (XLSX)
+        </button>
+      </div>
+
+      <!-- Importar Section -->
+      <div class="card form-card" style="padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h3>Importar Cadastros (Migração)</h3>
+            <button id="btnBaixarModelo" class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;">
+                <i class="ph ph-file-xls"></i> Baixar Planilha Modelo
+            </button>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">Importe a planilha de membros gerada de um sistema legado. Os dados serão formatados, limpos e salvos na nova estrutura da coleção <strong>pessoas</strong>.</p>
+        
+        <div style="padding: 24px; border: 2px dashed var(--border-color); border-radius: 8px; text-align: center; margin-bottom: 24px;">
+            <input type="file" id="excelFile" accept=".xls,.xlsx" style="display: none;" />
+            <button id="btnSelect" class="btn btn-secondary" onclick="document.getElementById('excelFile').click()" style="margin-bottom: 12px;">
+                <i class="ph ph-file-xls"></i> Escolher Arquivo Excel
+            </button>
+            <p id="fileName" style="font-size: 0.9rem; color: var(--text-muted);">Nenhum arquivo selecionado.</p>
+        </div>
+
+        <button id="btnImportar" class="btn btn-primary" style="width: 100%; justify-content: center;" disabled>
+            <i class="ph ph-upload-simple"></i> Iniciar Importação de Dados
+        </button>
+        
+        <div style="margin-top: 32px;">
+          <h4 style="margin-bottom: 12px;">Progresso: <span id="lblProgresso" style="color: var(--primary);">0 / 0</span></h4>
+          <div id="logArea" style="height: 300px; overflow-y: auto; background: #0A0A0A; color: #33FF33; padding: 16px; font-family: monospace; font-size: 0.85rem; border-radius: 8px; border: 1px solid #333;">
+              Aguardando início...<br>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <iebi-bottom-nav active-item="pessoas"></iebi-bottom-nav>
+  
+  <script src="../JS/components.js"></script>
+  <script type="module" src="../JS/firebase.js"></script>
+  <script type="module" src="../JS/importar.js"></script>
+  
+  <script>
+      // Lógica do botão de seleção de arquivo
+      document.getElementById('excelFile').addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if(file) {
+              document.getElementById('fileName').textContent = file.name;
+              document.getElementById('btnImportar').disabled = false;
+          }
+      });
+  </script>
+</body>
+</html>
