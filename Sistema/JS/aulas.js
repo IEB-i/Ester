@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // 2. Buscar Alunos Matriculados
                 const inscricoesRef = collection(db, 'igrejas', 'iebi', 'inscricoes');
-                const qInsc = query(inscricoesRef, where('id_turma', '==', turmaId), where('status', '==', 'Ativa'));
+                const qInsc = query(inscricoesRef, where('id_turma', '==', turmaId));
                 const inscSnap = await getDocs(qInsc);
                 
                 let alunos = [];
